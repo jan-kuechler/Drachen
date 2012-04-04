@@ -1,0 +1,10 @@
+# Visual Studio directories and files
+Debug/
+Release/
+ipch/
+*.sdf
+*.suo
+*.vcxproj.*
+
+*.exe
+*.dll
