@@ -2,7 +2,7 @@
 #include "Game.h"
 
 #define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+//#include <windows.h>
 
 int main(int argc, char **argv)
 {
@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 		}
 	}
 	catch (std::runtime_error err) {
-		MessageBoxA(NULL, err.what(), "Fatal Error", MB_ICONERROR | MB_OK);
+		//MessageBoxA(NULL, err.what(), "Fatal Error", MB_ICONERROR | MB_OK);
 	}
 
 	return 0;
