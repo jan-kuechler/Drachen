@@ -14,9 +14,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "A01FB6A80F07CF6E000AAC7B"
-               BuildableName = "&#171;PROJECTNAME&#187;.app"
+               BuildableName = "Drachen.app"
                BlueprintName = "&#171;PROJECTNAME&#187;"
-               ReferencedContainer = "container:SFML Graphics-based Application.xcodeproj">
+               ReferencedContainer = "container:Drachen.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,9 +32,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A01FB6A80F07CF6E000AAC7B"
-            BuildableName = "&#171;PROJECTNAME&#187;.app"
+            BuildableName = "Drachen.app"
             BlueprintName = "&#171;PROJECTNAME&#187;"
-            ReferencedContainer = "container:SFML Graphics-based Application.xcodeproj">
+            ReferencedContainer = "container:Drachen.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -52,9 +52,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A01FB6A80F07CF6E000AAC7B"
-            BuildableName = "&#171;PROJECTNAME&#187;.app"
+            BuildableName = "Drachen.app"
             BlueprintName = "&#171;PROJECTNAME&#187;"
-            ReferencedContainer = "container:SFML Graphics-based Application.xcodeproj">
+            ReferencedContainer = "container:Drachen.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -70,9 +70,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "A01FB6A80F07CF6E000AAC7B"
-            BuildableName = "&#171;PROJECTNAME&#187;.app"
+            BuildableName = "Drachen.app"
             BlueprintName = "&#171;PROJECTNAME&#187;"
-            ReferencedContainer = "container:SFML Graphics-based Application.xcodeproj">
+            ReferencedContainer = "container:Drachen.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
