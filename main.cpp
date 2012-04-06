@@ -8,6 +8,8 @@
 
 int main(int argc, char **argv)
 {
+    char buffer[1000];
+    std::cout << "Current directory is: " << getcwd(buffer, 1000) << "\n";
 	try {
 		GlobalStatus status;
 		status.level = "test";
