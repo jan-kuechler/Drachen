@@ -76,6 +76,9 @@ State Game::GetNextState()
 
 void Game::AddTower()
 {
+	if (activeTower)
+		return;
+
 	Tower t(&map);
 	t.SetImage(imgTower);
 
