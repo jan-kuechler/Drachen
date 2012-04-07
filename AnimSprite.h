@@ -18,6 +18,8 @@ public:
 	{
 		width = w;
 		height = h;
+
+		SetCenter(w / 2.0f, static_cast<float>(h));
 	}
 
 	void SetOffset(size_t off)
