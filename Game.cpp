@@ -35,6 +35,7 @@ void Game::Run()
 			continue;
 		if (activeTower && activeTower->HandleEvent(event)) {
 			if (activeTower->IsPlaced()) {
+				map.PlaceTower(map.PostionToTowerPos(activeTower->GetPosition()));
 				activeTower = 0;
 				std::sort(towers.begin(), towers.end(), [](const Tower& a, const Tower& b) {
 					return a.GetPosition().y < b.GetPosition().y;

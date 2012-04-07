@@ -14,9 +14,12 @@ private:
 	size_t blockSize;
 	Grid grid;
 
+	std::set<Vector2i> towerPlaces;
+	std::set<Vector2i> towers;
+
 	bool drawOverlay;
 
-	sf::Shape blockGreen, blockRed;
+	sf::Shape blockGreen, blockRed, blockBlue;
 public:
 	bool LoadFromFile(const std::string& fileName);
 
@@ -47,16 +50,33 @@ public:
 		drawOverlay = doDraw;
 	}
 
-	Vector2f BlockToPosition(Vector2i blk) const
+	bool MayPlaceTower(const Vector2i& tpos) const;
+	void PlaceTower(const Vector2i& tpos);
+
+	Vector2f BlockToPosition(const Vector2i& blk) const
 	{
 		return Vector2f((blk.x + 0.5f) * blockSize, (blk.y + 0.5f) * blockSize);
 	}
 
-	Vector2i PositionToBlock(Vector2f pos) const
+	Vector2i BlockToTowerPos(const Vector2i& blk) const
+	{
+		return blk / 2;
+	}
+
+	Vector2f TowerPosToPosition(const Vector2i& tp) const
+	{
+		return Vector2f((tp.x + 0.5f) * 2 * blockSize, (tp.y + 0.5f) * 2 * blockSize);
+	}
+
+	Vector2i PositionToBlock(const Vector2f& pos) const
 	{
 		return Vector2i(static_cast<int>(pos.x / blockSize), static_cast<int>(pos.y / blockSize));
 	}
 
+	Vector2i PostionToTowerPos(const Vector2f& pos) const
+	{
+		return Vector2i(static_cast<int>(pos.x / (2*blockSize)), static_cast<int>(pos.y / (2*blockSize)));
+	}
 private:
 };
 

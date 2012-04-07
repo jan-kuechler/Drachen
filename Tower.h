@@ -9,6 +9,9 @@ class Tower : public AnimSprite
 	const Map* map;
 	
 	bool placed;
+	bool validPosition;
+
+	static Color ColorInvalidPosition, ColorValidPosition, ColorPlaced;
 
 public:
 	Tower(const Map* map);
