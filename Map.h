@@ -20,6 +20,7 @@ private:
 	bool drawOverlay;
 
 	sf::Shape blockGreen, blockRed, blockBlue;
+	std::vector<std::vector<Shape*> > overlay;
 public:
 	bool LoadFromFile(const std::string& fileName);
 
@@ -77,7 +78,9 @@ public:
 	{
 		return Vector2i(static_cast<int>(pos.x / (2*blockSize)), static_cast<int>(pos.y / (2*blockSize)));
 	}
+
 private:
+	void UpdateOverlay();
 };
 
 #endif //MAP_H
