@@ -9,14 +9,15 @@ void AnimSprite::Update(float elapsed)
 {
 	size_t frame = 0;
 
-	if (frameTime != 0) {
-		curTime += elapsed;
-		while (curTime > frames * frameTime) {
-			curTime -= frames * frameTime;
-		}
+	if (frameTime == 0)
+		return;
 
-		frame = static_cast<size_t>(curTime / frameTime);
+	curTime += elapsed;
+	while (curTime > frames * frameTime) {
+		curTime -= frames * frameTime;
 	}
+
+	frame = static_cast<size_t>(curTime / frameTime);
 
 	IntRect subrect(frame * width + (frame + 1) * offset, offset, (frame + 1) * width + (frame + 1) * offset, height);
 	SetSubRect(subrect);
