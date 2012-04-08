@@ -61,6 +61,7 @@ void Tower::Update(float elapsed)
 			if (norm(it->GetPosition() - GetPosition()) <= range) {
 				SetColor(ColorInvalidPosition);
 				cooldown = 1.0f;
+				break;
 			}
 		}
 	}
