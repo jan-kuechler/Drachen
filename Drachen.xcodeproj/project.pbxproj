@@ -23,9 +23,13 @@
 		D41993AB152CDABE00C633BF /* json_spirit_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D41993A1152CDABE00C633BF /* json_spirit_reader.cpp */; };
 		D41993AC152CDABE00C633BF /* json_spirit_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D41993A6152CDABE00C633BF /* json_spirit_value.cpp */; };
 		D41993AD152CDABE00C633BF /* json_spirit_writer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D41993A8152CDABE00C633BF /* json_spirit_writer.cpp */; };
-		D4211049152E4A8300537C92 /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D4211046152E480900537C92 /* libboost_system.dylib */; };
-		D421104A152E4A8B00537C92 /* libboost_filesystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D4211045152E480900537C92 /* libboost_filesystem.dylib */; };
 		D4C9C6A0152F51430004DFBE /* data in Resources */ = {isa = PBXBuildFile; fileRef = D4C9C69F152F51430004DFBE /* data */; };
+		D4C9C6AA152F54B80004DFBE /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D4C9C6A9152F54B80004DFBE /* libboost_system.dylib */; };
+		D4C9C6AC152F54C40004DFBE /* libboost_filesystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D4C9C6AB152F54C40004DFBE /* libboost_filesystem.dylib */; };
+		D4C9C6B0152F56C50004DFBE /* libboost_system.dylib in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D4C9C6A9152F54B80004DFBE /* libboost_system.dylib */; };
+		D4C9C6B1152F56C80004DFBE /* libboost_filesystem.dylib in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = D4C9C6AB152F54C40004DFBE /* libboost_filesystem.dylib */; };
+		D4C9C6B2152F56CE0004DFBE /* libboost_system.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D4C9C6A9152F54B80004DFBE /* libboost_system.dylib */; };
+		D4C9C6B3152F56CF0004DFBE /* libboost_filesystem.dylib in CopyFiles */ = {isa = PBXBuildFile; fileRef = D4C9C6AB152F54C40004DFBE /* libboost_filesystem.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +39,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				D4C9C6B0152F56C50004DFBE /* libboost_system.dylib in Copy Frameworks */,
+				D4C9C6B1152F56C80004DFBE /* libboost_filesystem.dylib in Copy Frameworks */,
 				A0072ADE0F1D0EC500B4A594 /* sfml-system.framework in Copy Frameworks */,
 				A0072ADF0F1D0EC500B4A594 /* sfml-window.framework in Copy Frameworks */,
 				A0072AE00F1D0EC500B4A594 /* sfml-graphics.framework in Copy Frameworks */,
@@ -42,12 +48,14 @@
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D4C9C64C152F504C0004DFBE /* CopyFiles */ = {
+		D4C9C6AD152F54E80004DFBE /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 7;
+			dstSubfolderSpec = 6;
 			files = (
+				D4C9C6B2152F56CE0004DFBE /* libboost_system.dylib in CopyFiles */,
+				D4C9C6B3152F56CF0004DFBE /* libboost_filesystem.dylib in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,11 +81,9 @@
 		D41993A8152CDABE00C633BF /* json_spirit_writer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = json_spirit_writer.cpp; sourceTree = "<group>"; };
 		D41993A9152CDABE00C633BF /* json_spirit_writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_spirit_writer.h; sourceTree = "<group>"; };
 		D41993AA152CDABE00C633BF /* json_spirit_writer_template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_spirit_writer_template.h; sourceTree = "<group>"; };
-		D41993B6152CDBA700C633BF /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = ../../../../../usr/local/lib/libboost_filesystem.dylib; sourceTree = "<group>"; };
-		D41993B8152CDBB400C633BF /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = ../../../../../usr/local/lib/libboost_system.dylib; sourceTree = "<group>"; };
-		D4211045152E480900537C92 /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = ../../boost_clang/stage/lib/libboost_filesystem.dylib; sourceTree = "<group>"; };
-		D4211046152E480900537C92 /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = ../../boost_clang/stage/lib/libboost_system.dylib; sourceTree = "<group>"; };
 		D4C9C69F152F51430004DFBE /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = "<group>"; };
+		D4C9C6A9152F54B80004DFBE /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = ../../boost_clang/stage/lib/libboost_system.dylib; sourceTree = "<group>"; };
+		D4C9C6AB152F54C40004DFBE /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = ../../boost_clang/stage/lib/libboost_filesystem.dylib; sourceTree = "<group>"; };
 		D4CC8B7F152CD50F0024B826 /* AnimSprite.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AnimSprite.cpp; sourceTree = "<group>"; };
 		D4CC8B80152CD50F0024B826 /* AnimSprite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimSprite.h; sourceTree = "<group>"; };
 		D4CC8B81152CD50F0024B826 /* Enemy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Enemy.cpp; sourceTree = "<group>"; };
@@ -99,8 +105,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4211049152E4A8300537C92 /* libboost_system.dylib in Frameworks */,
-				D421104A152E4A8B00537C92 /* libboost_filesystem.dylib in Frameworks */,
+				D4C9C6AA152F54B80004DFBE /* libboost_system.dylib in Frameworks */,
+				D4C9C6AC152F54C40004DFBE /* libboost_filesystem.dylib in Frameworks */,
 				A01FB6CE0F07CFF2000AAC7B /* sfml-graphics.framework in Frameworks */,
 				A01FB6CF0F07CFF2000AAC7B /* sfml-system.framework in Frameworks */,
 				A01FB6D00F07CFF2000AAC7B /* sfml-window.framework in Frameworks */,
@@ -113,10 +119,6 @@
 		A01FB69A0F07CF63000AAC7B = {
 			isa = PBXGroup;
 			children = (
-				D4211045152E480900537C92 /* libboost_filesystem.dylib */,
-				D4211046152E480900537C92 /* libboost_system.dylib */,
-				D41993B8152CDBB400C633BF /* libboost_system.dylib */,
-				D41993B6152CDBA700C633BF /* libboost_filesystem.dylib */,
 				A01FB6B20F07CF80000AAC7B /* Sources */,
 				A01FB6B10F07CF7C000AAC7B /* Resources */,
 				A01FB6B00F07CF75000AAC7B /* Frameworks */,
@@ -135,6 +137,8 @@
 		A01FB6B00F07CF75000AAC7B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D4C9C6A9152F54B80004DFBE /* libboost_system.dylib */,
+				D4C9C6AB152F54C40004DFBE /* libboost_filesystem.dylib */,
 				A01FB6CD0F07CFF2000AAC7B /* SFML.framework */,
 				A01FB6CB0F07CFF2000AAC7B /* sfml-system.framework */,
 				A01FB6CC0F07CFF2000AAC7B /* sfml-window.framework */,
@@ -197,21 +201,21 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A01FB6A80F07CF6E000AAC7B /* «PROJECTNAME» */ = {
+		A01FB6A80F07CF6E000AAC7B /* Drachen */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A01FB6AF0F07CF6F000AAC7B /* Build configuration list for PBXNativeTarget "«PROJECTNAME»" */;
+			buildConfigurationList = A01FB6AF0F07CF6F000AAC7B /* Build configuration list for PBXNativeTarget "Drachen" */;
 			buildPhases = (
 				A01FB6A50F07CF6E000AAC7B /* Resources */,
 				A01FB6A60F07CF6E000AAC7B /* Sources */,
 				A01FB6A70F07CF6E000AAC7B /* Frameworks */,
 				A0072AF00F1D0EDD00B4A594 /* Copy Frameworks */,
-				D4C9C64C152F504C0004DFBE /* CopyFiles */,
+				D4C9C6AD152F54E80004DFBE /* CopyFiles */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = "«PROJECTNAME»";
+			name = Drachen;
 			productName = "«PROJECTNAME»";
 			productReference = A01FB6A90F07CF6E000AAC7B /* Drachen.app */;
 			productType = "com.apple.product-type.application";
@@ -236,7 +240,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A01FB6A80F07CF6E000AAC7B /* «PROJECTNAME» */,
+				A01FB6A80F07CF6E000AAC7B /* Drachen */,
 			);
 		};
 /* End PBXProject section */
@@ -310,6 +314,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -324,7 +329,7 @@
 				);
 				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				LLVM_LTO = YES;
-				OTHER_LDFLAGS = "-v";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Drachen;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 			};
@@ -339,6 +344,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_LINK_WITH_DYNAMIC_LIBRARIES = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = pch.h;
@@ -352,7 +358,7 @@
 				);
 				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				LLVM_LTO = YES;
-				OTHER_LDFLAGS = "-v";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = Drachen;
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				ZERO_LINK = NO;
@@ -371,7 +377,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A01FB6AF0F07CF6F000AAC7B /* Build configuration list for PBXNativeTarget "«PROJECTNAME»" */ = {
+		A01FB6AF0F07CF6F000AAC7B /* Build configuration list for PBXNativeTarget "Drachen" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A01FB6AD0F07CF6F000AAC7B /* Debug */,
