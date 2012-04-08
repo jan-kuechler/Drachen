@@ -14,6 +14,7 @@ private:
 	size_t blockSize;
 	Grid grid;
 
+	// Only access these sets in Map.cpp, the operator < for Vector2i is only defined there.
 	std::set<Vector2i> towerPlaces;
 	std::set<Vector2i> towers;
 

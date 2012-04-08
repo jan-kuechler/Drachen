@@ -85,16 +85,18 @@ bool Map::MayPlaceTower(const Vector2i& tpos) const
 
 void Map::UpdateOverlay()
 {
+	const Vector2f p1(0, 0);
+	const Vector2f p2(static_cast<float>(blockSize), static_cast<float>(blockSize));
 	for (size_t x = 0; x < width; ++x) {
 		for (size_t y = 0; y < height; ++y) {
 			if (grid[x][y])
-				overlay[x][y] = Shape::Rectangle(0, 0, blockSize, blockSize, Color(0, 255, 0, 64));
+				overlay[x][y] = Shape::Rectangle(p1, p2, Color(0, 255, 0, 64));
 			else if (MayPlaceTower(BlockToTowerPos(Vector2i(x, y))))
-				overlay[x][y] = Shape::Rectangle(0, 0, blockSize, blockSize, Color(0, 0, 255, 64));
+				overlay[x][y] = Shape::Rectangle(p1, p2, Color(0, 0, 255, 64));
 			else
-				overlay[x][y] = Shape::Rectangle(0, 0, blockSize, blockSize, Color(255, 0, 0, 64));
+				overlay[x][y] = Shape::Rectangle(p1, p2, Color(255, 0, 0, 64));
 
-			overlay[x][y].SetPosition(x * blockSize, y * blockSize);
+			overlay[x][y].SetPosition(static_cast<float>(x * blockSize), static_cast<float>(y * blockSize));
 		}
 	}
 }
