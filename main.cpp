@@ -1,11 +1,6 @@
 #include "pch.h"
 #include "Game.h"
 
-#define WIN32_LEAN_AND_MEAN
-//#include <windows.h>
-
-// Please read http://clang.llvm.org/cxx_status.html before using any C++11 features ;)
-
 int main(int argc, char **argv)
 {
 	try {
@@ -41,7 +36,8 @@ int main(int argc, char **argv)
 		}
 	}
 	catch (std::runtime_error err) {
-		//MessageBoxA(NULL, err.what(), "Fatal Error", MB_ICONERROR | MB_OK);
+		std::ofstream out("crash.log");
+		out << err.what() << "\n";
 	}
     
 
