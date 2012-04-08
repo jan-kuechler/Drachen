@@ -66,7 +66,11 @@ void Game::Run()
 		}
 	}
 
-	foe.Update(window.GetFrameTime());
+	float elapsed = window.GetFrameTime();
+
+	foe.Update(elapsed);
+	for (auto it = towers.begin(); it != towers.end(); ++it)
+		it->Update(elapsed);
 
 	window.Clear();
 	map.Draw(window);

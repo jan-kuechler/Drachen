@@ -140,7 +140,7 @@ void Enemy::FindPath(size_t tgtX, size_t tgtY)
 		std::vector<Vector2i> neighbors;
 		FillNeighbors(neighbors, *map, cur->x, cur->y);
 
-		for (std::vector<Vector2i>::iterator it = neighbors.begin(); it != neighbors.end(); ++it) {
+		for (auto it = neighbors.begin(); it != neighbors.end(); ++it) {
 			// neighbor node
 			Node *suc = new Node(it->x, it->y);
 			allNodes.push_back(suc);
@@ -148,8 +148,8 @@ void Enemy::FindPath(size_t tgtX, size_t tgtY)
 			float newg = cur->g + 1.f; // the cost to reach the neighbor is the cost to reach the current node plus one step
 
 			// find the neighbor in the open or the closed list
-			std::vector<Node*>::iterator oit = boost::find_if(open, NodeEqPos(*suc));
-			std::vector<Node*>::iterator cit = boost::find_if(closed, NodeEqPos(*suc));
+			auto oit = boost::find_if(open, NodeEqPos(*suc));
+			auto cit = boost::find_if(closed, NodeEqPos(*suc));
 
 			if (oit != open.end()) {
 				if ((*oit)->g <= newg)

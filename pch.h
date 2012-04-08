@@ -6,8 +6,6 @@
 
 // Alle normalerweise genutzten Header Dateien gehören hier rein
 
-#pragma warning(disable: 4345)
-
 // Standard Header
 #include <queue>
 #include <vector>
