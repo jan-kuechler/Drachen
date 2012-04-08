@@ -23,6 +23,8 @@ void Game::Reset()
 
 	foe.SetSpeed(50);
 
+	enemies.push_back(foe);
+
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
 }
 
@@ -51,12 +53,12 @@ void Game::Run()
 		if (event.Type == Event::KeyReleased) {
 			switch (event.Key.Code) {
 			case Key::G:
-				foe.SetTarget(24, 17);
+				enemies[0].SetTarget(24, 17);
 				break;
 			case Key::T:
 				AddTower();
 				break;
-			case Key::O:
+			case Key::F2:
 				map.ToggleOverlay();
 				break;
 			case Key::F3:
@@ -68,15 +70,20 @@ void Game::Run()
 
 	float elapsed = window.GetFrameTime();
 
-	foe.Update(elapsed);
+	for (auto it = enemies.begin(); it != enemies.end(); ++it)
+		it->Update(elapsed);
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		it->Update(elapsed);
 
 	window.Clear();
 	map.Draw(window);
-	for (auto it = towers.begin(); it != towers.end(); ++it)
+	for (auto it = towers.begin(); it != towers.end(); ++it) {
+		it->DrawRangeCircle(window);
 		window.Draw(*it);
-	window.Draw(foe);
+	}
+	for (auto it = enemies.begin(); it != enemies.end(); ++it)
+		window.Draw(*it);
+
 	window.Display();
 }
 
@@ -95,7 +102,7 @@ void Game::AddTower()
 	if (activeTower)
 		return;
 
-	Tower t(&map);
+	Tower t(&map, &enemies);
 	t.SetImage(imgTower);
 
 	const Input& input = window.GetInput();

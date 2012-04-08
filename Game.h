@@ -17,6 +17,7 @@ class Game
 
 	Image imgFoe;
 	Enemy foe;
+	std::vector<Enemy> enemies;
 
 	Image imgTower;
 	Tower* activeTower;
