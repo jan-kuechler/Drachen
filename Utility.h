@@ -3,9 +3,16 @@
 
 bool DefaultHandleEvent(RenderWindow& win, Event& event);
 
+static const float PI = 3.14159265f;
+
 inline float norm(const Vector2f& v)
 {
 	return sqrt(v.x*v.x + v.y*v.y);
+}
+
+inline float dot(const Vector2f& a, const Vector2f& b)
+{
+	return a.x * b.x + a.y * b.y;
 }
 
 template <typename Res>

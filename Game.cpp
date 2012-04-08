@@ -35,6 +35,11 @@ static bool CompTowerY(const Tower& a, const Tower& b)
 	return a.GetPosition().y < b.GetPosition().y;
 }
 
+static bool ProjectileDidHit(const Projectile& p)
+{
+	return p.DidHit();
+}
+
 void Game::Run()
 {
 	Event event;
@@ -72,8 +77,12 @@ void Game::Run()
 
 	for (auto it = enemies.begin(); it != enemies.end(); ++it)
 		it->Update(elapsed);
+	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
+		it->Update(elapsed);
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		it->Update(elapsed);
+
+	projectiles.erase(boost::remove_if(projectiles, ProjectileDidHit), projectiles.end());
 
 	window.Clear();
 	map.Draw(window);
@@ -82,6 +91,8 @@ void Game::Run()
 		window.Draw(*it);
 	}
 	for (auto it = enemies.begin(); it != enemies.end(); ++it)
+		window.Draw(*it);
+	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		window.Draw(*it);
 
 	window.Display();
@@ -102,7 +113,7 @@ void Game::AddTower()
 	if (activeTower)
 		return;
 
-	Tower t(&map, &enemies);
+	Tower t(&map, &enemies, &projectiles);
 	t.SetImage(imgTower);
 
 	const Input& input = window.GetInput();

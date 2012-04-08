@@ -4,11 +4,16 @@
 #include "AnimSprite.h"
 #include "Enemy.h"
 #include "Map.h"
+#include "Projectile.h"
 
 class Tower : public AnimSprite
 {
 	const Map* map;
 	const std::vector<Enemy>* enemies;
+	std::vector<Projectile>* projectiles;
+
+	static Image projectileImg;
+	static bool imgLoaded;
 
 	bool placed;
 	bool validPosition;
@@ -20,7 +25,7 @@ class Tower : public AnimSprite
 
 	float cooldown;
 public:
-	Tower(const Map* map, const std::vector<Enemy>* enemies);
+	Tower(const Map* map, const std::vector<Enemy>* enemies, std::vector<Projectile>* projectiles);
 
 	bool HandleEvent(Event& event);
 

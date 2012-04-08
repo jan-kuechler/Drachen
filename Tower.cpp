@@ -7,12 +7,20 @@ Color Tower::ColorValidPosition(0, 255, 0, 128);
 Color Tower::ColorPlaced(255, 255, 255);
 Color Tower::ColorRangeCircle(64, 255, 64, 128);
 
-Tower::Tower(const Map* map, const std::vector<Enemy>* enemies)
-: map(map), enemies(enemies), placed(false), validPosition(false), range(4.0f * map->GetBlockSize()), cooldown(1.0f)
+Image Tower::projectileImg;
+bool Tower::imgLoaded = false;
+
+Tower::Tower(const Map* map, const std::vector<Enemy>* enemies, std::vector<Projectile>* projectiles)
+: map(map), enemies(enemies), projectiles(projectiles), placed(false), validPosition(false), range(4.0f * map->GetBlockSize()), cooldown(1.0f)
 { 
 	SetColor(ColorInvalidPosition);
 
 	rangeCircle = Shape::Circle(GetPosition(), range, ColorRangeCircle);
+
+	if (!imgLoaded) {
+		LoadFromFile(projectileImg, "data/models/arrow.png");
+		imgLoaded = true;
+	}
 }
 bool Tower::HandleEvent(Event& event)
 {
@@ -59,7 +67,11 @@ void Tower::Update(float elapsed)
 	if (cooldown <= 0) {
 		for (auto it = enemies->begin(); it != enemies->end(); ++it) {
 			if (norm(it->GetPosition() - GetPosition()) <= range) {
-				SetColor(ColorInvalidPosition);
+				Projectile p(&(*it));
+				//p.SetSize(projectileImg.GetHeight(), projectileImg.GetWidth());
+				p.SetImage(projectileImg);
+				p.SetPosition(GetPosition());
+				projectiles->push_back(p);
 				cooldown = 1.0f;
 				break;
 			}

@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "Map.h"
 #include "Tower.h"
+#include "Projectile.h"
 
 class Game
 {
@@ -22,6 +23,8 @@ class Game
 	Image imgTower;
 	Tower* activeTower;
 	std::vector<Tower> towers;
+
+	std::vector<Projectile> projectiles;
 
 	Map map;
 
