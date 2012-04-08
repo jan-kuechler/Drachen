@@ -1,10 +1,6 @@
 #include "pch.h"
 #include "Enemy.h"
-
-float norm(const Vector2f& v)
-{
-	return sqrt(v.x*v.x + v.y*v.y);
-}
+#include "Utility.h"
 
 void Enemy::Update(float elapsed)
 {

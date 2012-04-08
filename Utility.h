@@ -1,7 +1,12 @@
-#ifndef DEFAULT_EVENT_HANDLER_H
-#define DEFAULT_EVENT_HANDLER_H
+#ifndef UTILITY_H
+#define UTILITY_H
 
 bool DefaultHandleEvent(RenderWindow& win, Event& event);
+
+inline float norm(const Vector2f& v)
+{
+	return sqrt(v.x*v.x + v.y*v.y);
+}
 
 template <typename Res>
 void LoadFromFile(Res& res, const std::string& fileName)
@@ -11,4 +16,4 @@ void LoadFromFile(Res& res, const std::string& fileName)
 	}
 }
 
-#endif //DEFAULT_EVENT_HANDLER_H
+#endif //UTILITY_H
