@@ -23,6 +23,7 @@ class Game
 	std::vector<Tower> towers;
 
 	Map map;
+
 public:
 	Game(RenderWindow& win, GlobalStatus& gs);
 

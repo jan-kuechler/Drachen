@@ -3,7 +3,6 @@
 #include "Utility.h"
 #include "Tower.h"
 
-
 Game::Game(RenderWindow& win, GlobalStatus& gs)
 : window(win), status(gs), activeTower(0)
 { }

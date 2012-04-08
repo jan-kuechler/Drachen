@@ -24,6 +24,7 @@ private:
 	std::vector<std::vector<Shape> > overlay;
 
 	bool dbgTowersAnywhere;
+
 public:
 	Map();
 
