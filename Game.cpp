@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Game.h"
 #include "Utility.h"
+#include "Tower.h"
+
 
 Game::Game(RenderWindow& win, GlobalStatus& gs)
 : window(win), status(gs), activeTower(0)
@@ -37,9 +39,13 @@ void Game::Run()
 			if (activeTower->IsPlaced()) {
 				map.PlaceTower(map.PostionToTowerPos(activeTower->GetPosition()));
 				activeTower = 0;
+#ifdef __APPLE__
+                std::sort(towers.begin(), towers.end(),sorttower);
+#else
 				std::sort(towers.begin(), towers.end(), [](const Tower& a, const Tower& b) {
 					return a.GetPosition().y < b.GetPosition().y;
 				});
+#endif
 			}
 			continue;
 		}

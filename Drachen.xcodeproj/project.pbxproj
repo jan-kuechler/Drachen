@@ -23,6 +23,8 @@
 		D41993AB152CDABE00C633BF /* json_spirit_reader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D41993A1152CDABE00C633BF /* json_spirit_reader.cpp */; };
 		D41993AC152CDABE00C633BF /* json_spirit_value.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D41993A6152CDABE00C633BF /* json_spirit_value.cpp */; };
 		D41993AD152CDABE00C633BF /* json_spirit_writer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D41993A8152CDABE00C633BF /* json_spirit_writer.cpp */; };
+		D4B8781815319F6D00D9420D /* SFML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A01FB6CD0F07CFF2000AAC7B /* SFML.framework */; };
+		D4B878191531A25000D9420D /* Tower.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4B8781515319B2F00D9420D /* Tower.cpp */; };
 		D4C9C6A0152F51430004DFBE /* data in Resources */ = {isa = PBXBuildFile; fileRef = D4C9C69F152F51430004DFBE /* data */; };
 		D4C9C6AA152F54B80004DFBE /* libboost_system.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D4C9C6A9152F54B80004DFBE /* libboost_system.dylib */; };
 		D4C9C6AC152F54C40004DFBE /* libboost_filesystem.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D4C9C6AB152F54C40004DFBE /* libboost_filesystem.dylib */; };
@@ -81,6 +83,8 @@
 		D41993A8152CDABE00C633BF /* json_spirit_writer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = json_spirit_writer.cpp; sourceTree = "<group>"; };
 		D41993A9152CDABE00C633BF /* json_spirit_writer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_spirit_writer.h; sourceTree = "<group>"; };
 		D41993AA152CDABE00C633BF /* json_spirit_writer_template.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = json_spirit_writer_template.h; sourceTree = "<group>"; };
+		D4B8781515319B2F00D9420D /* Tower.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Tower.cpp; sourceTree = "<group>"; };
+		D4B8781615319B2F00D9420D /* Tower.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tower.h; sourceTree = "<group>"; };
 		D4C9C69F152F51430004DFBE /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; path = data; sourceTree = "<group>"; };
 		D4C9C6A9152F54B80004DFBE /* libboost_system.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_system.dylib; path = ../../boost_clang/stage/lib/libboost_system.dylib; sourceTree = "<group>"; };
 		D4C9C6AB152F54C40004DFBE /* libboost_filesystem.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libboost_filesystem.dylib; path = ../../boost_clang/stage/lib/libboost_filesystem.dylib; sourceTree = "<group>"; };
@@ -105,11 +109,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D4C9C6AA152F54B80004DFBE /* libboost_system.dylib in Frameworks */,
-				D4C9C6AC152F54C40004DFBE /* libboost_filesystem.dylib in Frameworks */,
+				D4B8781815319F6D00D9420D /* SFML.framework in Frameworks */,
 				A01FB6CE0F07CFF2000AAC7B /* sfml-graphics.framework in Frameworks */,
 				A01FB6CF0F07CFF2000AAC7B /* sfml-system.framework in Frameworks */,
 				A01FB6D00F07CFF2000AAC7B /* sfml-window.framework in Frameworks */,
+				D4C9C6AA152F54B80004DFBE /* libboost_system.dylib in Frameworks */,
+				D4C9C6AC152F54C40004DFBE /* libboost_filesystem.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +178,8 @@
 				D4CC8B88152CD50F0024B826 /* pch.cpp */,
 				D4CC8B89152CD50F0024B826 /* pch.h */,
 				D4CC8B8A152CD50F0024B826 /* State.h */,
+				D4B8781515319B2F00D9420D /* Tower.cpp */,
+				D4B8781615319B2F00D9420D /* Tower.h */,
 				D4CC8B8B152CD50F0024B826 /* Utility.cpp */,
 				D4CC8B8C152CD50F0024B826 /* Utility.h */,
 			);
@@ -268,6 +275,7 @@
 				D4199398152CDA7A00C633BF /* AnimSprite.cpp in Sources */,
 				D419939C152CDA8300C633BF /* pch.cpp in Sources */,
 				D4199399152CDA7D00C633BF /* Enemy.cpp in Sources */,
+				D4B878191531A25000D9420D /* Tower.cpp in Sources */,
 				D41993AB152CDABE00C633BF /* json_spirit_reader.cpp in Sources */,
 				D41993AC152CDABE00C633BF /* json_spirit_value.cpp in Sources */,
 				D41993AD152CDABE00C633BF /* json_spirit_writer.cpp in Sources */,
@@ -309,6 +317,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COPY_PHASE_STRIP = NO;
@@ -329,9 +338,10 @@
 				);
 				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				LLVM_LTO = YES;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-v";
 				PRODUCT_NAME = Drachen;
 				RUN_CLANG_STATIC_ANALYZER = YES;
+				VALID_ARCHS = "x86_64 i386";
 			};
 			name = Debug;
 		};
@@ -339,6 +349,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				COPY_PHASE_STRIP = YES;
@@ -358,9 +369,10 @@
 				);
 				LINKER_DISPLAYS_MANGLED_NAMES = YES;
 				LLVM_LTO = YES;
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-v";
 				PRODUCT_NAME = Drachen;
 				RUN_CLANG_STATIC_ANALYZER = YES;
+				VALID_ARCHS = "x86_64 i386";
 				ZERO_LINK = NO;
 			};
 			name = Release;
