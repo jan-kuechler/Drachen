@@ -87,6 +87,7 @@ void Map::UpdateOverlay()
 {
 	const Vector2f p1(0, 0);
 	const Vector2f p2(static_cast<float>(blockSize), static_cast<float>(blockSize));
+
 	for (size_t x = 0; x < width; ++x) {
 		for (size_t y = 0; y < height; ++y) {
 			if (grid[x][y])
