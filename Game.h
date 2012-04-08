@@ -23,9 +23,6 @@ class Game
 	std::vector<Tower> towers;
 
 	Map map;
-
-	bool overlay;
-
 public:
 	Game(RenderWindow& win, GlobalStatus& gs);
 

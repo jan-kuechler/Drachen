@@ -11,8 +11,6 @@ Game::Game(RenderWindow& win, GlobalStatus& gs)
 void Game::Reset()
 {
 	LoadFromFile(map, LEVEL("level.js"));
-	overlay = false;
-	map.DrawOverlay(false);
 
 	LoadFromFile(imgFoe, "data/models/test.png");
 	foe.SetImage(imgFoe);
@@ -52,12 +50,20 @@ void Game::Run()
 		}
 
 		if (event.Type == Event::KeyReleased) {
-			if (event.Key.Code == Key::G)
+			switch (event.Key.Code) {
+			case Key::G:
 				foe.SetTarget(24, 17);
-			if (event.Key.Code == Key::O)
-				map.DrawOverlay(overlay = !overlay);
-			if (event.Key.Code == Key::T)
+				break;
+			case Key::T:
 				AddTower();
+				break;
+			case Key::O:
+				map.ToggleOverlay();
+				break;
+			case Key::F3:
+				map.DebugToggleTowersAnywhere();
+				break;
+			}
 		}
 	}
 

@@ -8,6 +8,8 @@ namespace fs = boost::filesystem;
 namespace js = json_spirit;
 
 namespace sf {
+
+	// Compare operator for the Map::towerPlaces and Map::towers sets.
 	bool operator < (const sf::Vector2i& a, const sf::Vector2i& b)
 	{
 		if (a.x == b.x) {
@@ -16,6 +18,10 @@ namespace sf {
 		return a.x < b.x;
 	}
 }
+
+Map::Map()
+: drawOverlay(false), dbgTowersAnywhere(false)
+{ }
 
 bool Map::LoadFromFile(const std::string& fileName)
 {
@@ -74,7 +80,7 @@ void Map::PlaceTower(const Vector2i& tpos)
 
 bool Map::MayPlaceTower(const Vector2i& tpos) const
 {
-	return (towerPlaces.find(tpos) != towerPlaces.end()) && (towers.find(tpos) == towers.end());
+	return dbgTowersAnywhere || ((towerPlaces.find(tpos) != towerPlaces.end()) && (towers.find(tpos) == towers.end()));
 }
 
 void Map::UpdateOverlay()

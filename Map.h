@@ -21,7 +21,11 @@ private:
 
 	sf::Shape blockGreen, blockRed, blockBlue;
 	std::vector<std::vector<Shape> > overlay;
+
+	bool dbgTowersAnywhere;
 public:
+	Map();
+
 	bool LoadFromFile(const std::string& fileName);
 
 	const Grid& GetGrid() const
@@ -46,9 +50,9 @@ public:
 
 	void Draw(RenderTarget& target);
 
-	void DrawOverlay(bool doDraw)
+	void ToggleOverlay()
 	{
-		drawOverlay = doDraw;
+		drawOverlay = !drawOverlay;
 	}
 
 	bool MayPlaceTower(const Vector2i& tpos) const;
@@ -77,6 +81,11 @@ public:
 	Vector2i PostionToTowerPos(const Vector2f& pos) const
 	{
 		return Vector2i(static_cast<int>(pos.x / (2*blockSize)), static_cast<int>(pos.y / (2*blockSize)));
+	}
+
+	void DebugToggleTowersAnywhere()
+	{
+		dbgTowersAnywhere = !dbgTowersAnywhere;
 	}
 
 private:
