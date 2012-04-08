@@ -20,7 +20,7 @@ private:
 	bool drawOverlay;
 
 	sf::Shape blockGreen, blockRed, blockBlue;
-	std::vector<std::vector<Shape*> > overlay;
+	std::vector<std::vector<Shape> > overlay;
 public:
 	bool LoadFromFile(const std::string& fileName);
 

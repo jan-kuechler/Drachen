@@ -62,9 +62,6 @@ bool Map::LoadFromFile(const std::string& fileName)
 		towerPlaces.insert(Vector2i(p[0].get_int(), p[1].get_int()));
 	}
 
-	blockGreen = Shape::Rectangle(0, 0, blockSize, blockSize, Color(0, 255, 0, 64));
-	blockRed   = Shape::Rectangle(0, 0, blockSize, blockSize, Color(255, 0, 0, 64));
-	blockBlue  = Shape::Rectangle(0, 0, blockSize, blockSize, Color(0, 0, 255, 64));
 	UpdateOverlay();
 
 	return true;
@@ -73,7 +70,6 @@ bool Map::LoadFromFile(const std::string& fileName)
 void Map::PlaceTower(const Vector2i& tpos)
 {
 	towers.insert(tpos);
-	UpdateOverlay();
 }
 
 bool Map::MayPlaceTower(const Vector2i& tpos) const
@@ -86,11 +82,13 @@ void Map::UpdateOverlay()
 	for (size_t x = 0; x < width; ++x) {
 		for (size_t y = 0; y < height; ++y) {
 			if (grid[x][y])
-				overlay[x][y] = &blockGreen;
+				overlay[x][y] = Shape::Rectangle(0, 0, blockSize, blockSize, Color(0, 255, 0, 64));
 			else if (MayPlaceTower(BlockToTowerPos(Vector2i(x, y))))
-				overlay[x][y] = &blockBlue;
+				overlay[x][y] = Shape::Rectangle(0, 0, blockSize, blockSize, Color(0, 0, 255, 64));
 			else
-				overlay[x][y] = &blockRed;
+				overlay[x][y] = Shape::Rectangle(0, 0, blockSize, blockSize, Color(255, 0, 0, 64));
+
+			overlay[x][y].SetPosition(x * blockSize, y * blockSize);
 		}
 	}
 }
@@ -102,8 +100,7 @@ void Map::Draw(RenderTarget& target)
 	if (drawOverlay) {
 		for (size_t x = 0; x < width; ++x) {
 			for (size_t y = 0; y < height; ++y) {
-				overlay[x][y]->SetPosition(x * blockSize, y * blockSize);
-				target.Draw(*overlay[x][y]);
+				target.Draw(overlay[x][y]);
 			}
 		}
 	}
