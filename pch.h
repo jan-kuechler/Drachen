@@ -1,4 +1,4 @@
-#ifndef __APPLE__
+#ifdef WIN32
 #pragma once
 #endif
 #ifndef PCH_H
@@ -23,6 +23,8 @@
 #include <boost/lexical_cast.hpp>
 
 #include <boost/filesystem.hpp>
+
+#include <boost/range/algorithm.hpp>
 
 // SFML Header
 #include <SFML/System.hpp>

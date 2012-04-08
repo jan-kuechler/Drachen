@@ -10,11 +10,5 @@ void LoadFromFile(Res& res, const std::string& fileName)
 		throw std::runtime_error("Failed to open '" + fileName + "'");
 	}
 }
-#ifdef __APPLE__
-#include "Tower.h"
-inline bool sorttower(const Tower& a, const Tower& b){
-    return a.GetPosition().y <b.GetPosition().y;
-}
-#endif
 
 #endif //DEFAULT_EVENT_HANDLER_H

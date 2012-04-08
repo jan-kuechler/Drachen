@@ -29,6 +29,13 @@ void Game::Reset()
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
 }
 
+// Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
+// later, so the overlap is displayed correctly.
+static bool CompTowerY(const Tower& a, const Tower& b)
+{
+	return a.GetPosition().y < b.GetPosition().y;
+}
+
 void Game::Run()
 {
 	Event event;
@@ -39,13 +46,7 @@ void Game::Run()
 			if (activeTower->IsPlaced()) {
 				map.PlaceTower(map.PostionToTowerPos(activeTower->GetPosition()));
 				activeTower = 0;
-#ifdef __APPLE__
-                std::sort(towers.begin(), towers.end(),sorttower);
-#else
-				std::sort(towers.begin(), towers.end(), [](const Tower& a, const Tower& b) {
-					return a.GetPosition().y < b.GetPosition().y;
-				});
-#endif
+				boost::sort(towers, CompTowerY);
 			}
 			continue;
 		}
