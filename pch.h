@@ -1,4 +1,6 @@
+#ifndef __APPLE__
 #pragma once
+#endif
 #ifndef PCH_H
 #define PCH_H
 
