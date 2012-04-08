@@ -5,6 +5,11 @@
 	
 	"block-size" : 25,
 	
+	"tower-places" : [
+		[ 4, 6],
+		[ 5, 6]
+	],
+	
 	"grid" : [
 		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
 		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],

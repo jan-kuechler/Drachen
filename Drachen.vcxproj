@@ -91,6 +91,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Tower.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="json_spirit\json_spirit_writer.h" />
     <ClInclude Include="json_spirit\json_spirit_writer_template.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Tower.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlobalStatus.h" />

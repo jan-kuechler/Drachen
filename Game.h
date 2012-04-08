@@ -5,6 +5,7 @@
 #include "State.h"
 #include "Enemy.h"
 #include "Map.h"
+#include "Tower.h"
 
 class Game
 {
@@ -16,6 +17,10 @@ class Game
 
 	Image imgFoe;
 	Enemy foe;
+
+	Image imgTower;
+	Tower* activeTower;
+	std::vector<Tower> towers;
 
 	Map map;
 
@@ -35,6 +40,8 @@ private:
 	{
 		return "data/levels/" + status.level + "/" + what;
 	}
+
+	void AddTower();
 };
 
 #endif //GAME_H
