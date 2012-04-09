@@ -30,15 +30,11 @@ void Projectile::Update(float elapsed)
 		return;
 	}
 
-	Vector2f prevPos = GetPosition();
-	Move(dir * (speed / r) * elapsed);
-
-	auto way = GetPosition() - prevPos;
-	way /= norm(way);
-	float angle = acosf(dot(LEFT, way));
-
-	if (way.y < 0)
+	dir /= r;
+	float angle = acosf(dot(LEFT, dir));
+	if (dir.y < 0)
 		angle = -angle;
 
+	Move(dir * speed * elapsed);
 	SetRotation(angle * 180/PI);
 }
