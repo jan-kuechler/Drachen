@@ -1,0 +1,50 @@
+######
+##  Default configuration
+##
+## Modify this configuration by creating a local.config file and resetting the
+## variables there. See local.config.sample for an example and a description
+## of all used variables.
+
+CXX = /usr/local/bin/g++
+CPPFLAGS +=  -Iinclude -Ijson_spirit -std=c++11 -O4
+CPPFLAGS_DEBUG += -g
+CPPFLAGS_RELEASE += -O2 -DNDEBUG
+
+LD = /usr/local/bin/g++
+LDFLAGS = 
+LDFLAGS_DEBUG +=
+LDFLAGS_RELEASE += 
+LIBS = -framework SFML -framework sfml-graphics -framework sfml-system -framework sfml-window 
+
+DIST_NAME = $(PROG_NAME)-$(PROG_VERSION)
+DIST_CONTENT = $(TARGET) $(DIST_FILES)
+
+
+
+SRCS = $(shell find . -name '*.[cS]')
+SRCS += $(shell find . -name '*.cpp')
+SRCS += $(shell find json_spirit -name '*.cpp')
+OBJS = $(addsuffix .o,$(basename $(SRCS)))
+
+SRC_FILES = $(wildcard $(SRC)/*.cpp)
+OBJ_FILES = $(patsubst $(SRC)/%.cpp,$(BUILD)/%.o,$(SRC_FILES))
+DEP_FILES = $(patsubst $(SRC)/%.cpp,$(BUILD)/%.d,$(SRC_FILES))
+
+
+BOOSTDIR = -I/Users/wutzi/src/boost_1_49_0/
+BOOSTLIBSDIR = -L/Users/wutzi/src/boost_1_49_0/stage/lib/
+BOOSTLIBS =  -lboost_system -lboost_filesystem 
+
+######
+##  Targets
+
+Drachen: $(OBJS)
+	$(LD) $(BOOSTLIBSDIR) $(BOOSTLIBS) $(LDFLAGS) $(LIBS)  -o $@ $^
+
+%.o: %.cpp
+	$(CXX) $(CPPFLAGS) $(BOOSTDIR) $(ROOTINC) $(ROOTCFLAGS) -c -o $@ $^
+
+clean:
+	rm -f $(OBJS)
+.PHONY: clean
+
