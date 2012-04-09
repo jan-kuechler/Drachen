@@ -3,7 +3,9 @@
 
 int main(int argc, char **argv)
 {
+#ifndef _DEBUG
 	try {
+#endif
 		GlobalStatus status;
 		status.level = "test";
 
@@ -34,12 +36,13 @@ int main(int argc, char **argv)
 				break;
 			}
 		}
+#ifndef _DEBUG
 	}
 	catch (std::runtime_error err) {
 		std::ofstream out("crash.log");
 		out << err.what() << "\n";
 	}
+#endif
     
-
 	return 0;
 }
