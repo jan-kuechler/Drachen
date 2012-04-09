@@ -1,10 +1,12 @@
 # Visual Studio directories and files
 Debug/
 Release/
+Profile/
 ipch/
 *.sdf
 *.suo
 *.vcxproj.*
+*.vsp
 
 *.exe
 *.dll
