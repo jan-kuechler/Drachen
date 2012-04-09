@@ -54,8 +54,6 @@ void Game::Run()
 			case Key::F3:
 				map.DebugToggleTowersAnywhere();
 				break;
-            default:
-                break;
 			}
 		}
 	}
