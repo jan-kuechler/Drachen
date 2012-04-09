@@ -11,7 +11,7 @@ Image Tower::projectileImg;
 bool Tower::imgLoaded = false;
 
 Tower::Tower(const Map* map, std::vector<Enemy>* enemies, std::vector<Projectile>* projectiles)
-: map(map), enemies(enemies), projectiles(projectiles), placed(false), validPosition(false), range(4.0f * map->GetBlockSize()), cooldown(1.0f)
+: map(map), enemies(enemies), projectiles(projectiles), placed(false), stopPlace(false), validPosition(false), range(4.0f * map->GetBlockSize()), cooldown(1.0f)
 { 
 	SetColor(ColorInvalidPosition);
 
@@ -22,9 +22,10 @@ Tower::Tower(const Map* map, std::vector<Enemy>* enemies, std::vector<Projectile
 		imgLoaded = true;
 	}
 }
+
 bool Tower::HandleEvent(Event& event)
 {
-	if (placed)
+	if (placed || stopPlace)
 		return false;
 
 	if (event.Type == Event::MouseMoved) {
@@ -43,9 +44,14 @@ bool Tower::HandleEvent(Event& event)
 		}
 		rangeCircle.SetPosition(GetPosition());
 	}
-	else if (event.Type == Event::MouseButtonPressed && validPosition && event.MouseButton.Button == Mouse::Left) {
-		placed = true;
-		SetColor(ColorPlaced);
+	else if (event.Type == Event::MouseButtonPressed && event.MouseButton.Button == Mouse::Left) {
+		if (validPosition) {
+			placed = true;
+			SetColor(ColorPlaced);
+		}
+		else {
+			stopPlace = true;
+		}
 	}
 	else {
 		return false;

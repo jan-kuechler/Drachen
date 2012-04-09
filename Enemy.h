@@ -16,6 +16,7 @@ class Enemy : public AnimSprite
 	size_t blockSize;
 
 	size_t numProjectiles;
+
 public:
 	Enemy(const Map* map);
 

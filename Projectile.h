@@ -10,6 +10,7 @@ class Projectile : public AnimSprite
 
 	float speed;
 	bool hit;
+
 public:
 	Projectile(Enemy* target);
 

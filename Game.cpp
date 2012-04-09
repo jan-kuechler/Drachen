@@ -33,6 +33,10 @@ void Game::Run()
 				activeTower = 0;
 				boost::sort(towers, CompTowerY);
 			}
+			else if (activeTower->StopPlace()) {
+				towers.pop_back();
+				activeTower = 0;
+			}
 			continue;
 		}
 
