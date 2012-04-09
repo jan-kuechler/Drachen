@@ -3,7 +3,7 @@
 #include "Utility.h"
 
 Enemy::Enemy(const Map* map)
-: map(map), numProjectiles(0), life(10), initialLife(life), hpBarGreen(life * 3.0f, 2.0f), hpBarRed(0.0f, 2.0f)
+: map(map), numProjectiles(0), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f)
 {
 	hpBarGreen.SetColor(Color::Green);
 	hpBarRed.SetColor(Color::Red);
@@ -196,15 +196,11 @@ void Enemy::FindPath(size_t tgtX, size_t tgtY)
 
 	// reconstruct the path from the goal node, following the parent pointers
 	Node *n = open.front();
-	std::ofstream out("path.txt");
 	while (n) {
-		out << n->x << "\t" << n->y << "\n";
 		path.push(map->BlockToPosition(Vector2i(n->x, n->y)));
 		n = n->parent;
 	}
-	out.close();
 
-	for (size_t i=0; i < allNodes.size(); ++i) {
+	for (size_t i=0; i < allNodes.size(); ++i)
 		delete allNodes[i];
-	}
 }

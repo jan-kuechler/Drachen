@@ -54,8 +54,11 @@ public:
 	void Hit(int strength)
 	{
 		life -= strength;
-		hpBarGreen.SetWidth(life * 3.0f);
-		hpBarRed.SetWidth((initialLife - life) * 3.0f);
+
+		float greenPct = static_cast<float>(life) / initialLife;
+
+		hpBarGreen.SetWidth(greenPct * 30);
+		hpBarRed.SetWidth((1 - greenPct) * 30);
 	}
 
 	bool IsDead() const
