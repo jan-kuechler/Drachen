@@ -17,7 +17,7 @@ class Game
 	Sprite bg;
 
 	Image imgFoe;
-	std::vector<Enemy> enemies;
+	std::vector<std::shared_ptr<Enemy>> enemies;
 
 	Image imgTower;
 	Tower* activeTower;

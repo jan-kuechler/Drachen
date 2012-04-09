@@ -6,13 +6,13 @@
 
 class Projectile : public AnimSprite
 {
-	Enemy* target;
+	std::shared_ptr<Enemy> target;
 
 	float speed;
 	bool hit;
 
 public:
-	Projectile(Enemy* target);
+	Projectile(std::shared_ptr<Enemy> target);
 
 	void SetImage(const Image& img) /* override */;
 

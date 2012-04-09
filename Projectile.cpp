@@ -6,7 +6,7 @@ static const float HIT_DISTANCE = 10.f;
 
 static const Vector2f LEFT(-1.0f, 0.0f);
 
-Projectile::Projectile(Enemy* target)
+Projectile::Projectile(std::shared_ptr<Enemy> target)
 : speed(100.f), target(target), hit(false)
 {
 	assert(target);
@@ -32,6 +32,7 @@ void Projectile::Update(float elapsed)
 		hit = true;
 		target->Hit(2);
 		target->ReleaseProjectile();
+		target = 0;
 		return;
 	}
 

@@ -9,7 +9,7 @@
 class Tower : public AnimSprite
 {
 	const Map* map;
-	std::vector<Enemy>* enemies;
+	std::vector<std::shared_ptr<Enemy>>* enemies;
 	std::vector<Projectile>* projectiles;
 
 	static Image projectileImg;
@@ -26,7 +26,7 @@ class Tower : public AnimSprite
 	float cooldown;
 
 public:
-	Tower(const Map* map, std::vector<Enemy>* enemies, std::vector<Projectile>* projectiles);
+	Tower(const Map* map, std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles);
 
 	bool HandleEvent(Event& event);
 

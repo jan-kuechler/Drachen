@@ -18,4 +18,3 @@ bool DefaultHandleEvent(RenderWindow& win, Event& event)
 		return false;
 	}
 }
-

@@ -9,6 +9,10 @@ Game::Game(RenderWindow& win, GlobalStatus& gs)
 
 void Game::Reset()
 {
+	enemies.clear();
+	towers.clear();
+	projectiles.clear();
+
 	LoadFromFile(map, LEVEL("level.js"));
 	LoadFromFile(imgFoe, "data/models/test.png");
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
@@ -21,9 +25,9 @@ static bool CompTowerY(const Tower& a, const Tower& b)
 	return a.GetPosition().y < b.GetPosition().y;
 }
 
-static bool ShouldRemoveEnemy(const Enemy& e)
+static bool ShouldRemoveEnemy(const std::shared_ptr<Enemy>& e)
 {
-	return e.IsDead() && e.ProjectileCount() == 0;
+	return e->IsDead() && e->ProjectileCount() == 0;
 }
 
 void Game::Run()
@@ -66,7 +70,7 @@ void Game::Run()
 	float elapsed = window.GetFrameTime();
 
 	for (auto it = enemies.begin(); it != enemies.end(); ++it)
-		it->Update(elapsed);
+		(*it)->Update(elapsed);
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		it->Update(elapsed);
 	for (auto it = towers.begin(); it != towers.end(); ++it)
@@ -82,8 +86,8 @@ void Game::Run()
 		window.Draw(*it);
 	}
 	for (auto it = enemies.begin(); it != enemies.end(); ++it) {
-		it->DrawHpBar(window);
-		window.Draw(*it);
+		(*it)->DrawHpBar(window);
+		window.Draw(*(*it));
 	}
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		window.Draw(*it);
@@ -119,17 +123,17 @@ void Game::AddTower()
 
 void Game::AddEnemy()
 {
-	Enemy e(&map);
-	e.SetImage(imgFoe);
-	e.SetOffset(1);
-	e.SetSize(50, 50);
-	e.SetFrameTime(.2f);
-	e.SetNumFrames(4);
+	std::shared_ptr<Enemy>e(new Enemy(&map));
+	e->SetImage(imgFoe);
+	e->SetOffset(1);
+	e->SetSize(50, 50);
+	e->SetFrameTime(.2f);
+	e->SetNumFrames(4);
 
-	e.SetPosition(map.BlockToPosition(Vector2i(0, 7)));
+	e->SetPosition(map.BlockToPosition(Vector2i(0, 7)));
 
-	e.SetSpeed(50);
-	e.SetTarget(24, 17);
+	e->SetSpeed(50);
+	e->SetTarget(24, 17);
 
 	enemies.push_back(e);
 }

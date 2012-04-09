@@ -10,7 +10,7 @@ Color Tower::ColorRangeCircle(64, 255, 64, 128);
 Image Tower::projectileImg;
 bool Tower::imgLoaded = false;
 
-Tower::Tower(const Map* map, std::vector<Enemy>* enemies, std::vector<Projectile>* projectiles)
+Tower::Tower(const Map* map, std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles)
 : map(map), enemies(enemies), projectiles(projectiles), placed(false), stopPlace(false), validPosition(false), range(4.0f * map->GetBlockSize()), cooldown(1.0f)
 { 
 	SetColor(ColorInvalidPosition);
@@ -75,8 +75,8 @@ void Tower::Update(float elapsed)
 
 	if (cooldown <= 0) {
 		for (auto it = enemies->begin(); it != enemies->end(); ++it) {
-			if (!it->IsDead() && norm(it->GetPosition() - GetPosition()) <= range) {
-				Projectile p(&(*it));
+			if (!(*it)->IsDead() && norm((*it)->GetPosition() - GetPosition()) <= range) {
+				Projectile p(*it);
 				p.SetImage(projectileImg);
 				p.SetPosition(GetPosition());
 				projectiles->push_back(p);
