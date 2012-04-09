@@ -38,6 +38,16 @@ public:
 	}
 
 	void Update(float elapsed);
+
+	size_t GetWidth() const
+	{
+		return width;
+	}
+
+	size_t GetHeight() const
+	{
+		return height;
+	}
 };
 
 #endif //ANIM_SPRITE_H

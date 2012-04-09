@@ -130,6 +130,7 @@
     </ClCompile>
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Projectile.cpp" />
+    <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Tower.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="json_spirit\json_spirit_writer_template.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Projectile.h" />
+    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Tower.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Game.h" />

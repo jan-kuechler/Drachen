@@ -21,6 +21,11 @@ static bool CompTowerY(const Tower& a, const Tower& b)
 	return a.GetPosition().y < b.GetPosition().y;
 }
 
+static bool ShouldRemoveEnemy(const Enemy& e)
+{
+	return e.IsDead() && e.ProjectileCount() == 0;
+}
+
 void Game::Run()
 {
 	Event event;
@@ -68,6 +73,7 @@ void Game::Run()
 		it->Update(elapsed);
 
 	projectiles.erase(boost::remove_if(projectiles, boost::bind(&Projectile::DidHit, _1)), projectiles.end());
+	enemies.erase(boost::remove_if(enemies, ShouldRemoveEnemy), enemies.end());
 
 	window.Clear();
 	map.Draw(window);
@@ -75,8 +81,10 @@ void Game::Run()
 		it->DrawRangeCircle(window);
 		window.Draw(*it);
 	}
-	for (auto it = enemies.begin(); it != enemies.end(); ++it)
+	for (auto it = enemies.begin(); it != enemies.end(); ++it) {
+		it->DrawHpBar(window);
 		window.Draw(*it);
+	}
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		window.Draw(*it);
 

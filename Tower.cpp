@@ -61,7 +61,7 @@ bool Tower::HandleEvent(Event& event)
 
 void Tower::DrawRangeCircle(RenderTarget& target)
 {
-	//if (!placed)
+	if (!placed)
 		target.Draw(rangeCircle);
 }
 
@@ -75,7 +75,7 @@ void Tower::Update(float elapsed)
 
 	if (cooldown <= 0) {
 		for (auto it = enemies->begin(); it != enemies->end(); ++it) {
-			if (norm(it->GetPosition() - GetPosition()) <= range) {
+			if (!it->IsDead() && norm(it->GetPosition() - GetPosition()) <= range) {
 				Projectile p(&(*it));
 				p.SetImage(projectileImg);
 				p.SetPosition(GetPosition());

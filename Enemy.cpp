@@ -3,11 +3,17 @@
 #include "Utility.h"
 
 Enemy::Enemy(const Map* map)
-: map(map), numProjectiles(0)
-{ }
+: map(map), numProjectiles(0), life(10), initialLife(life), hpBarGreen(life * 3.0f, 2.0f), hpBarRed(0.0f, 2.0f)
+{
+	hpBarGreen.SetColor(Color::Green);
+	hpBarRed.SetColor(Color::Red);
+}
 
 void Enemy::Update(float elapsed)
 {
+	if (IsDead())
+		return;
+
 	AnimSprite::Update(elapsed);
 
 	if (!path.empty()) {
@@ -26,6 +32,14 @@ void Enemy::Update(float elapsed)
 
 		Move(dir * speed * elapsed);
 	}
+}
+
+void Enemy::DrawHpBar(RenderTarget& target)
+{
+	hpBarGreen.SetPosition(GetPosition() + Vector2f((hpBarGreen.GetWidth() + hpBarRed.GetWidth()) / -2.0f, -static_cast<float>(GetHeight()) - 5.0f));
+	hpBarRed.SetPosition(hpBarGreen.GetPosition() + Vector2f(hpBarGreen.GetWidth(), 0));
+	target.Draw(hpBarGreen);
+	target.Draw(hpBarRed);
 }
 
 void Enemy::SetTarget(size_t x, size_t y)

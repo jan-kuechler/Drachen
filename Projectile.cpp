@@ -30,6 +30,7 @@ void Projectile::Update(float elapsed)
 	float r = norm(dir);
 	if (r < HIT_DISTANCE) {
 		hit = true;
+		target->Hit(2);
 		target->ReleaseProjectile();
 		return;
 	}

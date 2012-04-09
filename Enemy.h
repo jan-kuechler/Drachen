@@ -3,6 +3,7 @@
 
 #include "AnimSprite.h"
 #include "Map.h"
+#include "Rectangle.h"
 
 class Enemy : public AnimSprite
 {
@@ -16,6 +17,9 @@ class Enemy : public AnimSprite
 	size_t blockSize;
 
 	size_t numProjectiles;
+
+	int life, initialLife;
+	sfext::Rectangle hpBarGreen, hpBarRed;
 
 public:
 	Enemy(const Map* map);
@@ -46,6 +50,20 @@ public:
 	{
 		return numProjectiles;
 	}
+
+	void Hit(int strength)
+	{
+		life -= strength;
+		hpBarGreen.SetWidth(life * 3.0f);
+		hpBarRed.SetWidth((initialLife - life) * 3.0f);
+	}
+
+	bool IsDead() const
+	{
+		return life <= 0;
+	}
+
+	void DrawHpBar(RenderTarget& target);
 
 private:
 	void FindPath(size_t tgtX, size_t tgtY);
