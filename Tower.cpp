@@ -67,6 +67,9 @@ void Tower::DrawRangeCircle(RenderTarget& target)
 
 void Tower::Update(float elapsed)
 {
+	if (!placed)
+		return;
+
 	if (cooldown > 0)
 		cooldown -= elapsed;
 
@@ -74,7 +77,6 @@ void Tower::Update(float elapsed)
 		for (auto it = enemies->begin(); it != enemies->end(); ++it) {
 			if (norm(it->GetPosition() - GetPosition()) <= range) {
 				Projectile p(&(*it));
-				//p.SetSize(projectileImg.GetHeight(), projectileImg.GetWidth());
 				p.SetImage(projectileImg);
 				p.SetPosition(GetPosition());
 				projectiles->push_back(p);
