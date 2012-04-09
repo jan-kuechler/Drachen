@@ -2,6 +2,10 @@
 #include "Enemy.h"
 #include "Utility.h"
 
+Enemy::Enemy(const Map* map)
+: map(map), numProjectiles(0)
+{ }
+
 void Enemy::Update(float elapsed)
 {
 	AnimSprite::Update(elapsed);
@@ -61,13 +65,10 @@ struct Node
 	}
 };
 
-struct NodePtrComp
+static bool NodePtrComp(const Node* lhs, const Node *rhs)
 {
-	bool operator()(const Node* lhs, const Node *rhs) const
-	{
-		return lhs->f > rhs->f;
-	}
-};
+	return lhs->f > rhs->f;
+}
 
 struct NodeEqPos
 {
@@ -111,7 +112,6 @@ void Enemy::FindPath(size_t tgtX, size_t tgtY)
 	while (!path.empty())
 		path.pop();
 
-	NodePtrComp comp;
 	std::vector<Node*> allNodes; // remember all nodes to free them at the end
 	std::vector<Node*> open, closed;
 
@@ -123,13 +123,13 @@ void Enemy::FindPath(size_t tgtX, size_t tgtY)
 
 	// open is a heap, sorted by (cost-to-reach + expected-distance-to-goal)
 	open.push_back(start);
-	boost::push_heap(open, comp);
+	boost::push_heap(open, NodePtrComp);
 
 	while (!open.empty() && *open.front() != *goal) {
 		Node *cur = open.front();
 
 		// remove the current node from the open heap
-		boost::pop_heap(open, comp);
+		boost::pop_heap(open, NodePtrComp);
 		open.pop_back();
 
 		// and find all neighbors
@@ -167,11 +167,11 @@ void Enemy::FindPath(size_t tgtX, size_t tgtY)
 			}
 			if (oit != open.end()) {
 				open.erase(oit);
-				boost::make_heap(open, comp);
+				boost::make_heap(open, NodePtrComp);
 			}
 
 			open.push_back(suc);
-			boost::push_heap(open, comp);
+			boost::push_heap(open, NodePtrComp);
 		}
 
 		closed.push_back(cur);

@@ -9,13 +9,13 @@
 class Tower : public AnimSprite
 {
 	const Map* map;
-	const std::vector<Enemy>* enemies;
+	std::vector<Enemy>* enemies;
 	std::vector<Projectile>* projectiles;
 
 	static Image projectileImg;
 	static bool imgLoaded;
 
-	bool placed;
+	bool placed, stopPlace;
 	bool validPosition;
 
 	float range;
@@ -24,14 +24,20 @@ class Tower : public AnimSprite
 	Shape rangeCircle;
 
 	float cooldown;
+
 public:
-	Tower(const Map* map, const std::vector<Enemy>* enemies, std::vector<Projectile>* projectiles);
+	Tower(const Map* map, std::vector<Enemy>* enemies, std::vector<Projectile>* projectiles);
 
 	bool HandleEvent(Event& event);
 
 	bool IsPlaced() const
 	{
 		return placed;
+	}
+
+	bool StopPlace() const
+	{
+		return stopPlace;
 	}
 
 	void DrawRangeCircle(RenderTarget& target);

@@ -10,21 +10,7 @@ Game::Game(RenderWindow& win, GlobalStatus& gs)
 void Game::Reset()
 {
 	LoadFromFile(map, LEVEL("level.js"));
-
 	LoadFromFile(imgFoe, "data/models/test.png");
-	foe.SetImage(imgFoe);
-	foe.SetOffset(1);
-	foe.SetSize(50, 50);
-	foe.SetFrameTime(.2f);
-	foe.SetNumFrames(4);
-
-	foe.SetMap(&map);
-	foe.SetPosition(map.BlockToPosition(Vector2i(0, 7)));
-
-	foe.SetSpeed(50);
-
-	enemies.push_back(foe);
-
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
 }
 
@@ -33,11 +19,6 @@ void Game::Reset()
 static bool CompTowerY(const Tower& a, const Tower& b)
 {
 	return a.GetPosition().y < b.GetPosition().y;
-}
-
-static bool ProjectileDidHit(const Projectile& p)
-{
-	return p.DidHit();
 }
 
 void Game::Run()
@@ -52,13 +33,17 @@ void Game::Run()
 				activeTower = 0;
 				boost::sort(towers, CompTowerY);
 			}
+			else if (activeTower->StopPlace()) {
+				towers.pop_back();
+				activeTower = 0;
+			}
 			continue;
 		}
 
 		if (event.Type == Event::KeyReleased) {
 			switch (event.Key.Code) {
 			case Key::G:
-				enemies[0].SetTarget(24, 17);
+				AddEnemy();
 				break;
 			case Key::T:
 				AddTower();
@@ -69,8 +54,6 @@ void Game::Run()
 			case Key::F3:
 				map.DebugToggleTowersAnywhere();
 				break;
-            default:
-                break;
 			}
 		}
 	}
@@ -84,7 +67,7 @@ void Game::Run()
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		it->Update(elapsed);
 
-	projectiles.erase(boost::remove_if(projectiles, ProjectileDidHit), projectiles.end());
+	projectiles.erase(boost::remove_if(projectiles, std::bind(&Projectile::DidHit, std::placeholders::_1)), projectiles.end());
 
 	window.Clear();
 	map.Draw(window);
@@ -124,4 +107,21 @@ void Game::AddTower()
 
 	towers.push_back(t);
 	activeTower = &towers.back();
+}
+
+void Game::AddEnemy()
+{
+	Enemy e(&map);
+	e.SetImage(imgFoe);
+	e.SetOffset(1);
+	e.SetSize(50, 50);
+	e.SetFrameTime(.2f);
+	e.SetNumFrames(4);
+
+	e.SetPosition(map.BlockToPosition(Vector2i(0, 7)));
+
+	e.SetSpeed(50);
+	e.SetTarget(24, 17);
+
+	enemies.push_back(e);
 }
