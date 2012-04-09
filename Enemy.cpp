@@ -2,6 +2,10 @@
 #include "Enemy.h"
 #include "Utility.h"
 
+Enemy::Enemy(const Map* map)
+: map(map), numProjectiles(0)
+{ }
+
 void Enemy::Update(float elapsed)
 {
 	AnimSprite::Update(elapsed);

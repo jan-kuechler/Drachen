@@ -10,7 +10,7 @@ Color Tower::ColorRangeCircle(64, 255, 64, 128);
 Image Tower::projectileImg;
 bool Tower::imgLoaded = false;
 
-Tower::Tower(const Map* map, const std::vector<Enemy>* enemies, std::vector<Projectile>* projectiles)
+Tower::Tower(const Map* map, std::vector<Enemy>* enemies, std::vector<Projectile>* projectiles)
 : map(map), enemies(enemies), projectiles(projectiles), placed(false), validPosition(false), range(4.0f * map->GetBlockSize()), cooldown(1.0f)
 { 
 	SetColor(ColorInvalidPosition);

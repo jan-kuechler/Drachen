@@ -17,7 +17,6 @@ class Game
 	Sprite bg;
 
 	Image imgFoe;
-	Enemy foe;
 	std::vector<Enemy> enemies;
 
 	Image imgTower;
@@ -44,6 +43,7 @@ private:
 	}
 
 	void AddTower();
+	void AddEnemy();
 };
 
 #endif //GAME_H

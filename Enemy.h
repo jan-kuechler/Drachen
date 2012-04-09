@@ -15,11 +15,9 @@ class Enemy : public AnimSprite
 	Path path;
 	size_t blockSize;
 
+	size_t numProjectiles;
 public:
-	void SetMap(const Map* m)
-	{
-		map = m;
-	}
+	Enemy(const Map* map);
 
 	void SetTarget(size_t x, size_t y);
 	void SetSpeed(float v)
@@ -28,6 +26,25 @@ public:
 	}
 
 	void Update(float elapsed) /*override*/;
+
+	void AddProjectile()
+	{
+		numProjectiles++;
+	}
+
+	void ReleaseProjectile()
+	{
+#ifdef _DEBUG
+		if (numProjectiles == 0)
+			throw std::runtime_error("ReleaseProjectiles() called, but numProjectiles is 0");
+#endif
+		numProjectiles--;
+	}
+
+	size_t ProjectileCount() const
+	{
+		return numProjectiles;
+	}
 
 private:
 	void FindPath(size_t tgtX, size_t tgtY);
