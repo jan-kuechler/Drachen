@@ -67,7 +67,7 @@ void Game::Run()
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		it->Update(elapsed);
 
-	projectiles.erase(boost::remove_if(projectiles, std::bind(&Projectile::DidHit, std::placeholders::_1)), projectiles.end());
+	projectiles.erase(boost::remove_if(projectiles, boost::bind(&Projectile::DidHit, _1)), projectiles.end());
 
 	window.Clear();
 	map.Draw(window);

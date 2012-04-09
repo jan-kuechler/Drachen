@@ -19,10 +19,9 @@
 
 // Boost Header
 #include <boost/lexical_cast.hpp>
-
 #include <boost/filesystem.hpp>
-
 #include <boost/range/algorithm.hpp>
+#include <boost/bind.hpp>
 
 // SFML Header
 #include <SFML/System.hpp>
