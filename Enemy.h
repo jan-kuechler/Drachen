@@ -21,10 +21,19 @@ class Enemy : public AnimSprite
 	int life, initialLife;
 	sfext::Rectangle hpBarGreen, hpBarRed;
 
+	Vector2i target;
+
+	bool hasTreasure;
+
 public:
 	Enemy(const Map* map);
 
-	void SetTarget(size_t x, size_t y);
+	void SetTarget(const Vector2i& pos);
+	Vector2i GetTarget() const
+	{
+		return target;
+	}
+
 	void SetSpeed(float v)
 	{
 		speed = v;
@@ -39,10 +48,7 @@ public:
 
 	void ReleaseProjectile()
 	{
-#ifdef _DEBUG
-		if (numProjectiles == 0)
-			throw std::runtime_error("ReleaseProjectiles() called, but numProjectiles is 0");
-#endif
+		assert(numProjectiles > 0);
 		numProjectiles--;
 	}
 
@@ -54,6 +60,8 @@ public:
 	void Hit(int strength)
 	{
 		life -= strength;
+		if (life < 0)
+			life = 0;
 
 		float greenPct = static_cast<float>(life) / initialLife;
 
@@ -64,6 +72,17 @@ public:
 	bool IsDead() const
 	{
 		return life <= 0;
+	}
+
+	bool HasTreasure() const
+	{
+		return hasTreasure;
+	}
+
+	bool PickupTreasure()
+	{
+		assert(!hasTreasure);
+		hasTreasure = true;
 	}
 
 	void DrawHpBar(RenderTarget& target);

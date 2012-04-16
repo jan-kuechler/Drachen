@@ -3,7 +3,7 @@
 #include "Utility.h"
 
 Enemy::Enemy(const Map* map)
-: map(map), numProjectiles(0), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f)
+: map(map), numProjectiles(0), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f), hasTreasure(false)
 {
 	hpBarGreen.SetColor(Color::Green);
 	hpBarRed.SetColor(Color::Red);
@@ -42,9 +42,10 @@ void Enemy::DrawHpBar(RenderTarget& target)
 	target.Draw(hpBarRed);
 }
 
-void Enemy::SetTarget(size_t x, size_t y)
+void Enemy::SetTarget(const Vector2i& pos)
 {
-	FindPath(x, y);
+	target = pos;
+	FindPath(pos.x, pos.y);
 }
 
 struct Node
