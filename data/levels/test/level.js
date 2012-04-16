@@ -10,6 +10,17 @@
 		[ 5, 6]
 	],
 	
+	"treasure-places" : [
+		[24, 15],
+		[24, 16],
+		[26, 18],
+		[27, 18],
+		[29, 15],
+		[29, 16]	
+	],
+	
+	"default-target": [26, 16],
+	
 	"grid" : [
 		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
 		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],

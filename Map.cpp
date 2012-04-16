@@ -68,6 +68,15 @@ bool Map::LoadFromFile(const std::string& fileName)
 		towerPlaces.insert(Vector2i(p[0].get_int(), p[1].get_int()));
 	}
 
+	js::mArray& trp = rootObj["treasure-places"].get_array();
+	for (size_t i = 0; i < trp.size(); ++i) {
+		js::mArray& p = trp[i].get_array();
+		treasurePlaces.push_back(Vector2i(p[0].get_int(), p[1].get_int()));
+	}
+
+	js::mArray& dt = rootObj["default-target"].get_array();
+	defaultTarget = Vector2i(dt[0].get_int(), dt[1].get_int());
+
 	UpdateOverlay();
 
 	return true;
