@@ -5,9 +5,14 @@ bool DefaultHandleEvent(RenderWindow& win, Event& event);
 
 static const float PI = 3.14159265f;
 
+inline float abs(const Vector2f& v)
+{
+	return v.x*v.x + v.y*v.y;
+}
+
 inline float norm(const Vector2f& v)
 {
-	return sqrt(v.x*v.x + v.y*v.y);
+	return sqrt(abs(v));
 }
 
 inline float dot(const Vector2f& a, const Vector2f& b)
