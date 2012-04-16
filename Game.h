@@ -7,6 +7,7 @@
 #include "Map.h"
 #include "Tower.h"
 #include "Projectile.h"
+#include "Treasure.h"
 
 class Game
 {
@@ -24,6 +25,9 @@ class Game
 	std::vector<Tower> towers;
 
 	std::vector<Projectile> projectiles;
+
+	Image imgTreasure;
+	std::vector<Treasure> treasures;
 
 	Map map;
 
@@ -44,6 +48,9 @@ private:
 
 	void AddTower();
 	void AddEnemy();
+
+	void UpdateEnemyTargets();
+	Vector2i NearestTarget(const Vector2f& pos);
 };
 
 #endif //GAME_H
