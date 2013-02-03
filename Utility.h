@@ -28,11 +28,11 @@ void LoadFromFile(Res& res, const std::string& fileName)
 	try {
 		if (!res.LoadFromFile(fileName)) {
 			//throw std::runtime_error("Failed to open '" + fileName + "'");
-			throw GameError() << ErrorInfo::String("unknown error") << ErrorInfo::FileName("loading '" + fileName + "'");
+			throw GameError() << ErrorInfo::Desc("Unknown error") << ErrorInfo::Loading(true) << boost::errinfo_file_name(fileName);
 		}
 	}
 	catch (boost::exception& ex) {
-		ex << ErrorInfo::FileName("loading '" + fileName + "'");
+		ex << ErrorInfo::Loading(true) << boost::errinfo_file_name(fileName);
 		throw;
 	}
 }

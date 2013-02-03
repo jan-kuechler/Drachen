@@ -45,8 +45,32 @@ int main(int argc, char **argv)
 		out << err.what() << "\n";
 	}
 	catch (boost::exception& ex) {
+		using boost::get_error_info;
+
 		std::ofstream out("crash.log");
-		out << "Fatal error detected\n";
+		out << "Fatal error detected";
+
+		if (std::string const *desc = get_error_info<ErrorInfo::Desc>(ex)) {
+			out << ": " << *desc << "\n";
+		}
+		else {
+			out << "\n";
+		}
+
+		if (std::string const *note = get_error_info<ErrorInfo::Note>(ex)) {
+			out << *note << "\n";
+		}
+
+		if (get_error_info<ErrorInfo::Loading>(ex)) {
+			if (std::string const* fileName = get_error_info<boost::errinfo_file_name>(ex)) {
+				out << "While loading '" << *fileName << "'\n";
+			}
+			else {
+				out << "While loading an unknown file\n";
+			}
+		}
+
+		out << "\nFull diagnostic information:\n";
 		out << diagnostic_information(ex);
 	}
 //#endif

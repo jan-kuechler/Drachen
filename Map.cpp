@@ -34,12 +34,11 @@ bool Map::LoadFromFile(const std::string& fileName)
 
 	std::ifstream in(fileName.c_str());
 	js::mValue rootValue;
-	if (!js::read(in, rootValue)) {
-		throw GameError() << ErrorInfo::String("root value not found");
-	}
+	if (!js::read(in, rootValue))
+		throw GameError() << ErrorInfo::Desc("Root value not found") << ErrorInfo::Note("The json file may be invalid");
 
 	if (rootValue.type() != js::obj_type)
-		return false;
+		throw GameError() << ErrorInfo::Desc("Root value is not an object");
 
 	js::mObject rootObj = rootValue.get_obj();
 
@@ -86,7 +85,7 @@ bool Map::LoadFromFile(const std::string& fileName)
 		}
 	}
 	else {
-		return false;
+		throw GameError() << ErrorInfo::Desc("Unsupported format of the target-area field.");
 	}
 
 	js::mArray& dt = rootObj["default-target"].get_array();
