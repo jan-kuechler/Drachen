@@ -2,6 +2,7 @@
 #include "Error.h"
 #include "Map.h"
 #include "Utility.h"
+#include "DataPaths.h"
 
 #include "json_spirit/json_spirit.h"
 
@@ -24,15 +25,15 @@ Map::Map()
 : drawOverlay(false), dbgTowersAnywhere(false)
 { }
 
-bool Map::LoadFromFile(const std::string& fileName)
+bool Map::LoadFromFile(const std::string& level)
 {
-	fs::path filePath = fileName;
-	fs::path base = filePath.parent_path();
+	fs::path base = GetLevelPath(level);
+	fs::path filePath = base / "level.js";
 
 	::LoadFromFile(bgImg, (base / "Background.png").string());
 	bg.SetImage(bgImg);
 
-	std::ifstream in(fileName.c_str());
+	std::ifstream in(filePath.string());
 	js::mValue rootValue;
 	if (!js::read(in, rootValue))
 		throw GameError() << ErrorInfo::Desc("Root value not found") << ErrorInfo::Note("The json file may be invalid");
@@ -41,6 +42,10 @@ bool Map::LoadFromFile(const std::string& fileName)
 		throw GameError() << ErrorInfo::Desc("Root value is not an object");
 
 	js::mObject rootObj = rootValue.get_obj();
+
+	// fill meta information
+	levelMetaInfo.mapName = rootObj["name"].get_str();
+	levelMetaInfo.theme   = rootObj["theme"].get_str();
 
 	width = rootObj["width"].get_int();
 	height = rootObj["height"].get_int();

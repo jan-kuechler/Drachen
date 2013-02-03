@@ -1,5 +1,7 @@
 {
 	"name" : "test",
+	"theme" : "default",
+	
 	"width" : 32,
 	"height"  : 24,
 	

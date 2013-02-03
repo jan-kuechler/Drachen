@@ -1,12 +1,16 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include "LevelMetaInfo.h"
+
 class Map
 {
 public:
 	typedef std::vector<std::vector<bool> > Grid;
 
 private:
+	LevelMetaInfo levelMetaInfo;
+
 	Image bgImg;
 	Sprite bg;
 
@@ -31,7 +35,12 @@ private:
 public:
 	Map();
 
-	bool LoadFromFile(const std::string& fileName);
+	bool LoadFromFile(const std::string& level);
+
+	const LevelMetaInfo& GetLevelMetaInfo() const
+	{
+		return levelMetaInfo;
+	}
 
 	const Grid& GetGrid() const
 	{
