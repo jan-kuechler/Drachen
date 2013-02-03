@@ -151,6 +151,7 @@
     <ClInclude Include="DataPaths.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Error.h" />
+    <ClInclude Include="GameStatus.h" />
     <ClInclude Include="json_spirit\json_spirit.h" />
     <ClInclude Include="json_spirit\json_spirit_error_position.h" />
     <ClInclude Include="json_spirit\json_spirit_reader.h" />

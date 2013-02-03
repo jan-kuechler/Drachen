@@ -3,8 +3,6 @@
 #include "Utility.h"
 #include "DataPaths.h"
 
-#include "json_spirit/json_spirit.h"
-
 namespace fs = boost::filesystem;
 namespace js = json_spirit;
 
@@ -23,10 +21,9 @@ void Theme::LoadTheme(const std::string& name)
 	if (rootValue.type() != js::obj_type)
 		throw GameError() << ErrorInfo::Desc("Root value is not an object");
 
-	js::mObject rootObj = rootValue.get_obj();
+	rootObj = rootValue.get_obj();
 
 	LoadFromFile(mainFont, (themePath / rootObj["main-font"].get_str()).string());
-
 	LoadFromFile(topPanel, (themePath / rootObj["top-panel"].get_str()).string());
 
 	currentTheme = name;
