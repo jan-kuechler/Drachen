@@ -4,7 +4,7 @@
 #include "Tower.h"
 
 Game::Game(RenderWindow& win, GlobalStatus& gs)
-: window(win), status(gs), activeTower(0)
+: window(win), status(gs), activeTower(0), running(true)
 { }
 
 void Game::Reset()
@@ -17,6 +17,7 @@ void Game::Reset()
 	LoadFromFile(imgFoe, "data/models/test.png");
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
 
+	running = true;
 	lives = status.startLives;
 }
 
@@ -29,7 +30,7 @@ static bool CompTowerY(const Tower& a, const Tower& b)
 
 static bool ShouldRemoveEnemy(const std::shared_ptr<Enemy>& e)
 {
-	return e->IsDead() && e->ProjectileCount() == 0;
+	return e->IsIrrelevant() && e->ProjectileCount() == 0;
 }
 
 void Game::Run()
@@ -71,8 +72,14 @@ void Game::Run()
 
 	float elapsed = window.GetFrameTime();
 
-	for (auto it = enemies.begin(); it != enemies.end(); ++it)
-		(*it)->Update(elapsed);
+	for (auto it = enemies.begin(); it != enemies.end(); ++it) {
+		std::shared_ptr<Enemy> e = *it;
+		e->Update(elapsed);
+		if (e->IsAtTarget() && !e->DidStrike()) {
+			e->Strike();
+			LooseLife();
+		}
+	}
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		it->Update(elapsed);
 	for (auto it = towers.begin(); it != towers.end(); ++it)
@@ -98,9 +105,17 @@ void Game::Run()
 	window.Display();
 }
 
+void Game::LooseLife()
+{
+	lives--;
+	if (lives == 0) {
+		running = false;
+	}
+}
+
 bool Game::IsRunning()
 {
-	return true;
+	return running;
 }
 
 State Game::GetNextState()

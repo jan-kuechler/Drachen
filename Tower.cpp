@@ -75,7 +75,7 @@ void Tower::Update(float elapsed)
 
 	if (cooldown <= 0) {
 		for (auto it = enemies->begin(); it != enemies->end(); ++it) {
-			if (!(*it)->IsDead() && norm((*it)->GetPosition() - GetPosition()) <= range) {
+			if (!(*it)->IsIrrelevant() && norm((*it)->GetPosition() - GetPosition()) <= range) {
 				Projectile p(*it);
 				p.SetImage(projectileImg);
 				p.SetPosition(GetPosition());

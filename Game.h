@@ -40,6 +40,8 @@ public:
 	State GetNextState();
 
 private:
+	bool running;
+
 	std::string LEVEL(const char *what) const
 	{
 		return "data/levels/" + status.level + "/" + what;
@@ -47,6 +49,8 @@ private:
 
 	void AddTower();
 	void AddEnemy();
+
+	void LooseLife();
 };
 
 #endif //GAME_H

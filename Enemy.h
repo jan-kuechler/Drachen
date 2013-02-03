@@ -22,6 +22,7 @@ class Enemy : public AnimSprite
 	sfext::Rectangle hpBarGreen, hpBarRed;
 
 	Vector2i target;
+	bool atTarget, striked;
 
 public:
 	Enemy(const Map* map);
@@ -70,6 +71,27 @@ public:
 	bool IsDead() const
 	{
 		return life <= 0;
+	}
+
+	bool IsAtTarget() const
+	{
+		return atTarget;
+	}
+
+	void Strike()
+	{
+		assert(atTarget);
+		striked = true;
+	}
+
+	bool DidStrike() const
+	{
+		return striked;
+	}
+
+	bool IsIrrelevant() const
+	{
+		return IsDead() || DidStrike();
 	}
 
 	void DrawHpBar(RenderTarget& target);

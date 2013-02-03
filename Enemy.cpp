@@ -3,7 +3,7 @@
 #include "Utility.h"
 
 Enemy::Enemy(const Map* map)
-: map(map), numProjectiles(0), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f)
+: map(map), numProjectiles(0), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f), atTarget(false), striked(false)
 {
 	hpBarGreen.SetColor(Color::Green);
 	hpBarRed.SetColor(Color::Red);
@@ -11,7 +11,7 @@ Enemy::Enemy(const Map* map)
 
 void Enemy::Update(float elapsed)
 {
-	if (IsDead())
+	if (IsDead() || IsAtTarget())
 		return;
 
 	AnimSprite::Update(elapsed);
@@ -31,6 +31,10 @@ void Enemy::Update(float elapsed)
 		dir /= r;
 
 		Move(dir * speed * elapsed);
+	}
+	
+	if (map->IsInTargetArea(map->PositionToBlock(GetPosition()))) {
+		atTarget = true;
 	}
 }
 
