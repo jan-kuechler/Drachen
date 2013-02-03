@@ -2,11 +2,14 @@
 #include "Game.h"
 #include "Utility.h"
 
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+void HandleException(boost::exception& ex);
+
 int main(int argc, char **argv)
 {
-//#ifndef _DEBUG
 	try {
-//#endif
 		GlobalStatus status;
 		status.level = "test";
 		status.startLives = 6;
@@ -38,42 +41,51 @@ int main(int argc, char **argv)
 				break;
 			}
 		}
-//#ifndef _DEBUG
 	}
 	catch (std::runtime_error err) {
 		std::ofstream out("crash.log");
 		out << err.what() << "\n";
 	}
 	catch (boost::exception& ex) {
-		using boost::get_error_info;
-
-		std::ofstream out("crash.log");
-		out << "Fatal error detected";
-
-		if (std::string const *desc = get_error_info<ErrorInfo::Desc>(ex)) {
-			out << ": " << *desc << "\n";
-		}
-		else {
-			out << "\n";
-		}
-
-		if (std::string const *note = get_error_info<ErrorInfo::Note>(ex)) {
-			out << *note << "\n";
-		}
-
-		if (get_error_info<ErrorInfo::Loading>(ex)) {
-			if (std::string const* fileName = get_error_info<boost::errinfo_file_name>(ex)) {
-				out << "While loading '" << *fileName << "'\n";
-			}
-			else {
-				out << "While loading an unknown file\n";
-			}
-		}
-
-		out << "\nFull diagnostic information:\n";
-		out << diagnostic_information(ex);
+		HandleException(ex);
 	}
-//#endif
     
 	return 0;
+}
+
+void HandleException(boost::exception& ex)
+{
+	using boost::get_error_info;
+
+	std::stringstream msg;
+
+	msg << "Fatal error detected";
+
+	if (std::string const *desc = get_error_info<ErrorInfo::Desc>(ex)) {
+		msg << ": " << *desc << "\n";
+	}
+	else {
+		msg << "\n";
+	}
+
+	if (std::string const *note = get_error_info<ErrorInfo::Note>(ex)) {
+		msg << *note << "\n";
+	}
+
+	if (get_error_info<ErrorInfo::Loading>(ex)) {
+		if (std::string const* fileName = get_error_info<boost::errinfo_file_name>(ex)) {
+			msg << "Loading '" << *fileName << "'\n";
+		}
+		else {
+			msg << "While loading an unknown file\n";
+		}
+	}
+
+	msg << "\nFull diagnostic information:\n";
+	msg << diagnostic_information(ex);
+
+	std::ofstream out("crash.log");
+	out << msg.str();
+
+	MessageBoxA(0, msg.str().c_str(), "Error", 0);
 }
