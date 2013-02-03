@@ -4,9 +4,9 @@
 
 int main(int argc, char **argv)
 {
-#ifndef _DEBUG
+//#ifndef _DEBUG
 	try {
-#endif
+//#endif
 		GlobalStatus status;
 		status.level = "test";
 		status.startLives = 6;
@@ -38,13 +38,18 @@ int main(int argc, char **argv)
 				break;
 			}
 		}
-#ifndef _DEBUG
+//#ifndef _DEBUG
 	}
 	catch (std::runtime_error err) {
 		std::ofstream out("crash.log");
 		out << err.what() << "\n";
 	}
-#endif
+	catch (boost::exception& ex) {
+		std::ofstream out("crash.log");
+		out << "Fatal error detected\n";
+		out << diagnostic_information(ex);
+	}
+//#endif
     
 	return 0;
 }

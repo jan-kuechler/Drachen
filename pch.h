@@ -22,6 +22,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/range/algorithm.hpp>
 #include <boost/bind.hpp>
+#include <boost/exception/all.hpp>
 
 // SFML Header
 #include <SFML/System.hpp>

@@ -1,6 +1,8 @@
 #ifndef UTILITY_H
 #define UTILITY_H
 
+#include "Error.h"
+
 bool DefaultHandleEvent(RenderWindow& win, Event& event);
 
 static const float PI = 3.14159265f;
@@ -23,8 +25,15 @@ inline float dot(const Vector2f& a, const Vector2f& b)
 template <typename Res>
 void LoadFromFile(Res& res, const std::string& fileName)
 {
-	if (!res.LoadFromFile(fileName)) {
-		throw std::runtime_error("Failed to open '" + fileName + "'");
+	try {
+		if (!res.LoadFromFile(fileName)) {
+			//throw std::runtime_error("Failed to open '" + fileName + "'");
+			throw GameError() << ErrorInfo::String("unknown error") << ErrorInfo::FileName("loading '" + fileName + "'");
+		}
+	}
+	catch (boost::exception& ex) {
+		ex << ErrorInfo::FileName("loading '" + fileName + "'");
+		throw;
 	}
 }
 
