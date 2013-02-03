@@ -131,6 +131,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="Theme.cpp" />
     <ClCompile Include="Tower.cpp" />
     <ClCompile Include="Treasure.cpp" />
     <ClCompile Include="Utility.cpp" />
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimSprite.h" />
+    <ClInclude Include="DataPaths.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Error.h" />
     <ClInclude Include="json_spirit\json_spirit.h" />
@@ -161,6 +163,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rectangle.h" />
+    <ClInclude Include="Theme.h" />
     <ClInclude Include="Tower.h" />
     <ClInclude Include="Treasure.h" />
     <ClInclude Include="Utility.h" />
