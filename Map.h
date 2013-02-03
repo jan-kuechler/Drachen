@@ -18,7 +18,7 @@ private:
 	std::set<Vector2i> towerPlaces;
 	std::set<Vector2i> towers;
 
-	std::vector<Vector2i> treasurePlaces;
+	std::set<Vector2i> targetPlaces;
 	Vector2i defaultTarget;
 
 	bool drawOverlay;
@@ -63,20 +63,12 @@ public:
 	bool MayPlaceTower(const Vector2i& tpos) const;
 	void PlaceTower(const Vector2i& tpos);
 
-	Vector2i GetTreasurePlace(size_t i) const
-	{
-		return treasurePlaces.at(i);
-	}
-
-	size_t GetNumTreasurePlaces() const
-	{
-		return treasurePlaces.size();
-	}
-
 	Vector2i GetDefaultTarget() const
 	{
 		return defaultTarget;
 	}
+
+	bool IsInTargetArea(const Vector2i& blk) const;
 
 	Vector2f BlockToPosition(const Vector2i& blk) const
 	{

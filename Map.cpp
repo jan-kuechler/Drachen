@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Error.h"
 #include "Map.h"
 #include "Utility.h"
 
@@ -33,8 +34,9 @@ bool Map::LoadFromFile(const std::string& fileName)
 
 	std::ifstream in(fileName.c_str());
 	js::mValue rootValue;
-	if (!js::read(in, rootValue))
-		return false;
+	if (!js::read(in, rootValue)) {
+		throw GameError() << ErrorInfo::String("root value not found");
+	}
 
 	if (rootValue.type() != js::obj_type)
 		return false;
@@ -68,10 +70,23 @@ bool Map::LoadFromFile(const std::string& fileName)
 		towerPlaces.insert(Vector2i(p[0].get_int(), p[1].get_int()));
 	}
 
-	js::mArray& trp = rootObj["treasure-places"].get_array();
-	for (size_t i = 0; i < trp.size(); ++i) {
-		js::mArray& p = trp[i].get_array();
-		treasurePlaces.push_back(Vector2i(p[0].get_int(), p[1].get_int()));
+	js::mObject& targetArea = rootObj["target-area"].get_obj();
+	if (targetArea.count("top-left")) {
+		js::mArray& topLeft = targetArea["top-left"].get_array();
+		size_t width = targetArea["width"].get_int();
+		size_t height = targetArea["height"].get_int();
+
+		size_t x0 = topLeft[0].get_int();
+		size_t y0 = topLeft[1].get_int();
+
+		for (size_t dx = 0; dx < width; ++dx) {
+			for (size_t dy = 0; dy < width; ++dy) {
+				targetPlaces.insert(Vector2i(x0 + dx, y0 + dy));
+			}
+		}
+	}
+	else {
+		return false;
 	}
 
 	js::mArray& dt = rootObj["default-target"].get_array();
@@ -90,6 +105,11 @@ void Map::PlaceTower(const Vector2i& tpos)
 bool Map::MayPlaceTower(const Vector2i& tpos) const
 {
 	return dbgTowersAnywhere || ((towerPlaces.find(tpos) != towerPlaces.end()) && (towers.find(tpos) == towers.end()));
+}
+
+bool Map::IsInTargetArea(const Vector2i& blk) const
+{
+	return targetPlaces.find(blk) != targetPlaces.end();
 }
 
 void Map::UpdateOverlay()

@@ -19,6 +19,12 @@
 		[29, 16]	
 	],
 	
+	"target-area" : {
+		"top-left": [24, 13],
+		"width": 6,
+		"height": 6
+	},
+	
 	"default-target": [26, 16],
 	
 	"grid" : [
