@@ -23,8 +23,6 @@ class Enemy : public AnimSprite
 
 	Vector2i target;
 
-	bool hasTreasure;
-
 public:
 	Enemy(const Map* map);
 
@@ -72,17 +70,6 @@ public:
 	bool IsDead() const
 	{
 		return life <= 0;
-	}
-
-	bool HasTreasure() const
-	{
-		return hasTreasure;
-	}
-
-	bool PickupTreasure()
-	{
-		assert(!hasTreasure);
-		hasTreasure = true;
 	}
 
 	void DrawHpBar(RenderTarget& target);

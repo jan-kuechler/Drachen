@@ -26,8 +26,7 @@ class Game
 
 	std::vector<Projectile> projectiles;
 
-	Image imgTreasure;
-	std::vector<Treasure> treasures;
+	size_t lives;
 
 	Map map;
 
@@ -48,9 +47,6 @@ private:
 
 	void AddTower();
 	void AddEnemy();
-
-	void UpdateEnemyTargets();
-	Vector2i NearestTarget(const Vector2f& pos);
 };
 
 #endif //GAME_H

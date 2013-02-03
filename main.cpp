@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 #endif
 		GlobalStatus status;
 		status.level = "test";
-		status.numTreasures = 6;
+		status.startLives = 6;
 
 		RenderWindow window(sf::VideoMode(800, 600, 32), "Drachen");
 		window.SetFramerateLimit(100);

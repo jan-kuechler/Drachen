@@ -12,21 +12,12 @@ void Game::Reset()
 	enemies.clear();
 	towers.clear();
 	projectiles.clear();
-	treasures.clear();
 
 	LoadFromFile(map, LEVEL("level.js"));
 	LoadFromFile(imgFoe, "data/models/test.png");
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
-	LoadFromFile(imgTreasure, "data/models/gem.png");
 
-	size_t numTreasures = std::min(status.numTreasures, map.GetNumTreasurePlaces());
-	for (size_t i=0; i < numTreasures; ++i) {
-		Treasure t;
-		t.SetPosition(map.BlockToPosition(map.GetTreasurePlace(i)));
-		t.SetImage(imgTreasure);
-		t.SetCenter(imgTreasure.GetWidth() / 2.0f, imgTreasure.GetHeight() / 2.0f);
-		treasures.push_back(t);
-	}
+	lives = status.startLives;
 }
 
 // Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
@@ -90,8 +81,6 @@ void Game::Run()
 	projectiles.erase(boost::remove_if(projectiles, boost::bind(&Projectile::DidHit, _1)), projectiles.end());
 	enemies.erase(boost::remove_if(enemies, ShouldRemoveEnemy), enemies.end());
 
-	UpdateEnemyTargets();
-
 	window.Clear();
 	map.Draw(window);
 	for (auto it = towers.begin(); it != towers.end(); ++it) {
@@ -102,46 +91,11 @@ void Game::Run()
 		(*it)->DrawHpBar(window);
 		window.Draw(*(*it));
 	}
-	for (auto it = treasures.begin(); it != treasures.end(); ++it) 
-		window.Draw(*it);
 	
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		window.Draw(*it);
 
 	window.Display();
-}
-
-void Game::UpdateEnemyTargets()
-{
-	for (auto it = enemies.begin(); it != enemies.end(); ++it) {
-		std::shared_ptr<Enemy> e = *it;
-		if (e->IsDead())
-			continue;
-
-		auto target = NearestTarget(e->GetPosition());
-		if (target != e->GetTarget())
-			e->SetTarget(target);
-	}
-}
-
-Vector2i Game::NearestTarget(const Vector2f& pos)
-{
-	int minIdx = -1;
-	float minDist = std::numeric_limits<float>::max();
-
-	for (size_t i=0; i < treasures.size(); ++i) {
-		if (!treasures[i].Available())
-			continue;
-
-		float dist = abs(treasures[i].GetPosition() - pos);
-		if (dist < minDist) {
-			minIdx = i;
-			minDist = dist;
-		}
-	}
-	if (minIdx >= 0)
-		return map.PositionToBlock(treasures[minIdx].GetPosition());
-	return map.GetDefaultTarget();
 }
 
 bool Game::IsRunning()

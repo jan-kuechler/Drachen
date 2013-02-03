@@ -5,7 +5,7 @@ struct GlobalStatus
 {
 	std::string level;
 
-	size_t numTreasures;
+	size_t startLives;
 };
 
 #endif //GLOBAL_STATUS_H
