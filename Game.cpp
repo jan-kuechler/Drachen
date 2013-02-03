@@ -4,7 +4,7 @@
 #include "Tower.h"
 
 Game::Game(RenderWindow& win, GlobalStatus& gs)
-: window(win), status(gs), activeTower(0), running(true)
+: window(win), userInterface(window, theme, gs), status(gs), activeTower(0), running(true)
 { }
 
 void Game::Reset()
@@ -18,6 +18,7 @@ void Game::Reset()
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
 
 	theme.LoadTheme(map.GetLevelMetaInfo().theme);
+	userInterface.Reset();
 
 	running = true;
 	lives = status.startLives;
@@ -103,6 +104,8 @@ void Game::Run()
 	
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		window.Draw(*it);
+
+	userInterface.Draw();
 
 	window.Display();
 }

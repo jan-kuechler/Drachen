@@ -10,6 +10,9 @@ namespace js = json_spirit;
 
 void Theme::LoadTheme(const std::string& name)
 {
+	if (currentTheme == name)
+		return;
+
 	fs::path themePath = GetThemePath(name);
 	fs::path themeDef = themePath / "theme.js";
 
@@ -23,5 +26,8 @@ void Theme::LoadTheme(const std::string& name)
 	js::mObject rootObj = rootValue.get_obj();
 
 	LoadFromFile(mainFont, (themePath / rootObj["main-font"].get_str()).string());
+
+	LoadFromFile(topPanel, (themePath / rootObj["top-panel"].get_str()).string());
+
 	currentTheme = name;
 }

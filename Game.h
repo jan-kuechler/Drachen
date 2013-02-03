@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "GameUserInterface.h"
 #include "GlobalStatus.h"
 #include "State.h"
 #include "Enemy.h"
@@ -30,6 +31,7 @@ class Game
 
 	Map map;
 
+	GameUserInterface userInterface;
 	Theme theme;
 
 public:

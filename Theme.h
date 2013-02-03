@@ -11,10 +11,16 @@ public:
 		return mainFont;
 	}
 
+	const sf::Image& GetTopPanelImage() const
+	{
+		return topPanel;
+	}
+
 private:
 	std::string currentTheme;
 
 	sf::Font mainFont;
+	sf::Image topPanel;
 };
 
 #endif //THEME_H
