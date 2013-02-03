@@ -13,9 +13,11 @@ void Game::Reset()
 	towers.clear();
 	projectiles.clear();
 
-	LoadFromFile(map, LEVEL("level.js"));
+	LoadFromFile(map, status.level);
 	LoadFromFile(imgFoe, "data/models/test.png");
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
+
+	theme.LoadTheme(map.GetLevelMetaInfo().theme);
 
 	running = true;
 	lives = status.startLives;

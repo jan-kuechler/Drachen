@@ -7,7 +7,7 @@
 #include "Map.h"
 #include "Tower.h"
 #include "Projectile.h"
-#include "Treasure.h"
+#include "Theme.h"
 
 class Game
 {
@@ -30,6 +30,8 @@ class Game
 
 	Map map;
 
+	Theme theme;
+
 public:
 	Game(RenderWindow& win, GlobalStatus& gs);
 
@@ -41,11 +43,6 @@ public:
 
 private:
 	bool running;
-
-	std::string LEVEL(const char *what) const
-	{
-		return "data/levels/" + status.level + "/" + what;
-	}
 
 	void AddTower();
 	void AddEnemy();
