@@ -113,6 +113,7 @@
   <ItemGroup>
     <ClCompile Include="AnimSprite.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="GameUserInterface.cpp" />
     <ClCompile Include="json_spirit\json_spirit_reader.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -150,6 +151,7 @@
     <ClInclude Include="DataPaths.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Error.h" />
+    <ClInclude Include="GameStatus.h" />
     <ClInclude Include="json_spirit\json_spirit.h" />
     <ClInclude Include="json_spirit\json_spirit_error_position.h" />
     <ClInclude Include="json_spirit\json_spirit_reader.h" />
@@ -165,6 +167,7 @@
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="Theme.h" />
     <ClInclude Include="Tower.h" />
+    <ClInclude Include="GameUserInterface.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlobalStatus.h" />

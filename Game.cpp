@@ -4,7 +4,7 @@
 #include "Tower.h"
 
 Game::Game(RenderWindow& win, GlobalStatus& gs)
-: window(win), status(gs), activeTower(0), running(true)
+: window(win), globalStatus(gs), userInterface(window, theme, globalStatus, gameStatus), activeTower(0), running(true)
 { }
 
 void Game::Reset()
@@ -13,14 +13,15 @@ void Game::Reset()
 	towers.clear();
 	projectiles.clear();
 
-	LoadFromFile(map, status.level);
+	LoadFromFile(map, globalStatus.level);
 	LoadFromFile(imgFoe, "data/models/test.png");
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
 
 	theme.LoadTheme(map.GetLevelMetaInfo().theme);
+	userInterface.Reset(map.GetLevelMetaInfo());
 
 	running = true;
-	lives = status.startLives;
+	gameStatus.Reset(globalStatus);
 }
 
 // Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
@@ -90,6 +91,8 @@ void Game::Run()
 	projectiles.erase(boost::remove_if(projectiles, boost::bind(&Projectile::DidHit, _1)), projectiles.end());
 	enemies.erase(boost::remove_if(enemies, ShouldRemoveEnemy), enemies.end());
 
+	userInterface.Update();
+
 	window.Clear();
 	map.Draw(window);
 	for (auto it = towers.begin(); it != towers.end(); ++it) {
@@ -104,13 +107,15 @@ void Game::Run()
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		window.Draw(*it);
 
+	userInterface.Draw();
+
 	window.Display();
 }
 
 void Game::LooseLife()
 {
-	lives--;
-	if (lives == 0) {
+	gameStatus.lives--;
+	if (gameStatus.lives == 0) {
 		running = false;
 	}
 }

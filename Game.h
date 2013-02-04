@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "GameUserInterface.h"
+#include "GameStatus.h"
 #include "GlobalStatus.h"
 #include "State.h"
 #include "Enemy.h"
@@ -12,7 +14,7 @@
 class Game
 {
 	RenderWindow& window;
-	GlobalStatus& status;
+	GlobalStatus& globalStatus;
 
 	Image imgBg;
 	Sprite bg;
@@ -26,10 +28,9 @@ class Game
 
 	std::vector<Projectile> projectiles;
 
-	size_t lives;
-
 	Map map;
-
+	GameStatus gameStatus;
+	GameUserInterface userInterface;
 	Theme theme;
 
 public:
