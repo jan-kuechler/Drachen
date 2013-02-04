@@ -49,9 +49,6 @@ bool Map::LoadFromFile(const std::string& map)
 
 	// fill meta information
 	try {
-		levelMetaInfo.mapName = rootObj["name"].get_str();
-		levelMetaInfo.theme   = rootObj["theme"].get_str();
-
 		width = rootObj["width"].get_int();
 		height = rootObj["height"].get_int();
 		blockSize = rootObj["block-size"].get_int();

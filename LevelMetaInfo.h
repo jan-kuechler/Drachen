@@ -3,8 +3,8 @@
 
 struct LevelMetaInfo
 {
-	std::string mapName;
-
+	std::string name;
+	std::string map;
 	std::string theme;
 };
 

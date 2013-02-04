@@ -13,7 +13,7 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 	topPanel.SetPosition(0, 0);
 
 	levelName.SetFont(theme.GetMainFont());
-	levelName.SetText(metaInfo.mapName);
+	levelName.SetText(metaInfo.name);
 	levelName.SetPosition(theme.GetPosition("level-name-position"));
 	levelName.SetSize(theme.GetFloat("level-name-font-size"));
 

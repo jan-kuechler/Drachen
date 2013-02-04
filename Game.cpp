@@ -2,6 +2,12 @@
 #include "Game.h"
 #include "Utility.h"
 #include "Tower.h"
+#include "DataPaths.h"
+
+#include "json_spirit/json_spirit.h"
+
+namespace fs = boost::filesystem;
+namespace js = json_spirit;
 
 Game::Game(RenderWindow& win, GlobalStatus& gs)
 : window(win), globalStatus(gs), userInterface(window, theme, globalStatus, gameStatus), activeTower(0), running(true)
@@ -13,12 +19,14 @@ void Game::Reset()
 	towers.clear();
 	projectiles.clear();
 
-	LoadFromFile(map, globalStatus.level);
+	LoadLevel(globalStatus.level);
+
+	LoadFromFile(map, levelInfo.map);
 	LoadFromFile(imgFoe, "data/models/test.png");
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
 
-	theme.LoadTheme(map.GetLevelMetaInfo().theme);
-	userInterface.Reset(map.GetLevelMetaInfo());
+	theme.LoadTheme(levelInfo.theme);
+	userInterface.Reset(levelInfo);
 
 	running = true;
 	gameStatus.Reset(globalStatus);
@@ -128,6 +136,30 @@ bool Game::IsRunning()
 State Game::GetNextState()
 {
 	return ST_QUIT;
+}
+
+void Game::LoadLevel(const std::string& level)
+{
+	fs::path levelPath = GetLevelPath(level);
+	fs::path levelDef = levelPath / LevelDefinitionFile;
+
+	std::ifstream in(levelDef.string());
+	js::mValue rootValue;
+	try {
+		js::read_or_throw(in, rootValue);
+	}
+	catch (js::Error_position err) {
+		throw GameError() << ErrorInfo::Desc("Invalid json file") << ErrorInfo::Note(err.reason_) << boost::errinfo_at_line(err.line_) << boost::errinfo_file_name(levelDef.string());
+	}
+
+	if (rootValue.type() != js::obj_type)
+		throw GameError() << ErrorInfo::Desc("Root value is not an object");
+
+	js::mObject rootObj = rootValue.get_obj();
+
+	levelInfo.name = rootObj["name"].get_str();
+	levelInfo.map = rootObj["map"].get_str();
+	levelInfo.theme = rootObj["theme"].get_str();
 }
 
 void Game::AddTower()

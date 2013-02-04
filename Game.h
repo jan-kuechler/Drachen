@@ -10,6 +10,7 @@
 #include "Tower.h"
 #include "Projectile.h"
 #include "Theme.h"
+#include "LevelMetaInfo.h"
 
 class Game
 {
@@ -32,7 +33,7 @@ class Game
 	GameStatus gameStatus;
 	GameUserInterface userInterface;
 	Theme theme;
-
+	LevelMetaInfo levelInfo;
 public:
 	Game(RenderWindow& win, GlobalStatus& gs);
 
@@ -44,6 +45,8 @@ public:
 
 private:
 	bool running;
+
+	void LoadLevel(const std::string& level);
 
 	void AddTower();
 	void AddEnemy();
