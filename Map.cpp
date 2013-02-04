@@ -25,10 +25,10 @@ Map::Map()
 : drawOverlay(false), dbgTowersAnywhere(false)
 { }
 
-bool Map::LoadFromFile(const std::string& level)
+bool Map::LoadFromFile(const std::string& map)
 {
-	fs::path base = GetLevelPath(level);
-	fs::path filePath = base / "level.js";
+	fs::path base = GetMapPath(map);
+	fs::path filePath = base / MapDefinitionFile;
 
 	::LoadFromFile(bgImg, (base / "Background.png").string());
 	bg.SetImage(bgImg);

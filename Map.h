@@ -35,7 +35,7 @@ private:
 public:
 	Map();
 
-	bool LoadFromFile(const std::string& level);
+	bool LoadFromFile(const std::string& map);
 
 	const LevelMetaInfo& GetLevelMetaInfo() const
 	{
