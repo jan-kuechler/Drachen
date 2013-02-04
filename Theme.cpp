@@ -22,9 +22,8 @@ void Theme::LoadTheme(const std::string& name)
 		throw GameError() << ErrorInfo::Desc("Root value is not an object");
 
 	rootObj = rootValue.get_obj();
+	currentTheme = name;
 
 	LoadFromFile(mainFont, (themePath / rootObj["main-font"].get_str()).string());
 	LoadFromFile(topPanel, (themePath / rootObj["top-panel"].get_str()).string());
-
-	currentTheme = name;
 }
