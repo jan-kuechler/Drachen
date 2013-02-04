@@ -19,6 +19,7 @@ void Game::Reset()
 	towers.clear();
 	projectiles.clear();
 
+	gameStatus.Reset(globalStatus);
 	LoadLevel(globalStatus.level);
 
 	LoadFromFile(map, levelInfo.map);
@@ -29,7 +30,6 @@ void Game::Reset()
 	userInterface.Reset(levelInfo);
 
 	running = true;
-	gameStatus.Reset(globalStatus);
 }
 
 // Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
@@ -157,9 +157,25 @@ void Game::LoadLevel(const std::string& level)
 
 	js::mObject rootObj = rootValue.get_obj();
 
-	levelInfo.name = rootObj["name"].get_str();
-	levelInfo.map = rootObj["map"].get_str();
-	levelInfo.theme = rootObj["theme"].get_str();
+	try {
+		levelInfo.name = rootObj["name"].get_str();
+		levelInfo.map = rootObj["map"].get_str();
+		levelInfo.theme = rootObj["theme"].get_str();
+
+		js::mArray& waves = rootObj["waves"].get_array();
+		for (size_t i=0; i < waves.size(); ++i) {
+			js::mObject& waveDef = waves[i].get_obj();
+
+			GameStatus::Wave wave;
+			wave.countdown = waveDef["countdown"].get_int();
+			wave.enemies   = waveDef["enemies"].get_int();
+
+			gameStatus.waves.push_back(wave);
+		}
+	}
+	catch (std::runtime_error err) {
+		throw GameError() << ErrorInfo::Desc("Json error") << ErrorInfo::Note(err.what()) << boost::errinfo_file_name(levelDef.string());
+	}
 }
 
 void Game::AddTower()
