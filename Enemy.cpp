@@ -3,7 +3,7 @@
 #include "Utility.h"
 
 Enemy::Enemy(const Map* map)
-: map(map), numProjectiles(0), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f), atTarget(false), striked(false)
+: map(map), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f), atTarget(false), striked(false)
 {
 	hpBarGreen.SetColor(Color::Green);
 	hpBarRed.SetColor(Color::Red);

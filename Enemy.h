@@ -16,8 +16,6 @@ class Enemy : public AnimSprite
 	Path path;
 	size_t blockSize;
 
-	size_t numProjectiles;
-
 	int life, initialLife;
 	sfext::Rectangle hpBarGreen, hpBarRed;
 
@@ -39,22 +37,6 @@ public:
 	}
 
 	void Update(float elapsed) /*override*/;
-
-	void AddProjectile()
-	{
-		numProjectiles++;
-	}
-
-	void ReleaseProjectile()
-	{
-		assert(numProjectiles > 0);
-		numProjectiles--;
-	}
-
-	size_t ProjectileCount() const
-	{
-		return numProjectiles;
-	}
 
 	void Hit(int strength)
 	{
