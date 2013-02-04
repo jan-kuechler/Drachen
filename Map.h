@@ -25,6 +25,8 @@ private:
 	std::set<Vector2i> targetPlaces;
 	Vector2i defaultTarget;
 
+	Vector2f spawnPosition; // only used as a screen position, no need to keep the block
+
 	bool drawOverlay;
 
 	sf::Shape blockGreen, blockRed, blockBlue;
@@ -75,6 +77,11 @@ public:
 	Vector2i GetDefaultTarget() const
 	{
 		return defaultTarget;
+	}
+
+	Vector2f GetSpawnPosition() const
+	{
+		return spawnPosition;
 	}
 
 	bool IsInTargetArea(const Vector2i& blk) const;

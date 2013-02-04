@@ -79,6 +79,9 @@ bool Map::LoadFromFile(const std::string& map)
 			towerPlaces.insert(Vector2i(p[0].get_int(), p[1].get_int()));
 		}
 
+		js::mArray& spawn = rootObj["spawn-place"].get_array();
+		spawnPosition = BlockToPosition(Vector2i(spawn[0].get_int(), spawn[1].get_int()));
+
 		js::mObject& targetArea = rootObj["target-area"].get_obj();
 		if (targetArea.count("top-left")) {
 			js::mArray& topLeft = targetArea["top-left"].get_array();
