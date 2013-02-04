@@ -6,12 +6,9 @@ static const float HIT_DISTANCE = 10.f;
 
 static const Vector2f LEFT(-1.0f, 0.0f);
 
-Projectile::Projectile(std::shared_ptr<Enemy> target)
+Projectile::Projectile(std::weak_ptr<Enemy> target)
 : speed(100.f), target(target), hit(false)
-{
-	assert(target);
-	target->AddProjectile();
-}
+{ }
 
 void Projectile::SetImage(const Image& img)
 {
@@ -23,16 +20,24 @@ void Projectile::Update(float elapsed)
 {
 	AnimSprite::Update(elapsed);
 
-	if (hit || !target)
+	if (hit)
 		return;
 
-	Vector2f dir = target->GetPosition() - GetPosition();
+	std::shared_ptr<Enemy> tgt = target.lock();
+
+	if (tgt) {
+		targetPosition = tgt->GetPosition();
+	}
+
+	Vector2f dir = targetPosition - GetPosition();
 	float r = norm(dir);
 	if (r < HIT_DISTANCE) {
 		hit = true;
-		target->Hit(2);
-		target->ReleaseProjectile();
-		target = 0;
+
+		if (tgt) {
+			tgt->Hit(2);
+			tgt.reset(); // release the shared ptr
+		}
 		return;
 	}
 

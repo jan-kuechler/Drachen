@@ -33,7 +33,7 @@ static bool CompTowerY(const Tower& a, const Tower& b)
 
 static bool ShouldRemoveEnemy(const std::shared_ptr<Enemy>& e)
 {
-	return e->IsIrrelevant() && e->ProjectileCount() == 0;
+	return e->IsIrrelevant();
 }
 
 void Game::Run()
