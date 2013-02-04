@@ -35,8 +35,12 @@ bool Map::LoadFromFile(const std::string& level)
 
 	std::ifstream in(filePath.string());
 	js::mValue rootValue;
-	if (!js::read(in, rootValue))
-		throw GameError() << ErrorInfo::Desc("Root value not found") << ErrorInfo::Note("The json file may be invalid");
+	try {
+		js::read_or_throw(in, rootValue);
+	}
+	catch (js::Error_position err) {
+		throw GameError() << ErrorInfo::Desc("Invalid json file") << ErrorInfo::Note(err.reason_) << boost::errinfo_at_line(err.line_) << boost::errinfo_file_name(filePath.string());
+	}
 
 	if (rootValue.type() != js::obj_type)
 		throw GameError() << ErrorInfo::Desc("Root value is not an object");
@@ -44,58 +48,62 @@ bool Map::LoadFromFile(const std::string& level)
 	js::mObject rootObj = rootValue.get_obj();
 
 	// fill meta information
-	levelMetaInfo.mapName = rootObj["name"].get_str();
-	levelMetaInfo.theme   = rootObj["theme"].get_str();
+	try {
+		levelMetaInfo.mapName = rootObj["name"].get_str();
+		levelMetaInfo.theme   = rootObj["theme"].get_str();
 
-	width = rootObj["width"].get_int();
-	height = rootObj["height"].get_int();
-	blockSize = rootObj["block-size"].get_int();
+		width = rootObj["width"].get_int();
+		height = rootObj["height"].get_int();
+		blockSize = rootObj["block-size"].get_int();
 
-	grid.resize(width);
-	overlay.resize(width);
-	for (size_t i=0; i < width; ++i) {
-		grid[i].resize(height);
-		overlay[i].resize(height);
-	}
-
-	js::mArray& gridData = rootObj["grid"].get_array();
-
-	// NOTE: x/y reversed due to JSON layout
-	for (size_t y=0; y < gridData.size(); ++y) {
-		js::mArray& row = gridData[y].get_array();
-		for (size_t x=0; x < row.size(); ++x) {
-			grid[x][y] = row[x].get_bool(); 
+		grid.resize(width);
+		overlay.resize(width);
+		for (size_t i=0; i < width; ++i) {
+			grid[i].resize(height);
+			overlay[i].resize(height);
 		}
-	}
 
-	js::mArray& tp = rootObj["tower-places"].get_array();
-	for (size_t i = 0; i < tp.size(); ++i) {
-		js::mArray& p = tp[i].get_array();
-		towerPlaces.insert(Vector2i(p[0].get_int(), p[1].get_int()));
-	}
+		js::mArray& gridData = rootObj["grid"].get_array();
 
-	js::mObject& targetArea = rootObj["target-area"].get_obj();
-	if (targetArea.count("top-left")) {
-		js::mArray& topLeft = targetArea["top-left"].get_array();
-		size_t width = targetArea["width"].get_int();
-		size_t height = targetArea["height"].get_int();
-
-		size_t x0 = topLeft[0].get_int();
-		size_t y0 = topLeft[1].get_int();
-
-		for (size_t dx = 0; dx < width; ++dx) {
-			for (size_t dy = 0; dy < width; ++dy) {
-				targetPlaces.insert(Vector2i(x0 + dx, y0 + dy));
+		// NOTE: x/y reversed due to JSON layout
+		for (size_t y=0; y < gridData.size(); ++y) {
+			js::mArray& row = gridData[y].get_array();
+			for (size_t x=0; x < row.size(); ++x) {
+				grid[x][y] = row[x].get_bool(); 
 			}
 		}
-	}
-	else {
-		throw GameError() << ErrorInfo::Desc("Unsupported format of the target-area field.");
-	}
 
-	js::mArray& dt = rootObj["default-target"].get_array();
-	defaultTarget = Vector2i(dt[0].get_int(), dt[1].get_int());
+		js::mArray& tp = rootObj["tower-places"].get_array();
+		for (size_t i = 0; i < tp.size(); ++i) {
+			js::mArray& p = tp[i].get_array();
+			towerPlaces.insert(Vector2i(p[0].get_int(), p[1].get_int()));
+		}
 
+		js::mObject& targetArea = rootObj["target-area"].get_obj();
+		if (targetArea.count("top-left")) {
+			js::mArray& topLeft = targetArea["top-left"].get_array();
+			size_t width = targetArea["width"].get_int();
+			size_t height = targetArea["height"].get_int();
+
+			size_t x0 = topLeft[0].get_int();
+			size_t y0 = topLeft[1].get_int();
+
+			for (size_t dx = 0; dx < width; ++dx) {
+				for (size_t dy = 0; dy < width; ++dy) {
+					targetPlaces.insert(Vector2i(x0 + dx, y0 + dy));
+				}
+			}
+		}
+		else {
+			throw GameError() << ErrorInfo::Desc("Unsupported format of the target-area field.");
+		}
+
+		js::mArray& dt = rootObj["default-target"].get_array();
+		defaultTarget = Vector2i(dt[0].get_int(), dt[1].get_int());
+	}
+	catch (std::runtime_error err) {
+		throw GameError() << ErrorInfo::Desc("Json error") << ErrorInfo::Note(err.what()) << boost::errinfo_file_name(filePath.string());
+	}
 	UpdateOverlay();
 
 	return true;
