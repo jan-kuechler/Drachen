@@ -9,6 +9,8 @@
 namespace fs = boost::filesystem;
 namespace js = json_spirit;
 
+static float SPAWN_TIME = 1.0f;
+
 Game::Game(RenderWindow& win, GlobalStatus& gs)
 : window(win), globalStatus(gs), userInterface(window, theme, globalStatus, gameStatus), activeTower(0), running(true)
 { }
@@ -21,13 +23,17 @@ void Game::Reset()
 
 	gameStatus.Reset(globalStatus);
 	LoadLevel(globalStatus.level);
-
 	LoadFromFile(map, levelInfo.map);
+
+	// Debug images. TODO: Move models to the Theme class
 	LoadFromFile(imgFoe, "data/models/test.png");
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
 
 	theme.LoadTheme(levelInfo.theme);
 	userInterface.Reset(levelInfo);
+
+	spawnTimer.Reset();
+	waveTimer.Reset();
 
 	running = true;
 }
@@ -44,12 +50,18 @@ static bool ShouldRemoveEnemy(const std::shared_ptr<Enemy>& e)
 	return e->IsIrrelevant();
 }
 
+// Main function of the game class, this gets called every frame.
 void Game::Run()
 {
+	// Handle all SFML events
 	Event event;
 	while (window.GetEvent(event)) {
+		// Handle default stuff like window closed etc.
 		if (DefaultHandleEvent(window, event))
 			continue;
+
+		// Let the active tower (the tower that is placed at the moment) handle
+		// any events that affect it.
 		if (activeTower && activeTower->HandleEvent(event)) {
 			if (activeTower->IsPlaced()) {
 				map.PlaceTower(map.PostionToTowerPos(activeTower->GetPosition()));
@@ -60,9 +72,13 @@ void Game::Run()
 				towers.pop_back();
 				activeTower = 0;
 			}
+
+			// The event was handled by the tower, nothing to do here!
 			continue;
 		}
+		// TODO: Forward events to the user interface
 
+		// some debug keys
 		if (event.Type == Event::KeyReleased) {
 			switch (event.Key.Code) {
 			case Key::G:
@@ -83,9 +99,15 @@ void Game::Run()
 
 	float elapsed = window.GetFrameTime();
 
+	// Update the wave state
+	UpdateWave();
+
+	// Go through all enemies, projectiles and towers and update them
 	for (auto it = enemies.begin(); it != enemies.end(); ++it) {
 		std::shared_ptr<Enemy> e = *it;
 		e->Update(elapsed);
+		// If an enemy reached the target area and did not strike yet,
+		// let them strike and loose a life. Poor player )-:
 		if (e->IsAtTarget() && !e->DidStrike()) {
 			e->Strike();
 			LooseLife();
@@ -96,11 +118,13 @@ void Game::Run()
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		it->Update(elapsed);
 
+	// Remove all the things no longer needed
 	projectiles.erase(boost::remove_if(projectiles, boost::bind(&Projectile::DidHit, _1)), projectiles.end());
 	enemies.erase(boost::remove_if(enemies, ShouldRemoveEnemy), enemies.end());
 
 	userInterface.Update();
 
+	// And draw all the stuff
 	window.Clear();
 	map.Draw(window);
 	for (auto it = towers.begin(); it != towers.end(); ++it) {
@@ -115,9 +139,63 @@ void Game::Run()
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		window.Draw(*it);
 
+	// Draw the user interface at last, so it does not get hidden by any objects
 	userInterface.Draw();
 
 	window.Display();
+}
+
+void Game::UpdateWave()
+{
+	if (gameStatus.currentWave >= gameStatus.waves.size()) {
+		// if we finished the last wave, the game has ended
+		if (enemies.size() == 0)
+			running = false;
+
+		// return even if there are still enemies, there is nothing wave related to handle 
+		// anymore (and currentWave points to the wave after the end of gameStatus.waves (-; )
+		return;
+	}
+
+	GameStatus::Wave& currentWave = gameStatus.waves[gameStatus.currentWave];
+
+	switch (gameStatus.waveState) {
+	case GameStatus::InCountdown:
+		// We are in the InCountdown state. If the countdown has elapsed, begin to spawn
+		// the enemies by proceeding to the InSpawn state;
+		if (waveTimer.GetElapsedTime() > currentWave.countdown) {
+			gameStatus.waveState = GameStatus::InSpawn;
+			gameStatus.enemiesSpawned = 0;
+		}
+		break;
+	case GameStatus::InSpawn:
+		// In the spawn state see if the spawn timer has elapsed and then spawn an enemy.
+		// If all enemies for this wave are spawned proceed to the InWave state
+		if (spawnTimer.GetElapsedTime() > SPAWN_TIME) {
+			if (gameStatus.enemiesSpawned < currentWave.enemies) {
+				SpawnEnemy();
+				gameStatus.enemiesSpawned++;
+				spawnTimer.Reset();
+			}
+			else {
+				gameStatus.waveState = GameStatus::InWave;
+			}
+		}
+		break;
+	case GameStatus::InWave:
+		// In the InWave state wait untill all enemies are killed, then proceed to the next wave.
+		// Reset both waveTimer and spawnTimer here, so the first spawn will happen immediatly when
+		// the wave countdown finished (as long as countdown > SPAWN_TIME).
+		// TODO: Add a maximal time for the wave after which the next wave will spawn regardless how
+		//       many enemies are there.
+		if (enemies.size() == 0) {
+			gameStatus.currentWave++;
+			gameStatus.waveState = GameStatus::InCountdown;
+			waveTimer.Reset();
+			spawnTimer.Reset();
+		}
+		break;
+	}
 }
 
 void Game::LooseLife()
@@ -126,6 +204,26 @@ void Game::LooseLife()
 	if (gameStatus.lives == 0) {
 		running = false;
 	}
+}
+
+void Game::SpawnEnemy()
+{
+	// TODO: Handle different types of enemies
+	// TODO: Do not hardcode enemy attributes
+
+	std::shared_ptr<Enemy>e(new Enemy(&map));
+	e->SetImage(imgFoe);
+	e->SetOffset(1);
+	e->SetSize(50, 50);
+	e->SetFrameTime(.2f);
+	e->SetNumFrames(4);
+
+	e->SetPosition(map.GetSpawnPosition());
+
+	e->SetSpeed(50);
+	e->SetTarget(Vector2i(24, 17));
+
+	enemies.push_back(e);
 }
 
 bool Game::IsRunning()

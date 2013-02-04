@@ -5,11 +5,11 @@
 	
 	"waves" : [
 		{ 
-			"countdown" : 10,
+			"countdown" : 5,
 			"enemies" : 6
 		},
 		{ 
-			"countdown" : 60,
+			"countdown" : 5,
 			"enemies" : 6
 		}		
 	]

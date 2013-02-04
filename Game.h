@@ -29,6 +29,8 @@ class Game
 
 	std::vector<Projectile> projectiles;
 
+	Clock spawnTimer, waveTimer;
+
 	Map map;
 	GameStatus gameStatus;
 	GameUserInterface userInterface;
@@ -48,8 +50,13 @@ private:
 
 	void LoadLevel(const std::string& level);
 
+	void UpdateWave();
+	void SpawnEnemy();
+
 	void AddTower();
 	void AddEnemy();
+
+
 
 	void LooseLife();
 };

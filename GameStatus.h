@@ -14,7 +14,10 @@ struct GameStatus
 	size_t lives;
 
 	std::vector<Wave> waves;
-	size_t currentWave;
+	size_t currentWave, enemiesSpawned;
+	enum {
+		InCountdown, InSpawn, InWave,
+	} waveState;
 
 	// Call reset at the begin of Game::Reset before loading the level data
 	void Reset(const GlobalStatus& gs)
@@ -22,6 +25,7 @@ struct GameStatus
 		lives = gs.startLives;
 		waves.clear();
 		currentWave = 0;
+		waveState = InCountdown;
 	}
 };
 
