@@ -9,6 +9,7 @@ struct GameStatus
 	{
 		size_t countdown; // seconds to start the wave
 		size_t enemies; // number of enemies to spawn
+		size_t maxTime; // maximal time for this wave
 	};
 
 	size_t lives;

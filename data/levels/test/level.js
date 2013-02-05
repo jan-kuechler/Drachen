@@ -6,6 +6,7 @@
 	"waves" : [
 		{ 
 			"countdown" : 5,
+			"max-time": 15,
 			"enemies" : 6
 		},
 		{ 

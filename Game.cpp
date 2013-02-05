@@ -33,7 +33,7 @@ void Game::Reset()
 	userInterface.Reset(levelInfo);
 
 	spawnTimer.Reset();
-	waveTimer.Reset();
+	countdownTimer.Reset();
 
 	running = true;
 }
@@ -163,9 +163,10 @@ void Game::UpdateWave()
 	case GameStatus::InCountdown:
 		// We are in the InCountdown state. If the countdown has elapsed, begin to spawn
 		// the enemies by proceeding to the InSpawn state;
-		if (waveTimer.GetElapsedTime() > currentWave.countdown) {
+		if (countdownTimer.GetElapsedTime() > currentWave.countdown) {
 			gameStatus.waveState = GameStatus::InSpawn;
 			gameStatus.enemiesSpawned = 0;
+			waveTimer.Reset();
 		}
 		break;
 	case GameStatus::InSpawn:
@@ -183,15 +184,14 @@ void Game::UpdateWave()
 		}
 		break;
 	case GameStatus::InWave:
-		// In the InWave state wait untill all enemies are killed, then proceed to the next wave.
-		// Reset both waveTimer and spawnTimer here, so the first spawn will happen immediatly when
+		// In the InWave state wait untill all enemies are killed or the maximal time for the wave has 
+		// elapsed, then proceed to the next wave.
+		// Reset both countdownTimer and spawnTimer here, so the first spawn will happen immediatly when
 		// the wave countdown finished (as long as countdown > SPAWN_TIME).
-		// TODO: Add a maximal time for the wave after which the next wave will spawn regardless how
-		//       many enemies are there.
-		if (enemies.size() == 0) {
+		if (enemies.size() == 0 || (currentWave.maxTime != 0 && waveTimer.GetElapsedTime() > currentWave.maxTime)) {
 			gameStatus.currentWave++;
 			gameStatus.waveState = GameStatus::InCountdown;
-			waveTimer.Reset();
+			countdownTimer.Reset();
 			spawnTimer.Reset();
 		}
 		break;
@@ -267,6 +267,11 @@ void Game::LoadLevel(const std::string& level)
 			GameStatus::Wave wave;
 			wave.countdown = waveDef["countdown"].get_int();
 			wave.enemies   = waveDef["enemies"].get_int();
+
+			if (waveDef.count("max-time"))
+				wave.maxTime = waveDef["max-time"].get_int();
+			else
+				wave.maxTime = 0;
 
 			gameStatus.waves.push_back(wave);
 		}
