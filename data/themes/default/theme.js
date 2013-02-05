@@ -7,5 +7,8 @@
 	"level-name-font-size" : 28,
 	
 	"lives-position" : [700, 38],
-	"lives-font-size" : 24
+	"lives-font-size" : 24,
+	
+	"countdown-position" : [100, 38],
+	"countdown-font-size" : 24
 }

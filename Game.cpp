@@ -32,8 +32,9 @@ void Game::Reset()
 	theme.LoadTheme(levelInfo.theme);
 	userInterface.Reset(levelInfo);
 
-	spawnTimer.Reset();
-	countdownTimer.Reset();
+	// reset countdown and spawn timer here for the first wave
+	gameStatus.spawnTimer.Reset();
+	gameStatus.countdownTimer.Reset();
 
 	running = true;
 }
@@ -163,20 +164,20 @@ void Game::UpdateWave()
 	case GameStatus::InCountdown:
 		// We are in the InCountdown state. If the countdown has elapsed, begin to spawn
 		// the enemies by proceeding to the InSpawn state;
-		if (countdownTimer.GetElapsedTime() > currentWave.countdown) {
+		if (gameStatus.countdownTimer.GetElapsedTime() > currentWave.countdown) {
 			gameStatus.waveState = GameStatus::InSpawn;
 			gameStatus.enemiesSpawned = 0;
-			waveTimer.Reset();
+			gameStatus.waveTimer.Reset();
 		}
 		break;
 	case GameStatus::InSpawn:
 		// In the spawn state see if the spawn timer has elapsed and then spawn an enemy.
 		// If all enemies for this wave are spawned proceed to the InWave state
-		if (spawnTimer.GetElapsedTime() > SPAWN_TIME) {
+		if (gameStatus.spawnTimer.GetElapsedTime() > SPAWN_TIME) {
 			if (gameStatus.enemiesSpawned < currentWave.enemies) {
 				SpawnEnemy();
 				gameStatus.enemiesSpawned++;
-				spawnTimer.Reset();
+				gameStatus.spawnTimer.Reset();
 			}
 			else {
 				gameStatus.waveState = GameStatus::InWave;
@@ -188,11 +189,11 @@ void Game::UpdateWave()
 		// elapsed, then proceed to the next wave.
 		// Reset both countdownTimer and spawnTimer here, so the first spawn will happen immediatly when
 		// the wave countdown finished (as long as countdown > SPAWN_TIME).
-		if (enemies.size() == 0 || (currentWave.maxTime != 0 && waveTimer.GetElapsedTime() > currentWave.maxTime)) {
+		if (enemies.size() == 0 || (currentWave.maxTime != 0 && gameStatus.waveTimer.GetElapsedTime() > currentWave.maxTime)) {
 			gameStatus.currentWave++;
 			gameStatus.waveState = GameStatus::InCountdown;
-			countdownTimer.Reset();
-			spawnTimer.Reset();
+			gameStatus.countdownTimer.Reset();
+			gameStatus.spawnTimer.Reset();
 		}
 		break;
 	}

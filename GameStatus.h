@@ -20,6 +20,8 @@ struct GameStatus
 		InCountdown, InSpawn, InWave,
 	} waveState;
 
+	Clock spawnTimer, waveTimer, countdownTimer;
+
 	// Call reset at the begin of Game::Reset before loading the level data
 	void Reset(const GlobalStatus& gs)
 	{

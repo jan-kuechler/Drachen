@@ -18,6 +18,11 @@ class GameUserInterface
 
 	sf::String levelName;
 	sf::String lives;
+	sf::String countdown;
+
+	bool showCountdown;
+
+	sf::Clock textUpdateClock;
 
 public:
 	GameUserInterface(RenderWindow& window, const Theme& theme, GlobalStatus& globalStatus, GameStatus& gameStatus);
@@ -25,6 +30,9 @@ public:
 	void Update();
 	void Draw();
 	void Reset(const LevelMetaInfo& metaInfo);
+
+private:
+	void UpdateText();
 };
 
 #endif //GAME_USER_INTERFACE_H

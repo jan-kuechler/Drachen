@@ -29,8 +29,6 @@ class Game
 
 	std::vector<Projectile> projectiles;
 
-	Clock spawnTimer, waveTimer, countdownTimer;
-
 	Map map;
 	GameStatus gameStatus;
 	GameUserInterface userInterface;
