@@ -3,6 +3,7 @@
 #include "Utility.h"
 #include "Tower.h"
 #include "DataPaths.h"
+#include "TowerSettings.h"
 
 #include "json_spirit/json_spirit.h"
 
@@ -12,7 +13,7 @@ namespace js = json_spirit;
 static float SPAWN_TIME = 1.0f;
 
 Game::Game(RenderWindow& win, GlobalStatus& gs)
-: window(win), globalStatus(gs), userInterface(window, theme, globalStatus, gameStatus, &map), running(true)
+: window(win), globalStatus(gs), userInterface(this, window, theme, globalStatus, gameStatus, &map), running(true)
 { }
 
 void Game::Reset()
@@ -281,4 +282,14 @@ void Game::AddEnemy()
 	e->SetTarget(Vector2i(24, 17));
 
 	enemies.push_back(e);
+}
+
+void Game::AddTower(TowerSettings* settings, Vector2f pos)
+{
+	Tower t(&enemies, &projectiles);
+	t.SetImage(*settings->baseImage);
+	t.SetPosition(pos);
+	t.SetSize(settings->baseImage->GetWidth(), settings->baseImage->GetHeight());
+	towers.push_back(t);
+	boost::sort(towers, CompTowerY);
 }

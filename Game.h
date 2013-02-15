@@ -12,6 +12,8 @@
 #include "Theme.h"
 #include "LevelMetaInfo.h"
 
+struct TowerSettings;
+
 class Game
 {
 	RenderWindow& window;
@@ -41,6 +43,8 @@ public:
 
 	bool IsRunning();
 	State GetNextState();
+
+	void AddTower(TowerSettings* settings, Vector2f pos);
 
 private:
 	bool running;

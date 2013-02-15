@@ -6,7 +6,7 @@ Image Tower::projectileImg;
 bool Tower::imgLoaded = false;
 
 Tower::Tower(std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles)
-: enemies(enemies), projectiles(projectiles), range(4.0f), cooldown(1.0f)
+: enemies(enemies), projectiles(projectiles), range(4.0f * 25), cooldown(1.0f)
 { 
 	if (!imgLoaded) {
 		LoadFromFile(projectileImg, "data/models/arrow.png");

@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "GameUserInterface.h"
 #include "Map.h"
+#include "Game.h"
+#include "GlobalStatus.h"
+#include "GameStatus.h"
+#include "LevelMetaInfo.h"
 #include "TowerPlacer.h"
 #include "TowerSettings.h"
 #include "Utility.h"
@@ -10,8 +14,8 @@ using boost::lexical_cast;
 // do not update the text every frame
 static const float TEXT_UPDATE_TIME = 0.2f;
 
-GameUserInterface::GameUserInterface(RenderWindow& window, const Theme& theme, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map* map)
-: window(window), theme(theme), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
+GameUserInterface::GameUserInterface(Game* game, RenderWindow& window, const Theme& theme, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map* map)
+: game(game), window(window), theme(theme), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
 { }
 
 void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
@@ -46,7 +50,7 @@ void GameUserInterface::Update()
 
 	if (towerPlacer) {
 		if (towerPlacer->IsPlaced()) {
-			// TODO: Tell the game the tower that there is a tower
+			game->AddTower(towerPlacer->GetSettings(), towerPlacer->GetPosition());
 			towerPlacer.release();
 		}
 		else if (towerPlacer->PlacingCanceld()) {

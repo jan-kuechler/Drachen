@@ -1,13 +1,15 @@
 #ifndef GAME_USER_INTERFACE_H
 #define GAME_USER_INTERFACE_H
 
-#include "GlobalStatus.h"
-#include "GameStatus.h"
-#include "LevelMetaInfo.h"
 #include "Theme.h"
 #include "TowerPlacer.h"
 
 class Map;
+class Game;
+class Theme;
+struct GlobalStatus;
+struct GameStatus;
+struct LevelMetaInfo;
 
 class GameUserInterface
 {
@@ -17,6 +19,7 @@ class GameUserInterface
 	GlobalStatus& globalStatus;
 	GameStatus& gameStatus;
 	const Map* map;
+	Game* game;
 
 	Sprite topPanel;
 
@@ -31,7 +34,7 @@ class GameUserInterface
 	std::unique_ptr<TowerPlacer> towerPlacer;
 
 public:
-	GameUserInterface(RenderWindow& window, const Theme& theme, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map *map);
+	GameUserInterface(Game* game, RenderWindow& window, const Theme& theme, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map *map);
 
 	void Update();
 	void Draw();
