@@ -2,74 +2,20 @@
 #include "Tower.h"
 #include "Utility.h"
 
-Color Tower::ColorInvalidPosition(255, 0, 0, 128);
-Color Tower::ColorValidPosition(0, 255, 0, 128);
-Color Tower::ColorPlaced(255, 255, 255);
-Color Tower::ColorRangeCircle(64, 255, 64, 128);
-
 Image Tower::projectileImg;
 bool Tower::imgLoaded = false;
 
-Tower::Tower(const Map* map, std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles)
-: map(map), enemies(enemies), projectiles(projectiles), placed(false), stopPlace(false), validPosition(false), range(4.0f * map->GetBlockSize()), cooldown(1.0f)
+Tower::Tower(std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles)
+: enemies(enemies), projectiles(projectiles), range(4.0f), cooldown(1.0f)
 { 
-	SetColor(ColorInvalidPosition);
-
-	rangeCircle = Shape::Circle(GetPosition(), range, ColorRangeCircle);
-
 	if (!imgLoaded) {
 		LoadFromFile(projectileImg, "data/models/arrow.png");
 		imgLoaded = true;
 	}
 }
 
-bool Tower::HandleEvent(Event& event)
-{
-	if (placed || stopPlace)
-		return false;
-
-	if (event.Type == Event::MouseMoved) {
-		Vector2f pos(static_cast<float>(event.MouseMove.X), static_cast<float>(event.MouseMove.Y));
-		Vector2i tpos = map->PostionToTowerPos(pos);
-
-		if (map->MayPlaceTower(tpos)) {
-			SetPosition(map->TowerPosToPosition(tpos));
-			validPosition = true;
-			SetColor(ColorValidPosition);
-		}
-		else {
-			SetPosition(pos);
-			validPosition = false;
-			SetColor(ColorInvalidPosition);
-		}
-		rangeCircle.SetPosition(GetPosition());
-	}
-	else if (event.Type == Event::MouseButtonPressed && event.MouseButton.Button == Mouse::Left) {
-		if (validPosition) {
-			placed = true;
-			SetColor(ColorPlaced);
-		}
-		else {
-			stopPlace = true;
-		}
-	}
-	else {
-		return false;
-	}
-	return true;
-}
-
-void Tower::DrawRangeCircle(RenderTarget& target)
-{
-	if (!placed)
-		target.Draw(rangeCircle);
-}
-
 void Tower::Update(float elapsed)
 {
-	if (!placed)
-		return;
-
 	if (cooldown > 0)
 		cooldown -= elapsed;
 
