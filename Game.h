@@ -24,7 +24,6 @@ class Game
 	std::vector<std::shared_ptr<Enemy>> enemies;
 
 	Image imgTower;
-	Tower* activeTower;
 	std::vector<Tower> towers;
 
 	std::vector<Projectile> projectiles;
@@ -51,7 +50,6 @@ private:
 	void UpdateWave();
 	void SpawnEnemy();
 
-	void AddTower();
 	void AddEnemy();
 
 	void LooseLife();

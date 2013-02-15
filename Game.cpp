@@ -12,7 +12,7 @@ namespace js = json_spirit;
 static float SPAWN_TIME = 1.0f;
 
 Game::Game(RenderWindow& win, GlobalStatus& gs)
-: window(win), globalStatus(gs), userInterface(window, theme, globalStatus, gameStatus, &map), activeTower(0), running(true)
+: window(win), globalStatus(gs), userInterface(window, theme, globalStatus, gameStatus, &map), running(true)
 { }
 
 void Game::Reset()
@@ -64,23 +64,6 @@ void Game::Run()
 		if (userInterface.HandleEvent(event))
 			continue;
 
-		// Let the active tower (the tower that is placed at the moment) handle
-		// any events that affect it.
-		if (activeTower && activeTower->HandleEvent(event)) {
-			if (activeTower->IsPlaced()) {
-				map.PlaceTower(map.PostionToTowerPos(activeTower->GetPosition()));
-				activeTower = 0;
-				boost::sort(towers, CompTowerY);
-			}
-			else if (activeTower->StopPlace()) {
-				towers.pop_back();
-				activeTower = 0;
-			}
-
-			// The event was handled by the tower, nothing to do here!
-			continue;
-		}
-
 		// some debug keys
 		if (event.Type == Event::KeyReleased) {
 			switch (event.Key.Code) {
@@ -131,7 +114,6 @@ void Game::Run()
 	window.Clear();
 	map.Draw(window);
 	for (auto it = towers.begin(); it != towers.end(); ++it) {
-		it->DrawRangeCircle(window);
 		window.Draw(*it);
 	}
 	for (auto it = enemies.begin(); it != enemies.end(); ++it) {
@@ -282,22 +264,6 @@ void Game::LoadLevel(const std::string& level)
 	catch (std::runtime_error err) {
 		throw GameError() << ErrorInfo::Desc("Json error") << ErrorInfo::Note(err.what()) << boost::errinfo_file_name(levelDef.string());
 	}
-}
-
-void Game::AddTower()
-{
-	if (activeTower)
-		return;
-
-	Tower t(&map, &enemies, &projectiles);
-	t.SetImage(imgTower);
-
-	const Input& input = window.GetInput();
-	t.SetPosition(static_cast<float>(input.GetMouseX()), static_cast<float>(input.GetMouseY()));
-	t.SetSize(imgTower.GetWidth(), imgTower.GetHeight());
-
-	towers.push_back(t);
-	activeTower = &towers.back();
 }
 
 void Game::AddEnemy()
