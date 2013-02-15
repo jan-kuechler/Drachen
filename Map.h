@@ -1,16 +1,12 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "LevelMetaInfo.h"
-
 class Map
 {
 public:
 	typedef std::vector<std::vector<bool> > Grid;
 
 private:
-	LevelMetaInfo levelMetaInfo;
-
 	Image bgImg;
 	Sprite bg;
 
@@ -25,6 +21,8 @@ private:
 	std::set<Vector2i> targetPlaces;
 	Vector2i defaultTarget;
 
+	Vector2f spawnPosition; // only used as a screen position, no need to keep the block
+
 	bool drawOverlay;
 
 	sf::Shape blockGreen, blockRed, blockBlue;
@@ -36,11 +34,6 @@ public:
 	Map();
 
 	bool LoadFromFile(const std::string& map);
-
-	const LevelMetaInfo& GetLevelMetaInfo() const
-	{
-		return levelMetaInfo;
-	}
 
 	const Grid& GetGrid() const
 	{
@@ -75,6 +68,11 @@ public:
 	Vector2i GetDefaultTarget() const
 	{
 		return defaultTarget;
+	}
+
+	Vector2f GetSpawnPosition() const
+	{
+		return spawnPosition;
 	}
 
 	bool IsInTargetArea(const Vector2i& blk) const;
