@@ -134,6 +134,7 @@
     <ClCompile Include="Rectangle.cpp" />
     <ClCompile Include="Theme.cpp" />
     <ClCompile Include="Tower.cpp" />
+    <ClCompile Include="TowerPlacer.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
@@ -168,6 +169,8 @@
     <ClInclude Include="Theme.h" />
     <ClInclude Include="Tower.h" />
     <ClInclude Include="GameUserInterface.h" />
+    <ClInclude Include="TowerPlacer.h" />
+    <ClInclude Include="TowerSettings.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlobalStatus.h" />

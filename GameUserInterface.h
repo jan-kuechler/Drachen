@@ -5,6 +5,9 @@
 #include "GameStatus.h"
 #include "LevelMetaInfo.h"
 #include "Theme.h"
+#include "TowerPlacer.h"
+
+class Map;
 
 class GameUserInterface
 {
@@ -13,6 +16,7 @@ class GameUserInterface
 
 	GlobalStatus& globalStatus;
 	GameStatus& gameStatus;
+	const Map* map;
 
 	Sprite topPanel;
 
@@ -24,15 +28,21 @@ class GameUserInterface
 
 	sf::Clock textUpdateClock;
 
+	std::unique_ptr<TowerPlacer> towerPlacer;
+
 public:
-	GameUserInterface(RenderWindow& window, const Theme& theme, GlobalStatus& globalStatus, GameStatus& gameStatus);
+	GameUserInterface(RenderWindow& window, const Theme& theme, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map *map);
 
 	void Update();
 	void Draw();
 	void Reset(const LevelMetaInfo& metaInfo);
 
+	bool HandleEvent(sf::Event& event);
+
 private:
 	void UpdateText();
+
+	void StartPlacingTower();
 };
 
 #endif //GAME_USER_INTERFACE_H

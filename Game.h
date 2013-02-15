@@ -54,8 +54,6 @@ private:
 	void AddTower();
 	void AddEnemy();
 
-
-
 	void LooseLife();
 };
 

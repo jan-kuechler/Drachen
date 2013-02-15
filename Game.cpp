@@ -12,7 +12,7 @@ namespace js = json_spirit;
 static float SPAWN_TIME = 1.0f;
 
 Game::Game(RenderWindow& win, GlobalStatus& gs)
-: window(win), globalStatus(gs), userInterface(window, theme, globalStatus, gameStatus), activeTower(0), running(true)
+: window(win), globalStatus(gs), userInterface(window, theme, globalStatus, gameStatus, &map), activeTower(0), running(true)
 { }
 
 void Game::Reset()
@@ -61,6 +61,9 @@ void Game::Run()
 		if (DefaultHandleEvent(window, event))
 			continue;
 
+		if (userInterface.HandleEvent(event))
+			continue;
+
 		// Let the active tower (the tower that is placed at the moment) handle
 		// any events that affect it.
 		if (activeTower && activeTower->HandleEvent(event)) {
@@ -77,7 +80,6 @@ void Game::Run()
 			// The event was handled by the tower, nothing to do here!
 			continue;
 		}
-		// TODO: Forward events to the user interface
 
 		// some debug keys
 		if (event.Type == Event::KeyReleased) {
@@ -86,7 +88,7 @@ void Game::Run()
 				AddEnemy();
 				break;
 			case Key::T:
-				AddTower();
+				//AddTower();
 				break;
 			case Key::F2:
 				map.ToggleOverlay();
