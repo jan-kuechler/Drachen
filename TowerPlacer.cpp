@@ -8,7 +8,7 @@ Color TowerPlacer::ColorValidPosition(0, 255, 0, 128);
 Color TowerPlacer::ColorPlaced(255, 255, 255);
 Color TowerPlacer::ColorRangeCircle(64, 255, 64, 128);
 
-TowerPlacer::TowerPlacer(const Map* map, const TowerSettings* settings)
+TowerPlacer::TowerPlacer(const Map* map, TowerSettings* settings)
 : map(map), settings(settings), placed(false), cancelPlacing(false)
 {
 	SetColor(ColorInvalidPosition);

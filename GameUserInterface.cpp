@@ -65,8 +65,10 @@ void GameUserInterface::Draw()
 	if (showCountdown)
 		window.Draw(countdown);
 
-	if (towerPlacer)
+	if (towerPlacer) {
+		towerPlacer->DrawRangeCircle(window);
 		window.Draw(*towerPlacer);
+	}
 }
 
 bool GameUserInterface::HandleEvent(Event& event)
