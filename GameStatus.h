@@ -13,6 +13,7 @@ struct GameStatus
 	};
 
 	size_t lives;
+	size_t money;
 
 	std::vector<Wave> waves;
 	size_t currentWave, enemiesSpawned;

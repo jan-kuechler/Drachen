@@ -26,7 +26,7 @@ public:
 		return placed;
 	}
 
-	bool PlacingCanceld()
+	bool PlacingCanceled()
 	{
 		return cancelPlacing;
 	}

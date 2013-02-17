@@ -53,7 +53,7 @@ void GameUserInterface::Update()
 			game->AddTower(towerPlacer->GetSettings(), towerPlacer->GetPosition());
 			towerPlacer.release();
 		}
-		else if (towerPlacer->PlacingCanceld()) {
+		else if (towerPlacer->PlacingCanceled()) {
 			towerPlacer.release();
 		}
 	}

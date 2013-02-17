@@ -13,6 +13,7 @@ int main(int argc, char **argv)
 		GlobalStatus status;
 		status.level = "test";
 		status.startLives = 6;
+		status.startMoney = 10000;
 
 		RenderWindow window(sf::VideoMode(800, 600, 32), "Drachen");
 		window.SetFramerateLimit(100);
