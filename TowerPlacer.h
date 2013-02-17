@@ -21,6 +21,18 @@ public:
 
 	bool HandleEvent(sf::Event& event);
 
+	void SetPosition(float x, float y)
+	{
+		AnimSprite::SetPosition(x, y);
+		rangeCircle.SetPosition(x, y);
+	}
+
+	void SetPosition(Vector2f pos)
+	{
+		AnimSprite::SetPosition(pos);
+		rangeCircle.SetPosition(pos);
+	}
+
 	bool IsPlaced()
 	{
 		return placed;

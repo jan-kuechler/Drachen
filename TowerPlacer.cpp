@@ -37,7 +37,6 @@ bool TowerPlacer::HandleEvent(Event& event)
 			validPosition = false;
 			SetColor(ColorInvalidPosition);
 		}
-		rangeCircle.SetPosition(GetPosition());
 	}
 	else if (event.Type == Event::MouseButtonPressed) {
 		if (event.MouseButton.Button == Mouse::Left && validPosition) {
@@ -47,9 +46,8 @@ bool TowerPlacer::HandleEvent(Event& event)
 		else {
 			cancelPlacing = true;
 		}
+		return true;
 	}
-	else {
-		return false;
-	}
-	return true;
+
+	return false;
 }
