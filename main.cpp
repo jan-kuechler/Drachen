@@ -1,9 +1,13 @@
 #include "pch.h"
 #include "Game.h"
 #include "Utility.h"
+#include "ResourceManager.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+
+// global resource manager variables
+ResourceManager<sf::Image> gImageManager;
 
 void HandleException(boost::exception& ex);
 
