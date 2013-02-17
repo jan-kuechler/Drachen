@@ -27,6 +27,7 @@ struct GameStatus
 	void Reset(const GlobalStatus& gs)
 	{
 		lives = gs.startLives;
+		money = gs.startMoney;
 		waves.clear();
 		currentWave = 0;
 		waveState = InCountdown;
