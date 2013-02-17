@@ -1,6 +1,7 @@
 #ifndef GAME_USER_INTERFACE_H
 #define GAME_USER_INTERFACE_H
 
+#include "Button.h"
 #include "Theme.h"
 #include "TowerPlacer.h"
 
@@ -21,11 +22,14 @@ class GameUserInterface
 	const Map* map;
 	Game* game;
 
-	Sprite topPanel;
+	Sprite topPanel, bottomPanel;
 
 	sf::String levelName;
 	sf::String lives;
 	sf::String countdown;
+
+	std::vector<Button> towerButtons;
+	std::vector<int> towerButtonTypes;
 
 	bool showCountdown;
 
@@ -46,6 +50,8 @@ private:
 	void UpdateText();
 
 	void StartPlacingTower();
+
+	void LoadDefinition();
 };
 
 #endif //GAME_USER_INTERFACE_H

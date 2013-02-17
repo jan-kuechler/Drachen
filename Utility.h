@@ -22,6 +22,11 @@ inline float dot(const Vector2f& a, const Vector2f& b)
 	return a.x * b.x + a.y * b.y;
 }
 
+inline bool PointInRect(sf::Vector2f pt, sf::Vector2f topLeft, float width, float height)
+{
+	return pt.x >= topLeft.x && pt.x <= topLeft.x + width && pt.y > topLeft.y && pt.y <= topLeft.y + height;
+}
+
 template <typename Res>
 void LoadFromFile(Res& res, const std::string& fileName)
 {
