@@ -291,5 +291,6 @@ void Game::AddTower(TowerSettings* settings, Vector2f pos)
 	t.SetPosition(pos);
 	t.SetSize(settings->baseImage->GetWidth(), settings->baseImage->GetHeight());
 	towers.push_back(t);
+	map.PlaceTower(map.PostionToTowerPos(pos));
 	boost::sort(towers, CompTowerY);
 }
