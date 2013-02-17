@@ -29,9 +29,52 @@ void Theme::LoadTheme(const std::string& name)
 	currentTheme = name;
 	try {
 		LoadFromFile(mainFont, (themePath / rootObj["main-font"].get_str()).string());
-		LoadFromFile(topPanel, (themePath / rootObj["top-panel"].get_str()).string());
 	}
 	catch (std::runtime_error err) {
 		throw GameError() << ErrorInfo::Desc("Json error") << ErrorInfo::Note(err.what()) << boost::errinfo_file_name(themeDef.string());
 	}
+}
+
+std::string Theme::GetFileName(const std::string& path, int idx) const
+{
+	std::string fileName = TraversePath(path, idx).get_str();
+	return (GetThemePath(currentTheme) / fileName).string();
+}
+
+const js::mValue& Theme::TraversePath(const std::string& path, int idx) const
+{
+	std::vector<std::string> parts;
+	boost::split(parts, path, boost::is_any_of("/"));
+	std::string last = parts.back();
+	parts.pop_back();
+
+	const js::mObject* parent = &rootObj;
+	for (auto it = parts.begin(); it != parts.end(); ++it) {
+		bool arrayAccess = false;
+		int arrayIndex = 0;
+		std::string name = *it;
+
+		size_t bracketPos = it->find('[');
+		if (bracketPos != it->npos) {
+			arrayAccess = true;
+			name = it->substr(0, bracketPos);
+			std::string index = it->substr(bracketPos+1);
+			index.pop_back(); // remove the closing ]
+
+			if (!index.empty()) 
+				arrayIndex = boost::lexical_cast<int>(index);
+			else
+				arrayIndex = idx;
+		}
+
+		if (!arrayAccess) {
+			parent = &parent->at(name).get_obj();
+		}
+		else {
+			const js::mArray& arr = parent->at(name).get_array();
+			parent = &arr.at(arrayIndex).get_obj();
+		}
+	}
+
+	return parent->at(last);
 }

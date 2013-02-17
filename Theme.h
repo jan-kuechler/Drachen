@@ -3,22 +3,6 @@
 
 #include "json_spirit/json_spirit.h"
 
-// TODO ?!
-// Allow for composite names to be queried. A query (GetInt, GetFloat, etc) for
-// "title/font/size" would the json file entry at
-//  { ...
-//    "title" : {
-//      "font" : {
-//        "size" : 25,
-//        ...
-//      },
-//      ...
-//    },
-//    ...
-//  }
-//
-
-
 class Theme
 {
 public:
@@ -29,39 +13,42 @@ public:
 		return mainFont;
 	}
 
-	const sf::Image& GetTopPanelImage() const
+	const sf::Vector2f GetPosition(const std::string& path, int idx = -1) const
 	{
-		return topPanel;
-	}
-
-	const sf::Vector2f GetPosition(const std::string& name) const
-	{
-		const json_spirit::mArray& arr = rootObj.at(name).get_array();
+		const json_spirit::mArray& arr = TraversePath(path, idx).get_array();
 		return sf::Vector2f(static_cast<float>(arr[0].get_real()), static_cast<float>(arr[1].get_real()));
 	}
 
-	int GetInt(const std::string& name) const
+	int GetInt(const std::string& path, int idx = -1) const
 	{
-		return rootObj.at(name).get_int();
+		return TraversePath(path, idx).get_int();
 	}
 
-	float GetFloat(const std::string& name) const
+	float GetFloat(const std::string& path, int idx = -1) const
 	{
-		return static_cast<float>(rootObj.at(name).get_real());
+		return static_cast<float>(TraversePath(path, idx).get_real());
 	}
 
-	std::string GetString(const std::string& name) const
+	std::string GetString(const std::string& path, int idx = -1) const
 	{
-		return rootObj.at(name).get_str();
+		return TraversePath(path, idx).get_str();
+	}
+
+	std::string GetFileName(const std::string& path, int idx = -1) const;
+
+	size_t GetArrayLength(const std::string& path, int idx = -1) const
+	{
+		return TraversePath(path, idx).get_array().size();
 	}
 
 private:
 	json_spirit::mObject rootObj;
 
+	const json_spirit::mValue& TraversePath(const std::string& path, int idx = -1) const;
+
 	std::string currentTheme;
 
 	sf::Font mainFont;
-	sf::Image topPanel;
 };
 
 #endif //THEME_H
