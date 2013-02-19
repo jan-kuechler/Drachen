@@ -27,6 +27,7 @@ class GameUserInterface
 	sf::String levelName;
 	sf::String lives;
 	sf::String countdown;
+	sf::String money;
 
 	std::vector<Button> towerButtons;
 	std::vector<int> towerButtonTypes;

@@ -12,6 +12,7 @@ namespace js = json_spirit;
 
 static float SPAWN_TIME = 1.0f;
 
+#pragma warning (disable: 4355)
 Game::Game(RenderWindow& win, GlobalStatus& gs)
 : window(win), globalStatus(gs), userInterface(this, window, theme, globalStatus, gameStatus, &map), running(true)
 { }
@@ -70,9 +71,6 @@ void Game::Run()
 			switch (event.Key.Code) {
 			case Key::G:
 				AddEnemy();
-				break;
-			case Key::T:
-				//AddTower();
 				break;
 			case Key::F2:
 				map.ToggleOverlay();

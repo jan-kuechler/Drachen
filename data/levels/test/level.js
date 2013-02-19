@@ -1,5 +1,5 @@
 {
-	"name" : "test",
+	"name" : "Test Level",
 	"theme" : "default",
 	"map" : "test",
 	

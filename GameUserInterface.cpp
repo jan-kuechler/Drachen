@@ -41,17 +41,18 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 
 	levelName.SetFont(theme.GetMainFont());
 	levelName.SetText(metaInfo.name);
-	levelName.SetPosition(theme.GetPosition("level-name-position"));
-	levelName.SetSize(theme.GetFloat("level-name-font-size"));
+	auto boundaryBox = levelName.GetRect();
+	levelName.SetPosition(theme.GetPosition("text/level-name/position") - Vector2f(boundaryBox.GetWidth() / 2, boundaryBox.GetHeight() / 2));
+	levelName.SetSize(theme.GetFloat("text/level-name/font-size"));
 
 	lives.SetFont(theme.GetMainFont());
 	lives.SetText(lexical_cast<std::string>(gameStatus.lives));
-	lives.SetPosition(theme.GetPosition("lives-position"));
-	lives.SetSize(theme.GetFloat("lives-font-size"));
+	lives.SetPosition(theme.GetPosition("text/lives/position"));
+	lives.SetSize(theme.GetFloat("text/lives/font-size"));
 
 	countdown.SetFont(theme.GetMainFont());
-	countdown.SetPosition(theme.GetPosition("countdown-position"));
-	countdown.SetSize(theme.GetFloat("countdown-font-size"));
+	countdown.SetPosition(theme.GetPosition("text/countdown/position"));
+	countdown.SetSize(theme.GetFloat("text/countdown/font-size"));
 
 	UpdateText();
 	textUpdateClock.Reset();
@@ -109,14 +110,6 @@ bool GameUserInterface::HandleEvent(Event& event)
 	for (auto it = towerButtons.begin(); it != towerButtons.end(); ++it)
 		if (it->HandleEvent(event))
 			return true;
-
-	if (event.Type == Event::KeyReleased) {
-		switch (event.Key.Code) {
-		case Key::T:
-			StartPlacingTower();
-			return true;
-		}
-	}
 
 	return false;
 }
