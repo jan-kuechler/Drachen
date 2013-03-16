@@ -2,9 +2,16 @@
 #include "Enemy.h"
 #include "Utility.h"
 
-Enemy::Enemy(const Map* map)
-: map(map), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f), atTarget(false), striked(false)
+Enemy::Enemy(const EnemySettings& settings, const Map* map)
+: settings(settings), map(map), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f), atTarget(false), striked(false)
 {
+	SetImage(*settings.image);
+	SetSize(settings.width, settings.height);
+	SetOffset(settings.offset);
+	SetFrameTime(settings.frameTime);
+	SetNumFrames(settings.numFrames);
+	SetSpeed(settings.speed);
+
 	hpBarGreen.SetColor(Color::Green);
 	hpBarRed.SetColor(Color::Red);
 }

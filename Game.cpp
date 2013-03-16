@@ -4,6 +4,7 @@
 #include "Tower.h"
 #include "DataPaths.h"
 #include "TowerSettings.h"
+#include "ResourceManager.h"
 
 #include "json_spirit/json_spirit.h"
 
@@ -25,11 +26,8 @@ void Game::Reset()
 
 	gameStatus.Reset(globalStatus);
 	LoadLevel(globalStatus.level);
+	LoadEnemySettings();
 	LoadFromFile(map, levelInfo.map);
-
-	// Debug images. TODO: Move models to the Theme class
-	LoadFromFile(imgFoe, "data/models/test.png");
-	LoadFromFile(imgTower, "data/models/archer_level1.png");
 
 	gTheme.LoadTheme(levelInfo.theme);
 	userInterface.Reset(levelInfo);
@@ -70,7 +68,7 @@ void Game::Run()
 		if (event.Type == Event::KeyReleased) {
 			switch (event.Key.Code) {
 			case Key::G:
-				AddEnemy();
+				AddEnemy(enemySettings[0]);
 				break;
 			case Key::F2:
 				map.ToggleOverlay();
@@ -195,19 +193,7 @@ void Game::SpawnEnemy()
 	// TODO: Handle different types of enemies
 	// TODO: Do not hardcode enemy attributes
 
-	std::shared_ptr<Enemy>e(new Enemy(&map));
-	e->SetImage(imgFoe);
-	e->SetOffset(1);
-	e->SetSize(50, 50);
-	e->SetFrameTime(.2f);
-	e->SetNumFrames(4);
-
-	e->SetPosition(map.GetSpawnPosition());
-
-	e->SetSpeed(50);
-	e->SetTarget(Vector2i(24, 17));
-
-	enemies.push_back(e);
+	AddEnemy(enemySettings[0]);
 }
 
 bool Game::IsRunning()
@@ -265,20 +251,49 @@ void Game::LoadLevel(const std::string& level)
 	}
 }
 
-void Game::AddEnemy()
+void Game::LoadEnemySettings()
 {
-	std::shared_ptr<Enemy>e(new Enemy(&map));
-	e->SetImage(imgFoe);
-	e->SetOffset(1);
-	e->SetSize(50, 50);
-	e->SetFrameTime(.2f);
-	e->SetNumFrames(4);
+	enemySettings.clear();
 
-	e->SetPosition(map.BlockToPosition(Vector2i(0, 7)));
+	fs::path themePath = GetThemePath(levelInfo.theme);
+	fs::path enemyDef = themePath / EnemyDefinitionFile;
 
-	e->SetSpeed(50);
-	e->SetTarget(Vector2i(24, 17));
+	std::ifstream in(enemyDef.string());
+	js::mValue rootValue;
+	try {
+		js::read_or_throw(in, rootValue);
+	}
+	catch (js::Error_position err) {
+		throw GameError() << ErrorInfo::Desc("Invalid json file") << ErrorInfo::Note(err.reason_) << boost::errinfo_at_line(err.line_) << boost::errinfo_file_name(enemyDef.string());
+	}
 
+	if (rootValue.type() != js::obj_type)
+		throw GameError() << ErrorInfo::Desc("Root value is not an object") << boost::errinfo_file_name(enemyDef.string());
+
+	js::mObject rootObj = rootValue.get_obj();
+
+	js::mArray& enemies = rootObj["enemies"].get_array();
+	enemySettings.resize(enemies.size());
+	for (size_t i=0; i < enemies.size(); ++i) {
+		js::mObject& def = enemies[i].get_obj();
+
+		enemySettings[i].image     = &gImageManager.getResource((themePath / def["image"].get_str()).string());
+		enemySettings[i].width     = def["width"].get_int();
+		enemySettings[i].height    = def["height"].get_int();
+		enemySettings[i].offset    = def["offset"].get_int();
+		enemySettings[i].numFrames = def["frames"].get_int();
+		enemySettings[i].frameTime = static_cast<float>(def["frame-time"].get_real());
+		
+		enemySettings[i].life  = def["life"].get_int();
+		enemySettings[i].speed = static_cast<float>(def["speed"].get_real());
+	}
+}
+
+void Game::AddEnemy(const EnemySettings& settings)
+{
+	std::shared_ptr<Enemy> e(new Enemy(settings, &map));
+	e->SetPosition(map.GetSpawnPosition());
+	e->SetTarget(map.GetDefaultTarget());
 	enemies.push_back(e);
 }
 

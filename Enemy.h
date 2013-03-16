@@ -4,11 +4,13 @@
 #include "AnimSprite.h"
 #include "Map.h"
 #include "Rectangle.h"
+#include "EnemySettings.h"
 
 class Enemy : public AnimSprite
 {
 	typedef std::stack<Vector2f> Path;
 
+	const EnemySettings& settings;
 	const Map* map;
 
 	float speed;
@@ -23,7 +25,7 @@ class Enemy : public AnimSprite
 	bool atTarget, striked;
 
 public:
-	Enemy(const Map* map);
+	Enemy(const EnemySettings& settings, const Map* map);
 
 	void SetTarget(const Vector2i& pos);
 	Vector2i GetTarget() const

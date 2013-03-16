@@ -11,6 +11,7 @@
 #include "Projectile.h"
 #include "Theme.h"
 #include "LevelMetaInfo.h"
+#include "EnemySettings.h"
 
 struct TowerSettings;
 
@@ -22,10 +23,9 @@ class Game
 	Image imgBg;
 	Sprite bg;
 
-	Image imgFoe;
+	std::vector<EnemySettings> enemySettings;
 	std::vector<std::shared_ptr<Enemy>> enemies;
 
-	Image imgTower;
 	std::vector<Tower> towers;
 
 	std::vector<Projectile> projectiles;
@@ -54,9 +54,11 @@ private:
 	void UpdateWave();
 	void SpawnEnemy();
 
-	void AddEnemy();
+	void AddEnemy(const EnemySettings& settings);
 
 	void LooseLife();
+
+	void LoadEnemySettings();
 };
 
 #endif //GAME_H

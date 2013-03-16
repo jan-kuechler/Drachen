@@ -4,6 +4,7 @@
 static const std::string LevelDefinitionFile = "level.js";
 static const std::string MapDefinitionFile = "map.js";
 static const std::string ThemeDefinitionFile = "theme.js";
+static const std::string EnemyDefinitionFile = "enemies.js";
 
 static inline boost::filesystem::path GetLevelPath(const std::string& level)
 {

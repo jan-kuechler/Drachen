@@ -3,7 +3,7 @@
 
 struct TowerSettings
 {
-	sf::Image *baseImage, projectileImage;
+	sf::Image *baseImage, *projectileImage;
 
 	float range;
 	float cooldown;
