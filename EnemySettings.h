@@ -11,6 +11,7 @@ struct EnemySettings
 
 	size_t life;
 	float speed;
+	size_t moneyFactor;
 };
 
 #endif //ENEMY_SETTINGS_H

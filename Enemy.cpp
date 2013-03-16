@@ -3,7 +3,7 @@
 #include "Utility.h"
 
 Enemy::Enemy(const EnemySettings& settings, const Map* map)
-: settings(settings), map(map), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f), atTarget(false), striked(false)
+: map(map), life(10), initialLife(life), hpBarGreen(30, 2.0f), hpBarRed(0.0f, 2.0f), atTarget(false), striked(false)
 {
 	SetImage(*settings.image);
 	SetSize(settings.width, settings.height);
@@ -11,6 +11,8 @@ Enemy::Enemy(const EnemySettings& settings, const Map* map)
 	SetFrameTime(settings.frameTime);
 	SetNumFrames(settings.numFrames);
 	SetSpeed(settings.speed);
+
+	moneyFactor = settings.moneyFactor;
 
 	hpBarGreen.SetColor(Color::Green);
 	hpBarRed.SetColor(Color::Red);

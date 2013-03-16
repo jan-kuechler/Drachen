@@ -52,9 +52,7 @@ private:
 	void LoadLevel(const std::string& level);
 
 	void UpdateWave();
-	void SpawnEnemy();
-
-	void AddEnemy(const EnemySettings& settings);
+	void SpawnEnemy(size_t type);
 
 	void LooseLife();
 

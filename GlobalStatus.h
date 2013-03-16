@@ -7,6 +7,8 @@ struct GlobalStatus
 
 	size_t startLives;
 	size_t startMoney;
+
+	size_t moneyPerEnemy;
 };
 
 extern GlobalStatus gStatus;

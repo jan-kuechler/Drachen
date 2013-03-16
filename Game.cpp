@@ -11,7 +11,7 @@
 namespace fs = boost::filesystem;
 namespace js = json_spirit;
 
-static float SPAWN_TIME = 1.0f;
+static float SPAWN_TIME = .5f;
 
 #pragma warning (disable: 4355)
 Game::Game(RenderWindow& win, GlobalStatus& gs)
@@ -68,7 +68,7 @@ void Game::Run()
 		if (event.Type == Event::KeyReleased) {
 			switch (event.Key.Code) {
 			case Key::G:
-				AddEnemy(enemySettings[0]);
+				SpawnEnemy(0);
 				break;
 			case Key::F2:
 				map.ToggleOverlay();
@@ -100,6 +100,11 @@ void Game::Run()
 		it->Update(elapsed);
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		it->Update(elapsed);
+
+	boost::for_each(enemies, [&](const std::shared_ptr<Enemy>& e) {
+		if (e->IsDead())
+			gameStatus.money += gStatus.moneyPerEnemy * e->GetMoneyFactor();
+	});
 
 	// Remove all the things no longer needed
 	projectiles.erase(boost::remove_if(projectiles, boost::bind(&Projectile::DidHit, _1)), projectiles.end());
@@ -147,7 +152,6 @@ void Game::UpdateWave()
 		// the enemies by proceeding to the InSpawn state;
 		if (gameStatus.countdownTimer.GetElapsedTime() > currentWave.countdown) {
 			gameStatus.waveState = GameStatus::InSpawn;
-			gameStatus.enemiesSpawned = 0;
 			gameStatus.waveTimer.Reset();
 		}
 		break;
@@ -155,9 +159,9 @@ void Game::UpdateWave()
 		// In the spawn state see if the spawn timer has elapsed and then spawn an enemy.
 		// If all enemies for this wave are spawned proceed to the InWave state
 		if (gameStatus.spawnTimer.GetElapsedTime() > SPAWN_TIME) {
-			if (gameStatus.enemiesSpawned < currentWave.enemies) {
-				SpawnEnemy();
-				gameStatus.enemiesSpawned++;
+			if (currentWave.enemies.size() > 0) {
+				SpawnEnemy(currentWave.enemies.front());
+				currentWave.enemies.pop();
 				gameStatus.spawnTimer.Reset();
 			}
 			else {
@@ -186,14 +190,6 @@ void Game::LooseLife()
 	if (gameStatus.lives == 0) {
 		running = false;
 	}
-}
-
-void Game::SpawnEnemy()
-{
-	// TODO: Handle different types of enemies
-	// TODO: Do not hardcode enemy attributes
-
-	AddEnemy(enemySettings[0]);
 }
 
 bool Game::IsRunning()
@@ -236,7 +232,16 @@ void Game::LoadLevel(const std::string& level)
 
 			GameStatus::Wave wave;
 			wave.countdown = waveDef["countdown"].get_int();
-			wave.enemies   = waveDef["enemies"].get_int();
+
+			js::mArray enemies = waveDef["enemies"].get_array();
+			for (size_t j=0; j < enemies.size(); ++j) {
+				js::mArray what = enemies[j].get_array();
+
+				size_t type = what[0].get_int();
+				size_t num = what[1].get_int();
+				for (size_t k=0; k < num; ++k)
+					wave.enemies.push(type);
+			}
 
 			if (waveDef.count("max-time"))
 				wave.maxTime = waveDef["max-time"].get_int();
@@ -286,12 +291,13 @@ void Game::LoadEnemySettings()
 		
 		enemySettings[i].life  = def["life"].get_int();
 		enemySettings[i].speed = static_cast<float>(def["speed"].get_real());
+		enemySettings[i].moneyFactor = def["money-factor"].get_int();
 	}
 }
 
-void Game::AddEnemy(const EnemySettings& settings)
+void Game::SpawnEnemy(size_t type)
 {
-	std::shared_ptr<Enemy> e(new Enemy(settings, &map));
+	std::shared_ptr<Enemy> e(new Enemy(enemySettings[type], &map));
 	e->SetPosition(map.GetSpawnPosition());
 	e->SetTarget(map.GetDefaultTarget());
 	enemies.push_back(e);

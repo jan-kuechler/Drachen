@@ -22,6 +22,7 @@ int main(int argc, char **argv)
 	try {
 		gStatus.level = "test";
 		gStatus.startLives = 6;
+		gStatus.moneyPerEnemy = 10;
 		gStatus.startMoney = 10000;
 
 		RenderWindow window(sf::VideoMode(800, 600, 32), "Drachen");

@@ -10,10 +10,10 @@ class Enemy : public AnimSprite
 {
 	typedef std::stack<Vector2f> Path;
 
-	const EnemySettings& settings;
 	const Map* map;
 
 	float speed;
+	size_t moneyFactor;
 
 	Path path;
 	size_t blockSize;
@@ -76,6 +76,11 @@ public:
 	bool IsIrrelevant() const
 	{
 		return IsDead() || DidStrike();
+	}
+
+	size_t GetMoneyFactor() const
+	{
+		return moneyFactor;
 	}
 
 	void DrawHpBar(RenderTarget& target);
