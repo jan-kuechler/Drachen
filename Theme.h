@@ -51,4 +51,6 @@ private:
 	sf::Font mainFont;
 };
 
+extern Theme gTheme;
+
 #endif //THEME_H

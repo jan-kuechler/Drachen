@@ -14,7 +14,7 @@ static float SPAWN_TIME = 1.0f;
 
 #pragma warning (disable: 4355)
 Game::Game(RenderWindow& win, GlobalStatus& gs)
-: window(win), globalStatus(gs), userInterface(this, window, theme, globalStatus, gameStatus, &map), running(true)
+: window(win), globalStatus(gs), userInterface(this, window, globalStatus, gameStatus, &map), running(true)
 { }
 
 void Game::Reset()
@@ -31,7 +31,7 @@ void Game::Reset()
 	LoadFromFile(imgFoe, "data/models/test.png");
 	LoadFromFile(imgTower, "data/models/archer_level1.png");
 
-	theme.LoadTheme(levelInfo.theme);
+	gTheme.LoadTheme(levelInfo.theme);
 	userInterface.Reset(levelInfo);
 
 	// reset countdown and spawn timer here for the first wave
@@ -217,7 +217,7 @@ bool Game::IsRunning()
 
 State Game::GetNextState()
 {
-	return ST_QUIT;
+	return ST_MAIN_MENU;
 }
 
 void Game::LoadLevel(const std::string& level)

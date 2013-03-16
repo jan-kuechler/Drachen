@@ -33,7 +33,7 @@ class Game
 	Map map;
 	GameStatus gameStatus;
 	GameUserInterface userInterface;
-	Theme theme;
+	//Theme theme;
 	LevelMetaInfo levelInfo;
 public:
 	Game(RenderWindow& win, GlobalStatus& gs);

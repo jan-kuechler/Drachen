@@ -15,44 +15,44 @@ using boost::lexical_cast;
 // do not update the text every frame
 static const float TEXT_UPDATE_TIME = 0.2f;
 
-GameUserInterface::GameUserInterface(Game* game, RenderWindow& window, const Theme& theme, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map* map)
-: game(game), window(window), theme(theme), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
+GameUserInterface::GameUserInterface(Game* game, RenderWindow& window, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map* map)
+: game(game), window(window), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
 { }
 
 void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 {
-	topPanel.SetImage(gImageManager.getResource(theme.GetFileName("top-panel")));
+	topPanel.SetImage(gImageManager.getResource(gTheme.GetFileName("top-panel")));
 	topPanel.SetPosition(0, 0);
 
-	auto bottomPanelImage = theme.GetFileName("bottom-panel");
+	auto bottomPanelImage = gTheme.GetFileName("bottom-panel");
 	bottomPanel.SetImage(gImageManager.getResource(bottomPanelImage));
 	bottomPanel.SetPosition(0, 500);
 
-	size_t nTowerButtons = theme.GetArrayLength("tower-buttons");
+	size_t nTowerButtons = gTheme.GetArrayLength("tower-buttons");
 	towerButtons.clear();
 	towerButtonTypes.clear();
 	for (size_t i=0; i < nTowerButtons; ++i) {
 		Button btn;
-		btn.SetImage(gImageManager.getResource(theme.GetFileName("tower-buttons[]/image", i)));
-		btn.SetPosition(theme.GetPosition("tower-buttons[]/position", i));
+		btn.SetImage(gImageManager.getResource(gTheme.GetFileName("tower-buttons[]/image", i)));
+		btn.SetPosition(gTheme.GetPosition("tower-buttons[]/position", i));
 		towerButtons.push_back(btn);
-		towerButtonTypes.push_back(theme.GetInt("tower-buttons[]/tower", i));
+		towerButtonTypes.push_back(gTheme.GetInt("tower-buttons[]/tower", i));
 	}
 
-	levelName.SetFont(theme.GetMainFont());
+	levelName.SetFont(gTheme.GetMainFont());
 	levelName.SetText(metaInfo.name);
 	auto boundaryBox = levelName.GetRect();
-	levelName.SetPosition(theme.GetPosition("text/level-name/position") - Vector2f(boundaryBox.GetWidth() / 2, boundaryBox.GetHeight() / 2));
-	levelName.SetSize(theme.GetFloat("text/level-name/font-size"));
+	levelName.SetPosition(gTheme.GetPosition("text/level-name/position") - Vector2f(boundaryBox.GetWidth() / 2, boundaryBox.GetHeight() / 2));
+	levelName.SetSize(gTheme.GetFloat("text/level-name/font-size"));
 
-	lives.SetFont(theme.GetMainFont());
+	lives.SetFont(gTheme.GetMainFont());
 	lives.SetText(lexical_cast<std::string>(gameStatus.lives));
-	lives.SetPosition(theme.GetPosition("text/lives/position"));
-	lives.SetSize(theme.GetFloat("text/lives/font-size"));
+	lives.SetPosition(gTheme.GetPosition("text/lives/position"));
+	lives.SetSize(gTheme.GetFloat("text/lives/font-size"));
 
-	countdown.SetFont(theme.GetMainFont());
-	countdown.SetPosition(theme.GetPosition("text/countdown/position"));
-	countdown.SetSize(theme.GetFloat("text/countdown/font-size"));
+	countdown.SetFont(gTheme.GetMainFont());
+	countdown.SetPosition(gTheme.GetPosition("text/countdown/position"));
+	countdown.SetSize(gTheme.GetFloat("text/countdown/font-size"));
 
 	UpdateText();
 	textUpdateClock.Reset();

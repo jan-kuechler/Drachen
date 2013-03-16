@@ -14,7 +14,6 @@ struct LevelMetaInfo;
 
 class GameUserInterface
 {
-	const Theme& theme;
 	RenderWindow& window;
 
 	GlobalStatus& globalStatus;
@@ -39,7 +38,7 @@ class GameUserInterface
 	std::unique_ptr<TowerPlacer> towerPlacer;
 
 public:
-	GameUserInterface(Game* game, RenderWindow& window, const Theme& theme, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map *map);
+	GameUserInterface(Game* game, RenderWindow& window, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map *map);
 
 	void Update();
 	void Draw();

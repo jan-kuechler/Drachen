@@ -10,6 +10,8 @@
 #include <queue>
 #include <vector>
 #include <stack>
+#include <array>
+#include <tuple>
 
 #include <string>
 

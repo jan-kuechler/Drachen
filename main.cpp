@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "Game.h"
+#include "MainMenu.h"
 #include "Utility.h"
 #include "ResourceManager.h"
+#include "Theme.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -9,26 +11,44 @@
 // global resource manager variables
 ResourceManager<sf::Image> gImageManager;
 
+Theme gTheme;
+
+GlobalStatus gStatus;
+
 void HandleException(boost::exception& ex);
 
 int main(int argc, char **argv)
 {
 	try {
-		GlobalStatus status;
-		status.level = "test";
-		status.startLives = 6;
-		status.startMoney = 10000;
+		gStatus.level = "test";
+		gStatus.startLives = 6;
+		gStatus.startMoney = 10000;
 
 		RenderWindow window(sf::VideoMode(800, 600, 32), "Drachen");
 		window.SetFramerateLimit(100);
 
-		Game game(window, status);
+		gTheme.LoadTheme("default");
 
-		State state = ST_GAME;
+		MainMenu mainMenu(window);
+		Game game(window, gStatus);
+
+		State state = ST_MAIN_MENU;
 		bool newState = true;
 
 		while (window.IsOpened()) {
 			switch (state) {
+			case ST_MAIN_MENU:
+				if (newState) {
+					mainMenu.Reset();
+					newState = false;
+				}
+				mainMenu.Run();
+				if (!mainMenu.IsRunning()) {
+					state = mainMenu.GetNextState();
+					newState = true;
+				}
+				break;
+
 			case ST_GAME:
 				if (newState) {
 					game.Reset();
@@ -41,6 +61,7 @@ int main(int argc, char **argv)
 				}
 				break;
 
+			case ST_OPTIONS_MENU:
 			case ST_QUIT:
 				window.Close();
 				break;

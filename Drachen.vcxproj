@@ -130,6 +130,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rectangle.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="json_spirit\json_spirit_writer.h" />
     <ClInclude Include="json_spirit\json_spirit_writer_template.h" />
     <ClInclude Include="LevelMetaInfo.h" />
+    <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rectangle.h" />

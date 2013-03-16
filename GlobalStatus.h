@@ -9,4 +9,6 @@ struct GlobalStatus
 	size_t startMoney;
 };
 
+extern GlobalStatus gStatus;
+
 #endif //GLOBAL_STATUS_H

@@ -26,5 +26,15 @@
 			"position" : [100, 38],
 			"font-size" : 24
 		}
+	},
+	
+	"main-menu": {
+		"background": "menu/menu_bg.png",
+		
+		"buttons": [
+			"menu/button_start.png",
+			"menu/button_options.png",
+			"menu/button_quit.png"
+		]
 	}
 }
