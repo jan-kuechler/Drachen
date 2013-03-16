@@ -11,32 +11,58 @@
 namespace fs = boost::filesystem;
 namespace js = json_spirit;
 
-static float SPAWN_TIME = .5f;
+static const float SPAWN_TIME = .5f;
+
+static const int LOADING_BAR_WIDTH = 500;
 
 #pragma warning (disable: 4355)
 Game::Game(RenderWindow& win, GlobalStatus& gs)
-: window(win), globalStatus(gs), userInterface(this, window, globalStatus, gameStatus, &map), running(true)
+: window(win), globalStatus(gs), userInterface(this, window, globalStatus, gameStatus, &map), running(true), loadingScreenBar(LOADING_BAR_WIDTH, 20)
 { }
 
 void Game::Reset()
 {
+	loadingScreenBackground.SetImage(gImageManager.getResource(gTheme.GetFileName("main-menu/background")));
+	loadingScreenBackground.SetPosition(0, 0);
+	loadingScreenBar.SetPosition(250, 500);
+	loadingScreenBar.SetColor(Color(255, 216, 0));
+	UpdateLoadingScreen(0.1);
+
 	enemies.clear();
 	towers.clear();
 	projectiles.clear();
 
 	gameStatus.Reset(globalStatus);
+	UpdateLoadingScreen(0.2);
+
 	LoadLevel(globalStatus.level);
+	UpdateLoadingScreen(0.3);
+
 	LoadEnemySettings();
+	UpdateLoadingScreen(0.4);
+
 	LoadFromFile(map, levelInfo.map);
+	UpdateLoadingScreen(0.7);
 
 	gTheme.LoadTheme(levelInfo.theme);
 	userInterface.Reset(levelInfo);
+	UpdateLoadingScreen(0.9);
 
 	// reset countdown and spawn timer here for the first wave
 	gameStatus.spawnTimer.Reset();
 	gameStatus.countdownTimer.Reset();
+	UpdateLoadingScreen(1);
 
 	running = true;
+}
+
+void Game::UpdateLoadingScreen(float pct)
+{
+	loadingScreenBar.SetWidth(pct * LOADING_BAR_WIDTH);
+
+	window.Draw(loadingScreenBackground);
+	window.Draw(loadingScreenBar);
+	window.Display();
 }
 
 // Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn

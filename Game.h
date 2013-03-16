@@ -12,6 +12,7 @@
 #include "Theme.h"
 #include "LevelMetaInfo.h"
 #include "EnemySettings.h"
+#include "Rectangle.h"
 
 struct TowerSettings;
 
@@ -22,6 +23,9 @@ class Game
 
 	Image imgBg;
 	Sprite bg;
+
+	Sprite loadingScreenBackground;
+	sfext::Rectangle loadingScreenBar;
 
 	std::vector<EnemySettings> enemySettings;
 	std::vector<std::shared_ptr<Enemy>> enemies;
@@ -57,6 +61,8 @@ private:
 	void LooseLife();
 
 	void LoadEnemySettings();
+
+	void UpdateLoadingScreen(float pct);
 };
 
 #endif //GAME_H
