@@ -14,6 +14,8 @@ public:
 	typedef std::vector<std::vector<Cell> > Grid;
 
 private:
+	std::string prevMap;
+
 	Image bgImg;
 	Sprite bg;
 

@@ -27,6 +27,7 @@ class Game
 	Sprite loadingScreenBackground;
 	sfext::Rectangle loadingScreenBar;
 
+	std::string prevTheme;
 	std::vector<EnemySettings> enemySettings;
 	std::vector<std::shared_ptr<Enemy>> enemies;
 

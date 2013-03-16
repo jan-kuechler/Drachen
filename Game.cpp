@@ -13,7 +13,7 @@ namespace js = json_spirit;
 
 static const float SPAWN_TIME = .5f;
 
-static const int LOADING_BAR_WIDTH = 500;
+static const float LOADING_BAR_WIDTH = 500;
 
 #pragma warning (disable: 4355)
 Game::Game(RenderWindow& win, GlobalStatus& gs)
@@ -102,6 +102,11 @@ void Game::Run()
 				break;
 			case Key::F3:
 				map.DebugToggleTowersAnywhere();
+				break;
+
+			case Key::Q:
+				gameStatus.lives = 1;
+				LooseLife();
 				break;
 			}
 		}
@@ -215,7 +220,7 @@ void Game::UpdateWave()
 void Game::LooseLife()
 {
 	gameStatus.lives--;
-	if (gameStatus.lives == 0) {
+	if (gameStatus.lives <= 0) {
 		running = false;
 	}
 }
@@ -286,7 +291,8 @@ void Game::LoadLevel(const std::string& level)
 
 void Game::LoadEnemySettings()
 {
-	enemySettings.clear();
+	if (levelInfo.theme == prevTheme)
+		return; // already loaded
 
 	fs::path themePath = GetThemePath(levelInfo.theme);
 	fs::path enemyDef = themePath / EnemyDefinitionFile;
@@ -306,6 +312,7 @@ void Game::LoadEnemySettings()
 	js::mObject rootObj = rootValue.get_obj();
 
 	js::mArray& enemies = rootObj["enemies"].get_array();
+	enemySettings.clear();
 	enemySettings.resize(enemies.size());
 	for (size_t i=0; i < enemies.size(); ++i) {
 		js::mObject& def = enemies[i].get_obj();

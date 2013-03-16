@@ -27,6 +27,9 @@ Map::Map()
 
 bool Map::LoadFromFile(const std::string& map)
 {
+	if (map == prevMap)
+		return true; // everything already loaded
+
 	fs::path base = GetMapPath(map);
 	fs::path filePath = base / MapDefinitionFile;
 
