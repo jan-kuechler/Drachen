@@ -134,7 +134,7 @@ void Map::UpdateOverlay()
 		for (size_t y = 0; y < height; ++y) {
 			if (grid[x][y])
 				overlay[x][y] = Shape::Rectangle(p1, p2, Color(0, 255, 0, 64));
-			else if (MayPlaceTower(BlockToTowerPos(Vector2i(x, y))))
+			else if (MayPlaceTower(Vector2i(x, y)))
 				overlay[x][y] = Shape::Rectangle(p1, p2, Color(0, 0, 255, 64));
 			else
 				overlay[x][y] = Shape::Rectangle(p1, p2, Color(255, 0, 0, 64));
