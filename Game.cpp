@@ -26,32 +26,33 @@ void Game::Reset()
 	loadingScreenBackground.SetPosition(0, 0);
 	loadingScreenBar.SetPosition(250, 500);
 	loadingScreenBar.SetColor(Color(255, 216, 0));
-	UpdateLoadingScreen(0.1);
+	UpdateLoadingScreen(0.1f);
 
 	enemies.clear();
 	towers.clear();
 	projectiles.clear();
 
 	gameStatus.Reset(globalStatus);
-	UpdateLoadingScreen(0.2);
+	UpdateLoadingScreen(0.2f);
 
 	LoadLevel(globalStatus.level);
-	UpdateLoadingScreen(0.3);
+	UpdateLoadingScreen(0.3f);
 
 	LoadEnemySettings();
-	UpdateLoadingScreen(0.4);
+	UpdateLoadingScreen(0.4f);
 
 	LoadFromFile(map, levelInfo.map);
-	UpdateLoadingScreen(0.7);
+	map.Reset();
+	UpdateLoadingScreen(0.7f);
 
 	gTheme.LoadTheme(levelInfo.theme);
 	userInterface.Reset(levelInfo);
-	UpdateLoadingScreen(0.9);
+	UpdateLoadingScreen(0.9f);
 
 	// reset countdown and spawn timer here for the first wave
 	gameStatus.spawnTimer.Reset();
 	gameStatus.countdownTimer.Reset();
-	UpdateLoadingScreen(1);
+	UpdateLoadingScreen(1.f);
 
 	running = true;
 }

@@ -40,6 +40,7 @@ public:
 	Map();
 
 	bool LoadFromFile(const std::string& map);
+	void Reset();
 
 	const Grid& GetGrid() const
 	{

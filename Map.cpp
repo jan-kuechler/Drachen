@@ -103,6 +103,11 @@ bool Map::LoadFromFile(const std::string& map)
 	return true;
 }
 
+void Map::Reset()
+{
+	towers.clear();
+}
+
 void Map::PlaceTower(const Vector2i& tpos)
 {
 	towers.insert(tpos);

@@ -58,6 +58,9 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 	money.SetPosition(gTheme.GetPosition("text/money/position"));
 	money.SetSize(gTheme.GetFloat("text/money/font-size"));
 
+	// release any towerPlacer left from the previous round
+	towerPlacer.release();
+
 	UpdateText();
 	textUpdateClock.Reset();
 }
