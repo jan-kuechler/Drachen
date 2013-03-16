@@ -66,14 +66,8 @@ bool Map::LoadFromFile(const std::string& map)
 		for (size_t y=0; y < gridData.size(); ++y) {
 			js::mArray& row = gridData[y].get_array();
 			for (size_t x=0; x < row.size(); ++x) {
-				grid[x][y] = row[x].get_bool(); 
+				grid[x][y] = static_cast<Cell>(row[x].get_int()); 
 			}
-		}
-
-		js::mArray& tp = rootObj["tower-places"].get_array();
-		for (size_t i = 0; i < tp.size(); ++i) {
-			js::mArray& p = tp[i].get_array();
-			towerPlaces.insert(Vector2i(p[0].get_int(), p[1].get_int()));
 		}
 
 		js::mArray& spawn = rootObj["spawn-place"].get_array();
@@ -116,7 +110,14 @@ void Map::PlaceTower(const Vector2i& tpos)
 
 bool Map::MayPlaceTower(const Vector2i& tpos) const
 {
-	return dbgTowersAnywhere || ((towerPlaces.find(tpos) != towerPlaces.end()) && (towers.find(tpos) == towers.end()));
+	if (dbgTowersAnywhere)
+		return true;
+
+	if (towers.count(tpos))
+		return false;
+
+	Cell cell = grid[tpos.x][tpos.y];
+	return cell == Tower || cell == HighTower; 
 }
 
 bool Map::IsInTargetArea(const Vector2i& blk) const

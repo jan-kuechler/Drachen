@@ -116,7 +116,7 @@ static bool ValidNeighbor(int x, int y, const Map& map)
 {
 	return (x >= 0) && (y >= 0)
 		&& (static_cast<size_t>(x) < map.GetWidth()) && (static_cast<size_t>(y) < map.GetHeight()) 
-		&& map.GetGrid()[x][y];
+		&& map.GetGrid()[x][y] == Map::Path;
 }
 
 static void FillNeighbors(std::vector<Vector2i>& c, const Map& map, int x, int y)

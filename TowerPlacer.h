@@ -12,7 +12,7 @@ class TowerPlacer : public AnimSprite
 	TowerSettings* settings;
 
 	static Color ColorInvalidPosition, ColorValidPosition, ColorPlaced, ColorRangeCircle;
-	Shape rangeCircle;
+	Shape rangeCircle, highRangeCircle;
 
 	bool validPosition;
 	bool placed, cancelPlacing;
@@ -25,12 +25,14 @@ public:
 	{
 		AnimSprite::SetPosition(x, y);
 		rangeCircle.SetPosition(x, y);
+		highRangeCircle.SetPosition(x, y);
 	}
 
 	void SetPosition(Vector2f pos)
 	{
 		AnimSprite::SetPosition(pos);
 		rangeCircle.SetPosition(pos);
+		highRangeCircle.SetPosition(pos);
 	}
 
 	bool IsPlaced()
@@ -43,9 +45,12 @@ public:
 		return cancelPlacing;
 	}
 
-	void DrawRangeCircle(sf::RenderTarget& target)
+	void DrawRangeCircle(sf::RenderTarget& target, bool highRange)
 	{
-		target.Draw(rangeCircle);
+		if (highRange)
+			target.Draw(highRangeCircle);
+		else
+			target.Draw(rangeCircle);
 	}
 
 	TowerSettings* GetSettings()

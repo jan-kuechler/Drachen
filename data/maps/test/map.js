@@ -2,53 +2,35 @@
 	"name" : "test",
 	"theme" : "default",
 	
-	"width" : 32,
-	"height"  : 24,
+	"width" : 16,
+	"height"  : 12,
 	
-	"block-size" : 25,
-	
-	"tower-places" : [
-		[ 4, 6],
-		[ 5, 6]
-	],
-	
-	"spawn-place" : [0, 7],
+	"block-size" : 50,
+
+	"spawn-place" : [0, 4],
 		
 	"target-area" : {
-		"top-left": [24, 13],
-		"width": 6,
-		"height": 6
+		"top-left": [12,7],
+		"width": 3,
+		"height": 3
 	},
 	
-	"default-target": [26, 16],
+	"default-target": [13,8],
 	
-	"grid" : [
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
+	"grid": [
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,2,2,2,0,0,2,2,2,2,2,2,2,2,0,0],
+		[1,1,1,1,2,2,1,1,1,1,1,1,1,1,2,0],
+		[0,2,2,1,2,2,1,2,2,2,2,2,2,1,2,0],
+		[0,0,2,1,3,3,1,2,0,0,0,0,1,1,1,0],
+		[0,0,2,1,1,1,1,2,0,0,0,0,1,1,1,0],
+		[0,0,0,2,2,2,2,0,0,0,0,0,1,1,1,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 		
-		[  true,  true,  true,  true,  true,  true,  true,  true, false, false, false, false,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true, false, false, false, false ],
-		[  true,  true,  true,  true,  true,  true,  true,  true, false, false, false, false,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true,  true, false, false, false, false ],
-		[ false, false, false, false, false, false,  true,  true, false, false, false, false,  true,  true, false, false, false, false, false, false, false, false, false, false, false, false,  true,  true, false, false, false, false ],
-		[ false, false, false, false, false, false,  true,  true, false, false, false, false,  true,  true, false, false, false, false, false, false, false, false, false, false, false, false,  true,  true, false, false, false, false ],
-		[ false, false, false, false, false, false,  true,  true, false, false, false, false,  true,  true, false, false, false, false, false, false, false, false, false, false, false, false,  true,  true, false, false, false, false ],
-		[ false, false, false, false, false, false,  true,  true, false, false, false, false,  true,  true, false, false, false, false, false, false, false, false, false, false, false, false,  true,  true, false, false, false, false ],
-		[ false, false, false, false, false, false,  true,  true, false, false, false, false,  true,  true, false, false, false, false, false, false, false, false, false, false,  true,  true,  true,  true,  true,  true, false, false ],
-		[ false, false, false, false, false, false,  true,  true,  true,  true,  true,  true,  true,  true, false, false, false, false, false, false, false, false, false, false,  true,  true,  true,  true,  true,  true, false, false ],
-		[ false, false, false, false, false, false,  true,  true,  true,  true,  true,  true,  true,  true, false, false, false, false, false, false, false, false, false, false,  true,  true,  true,  true,  true,  true, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,  true,  true,  true,  true,  true,  true, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,  true,  true,  true,  true,  true,  true, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,  true,  true,  true,  true,  true,  true, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
-		
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ],
-		[ false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false ]
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 	]
 }

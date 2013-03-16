@@ -4,7 +4,14 @@
 class Map
 {
 public:
-	typedef std::vector<std::vector<bool> > Grid;
+	enum Cell {
+		Nothing   = 0,
+		Path      = 1,
+		Tower     = 2,
+		HighTower = 3,
+	};
+
+	typedef std::vector<std::vector<Cell> > Grid;
 
 private:
 	Image bgImg;
@@ -15,7 +22,6 @@ private:
 	Grid grid;
 
 	// Only access these sets in Map.cpp, the operator < for Vector2i is only defined there.
-	std::set<Vector2i> towerPlaces;
 	std::set<Vector2i> towers;
 
 	std::set<Vector2i> targetPlaces;
@@ -65,6 +71,11 @@ public:
 	bool MayPlaceTower(const Vector2i& tpos) const;
 	void PlaceTower(const Vector2i& tpos);
 
+	bool IsHighRangeBlock(const Vector2i& tpos) const
+	{
+		return grid[tpos.x][tpos.y] == HighTower;
+	}
+
 	Vector2i GetDefaultTarget() const
 	{
 		return defaultTarget;
@@ -84,12 +95,12 @@ public:
 
 	Vector2i BlockToTowerPos(const Vector2i& blk) const
 	{
-		return blk / 2;
+		return blk;
 	}
 
 	Vector2f TowerPosToPosition(const Vector2i& tp) const
 	{
-		return Vector2f((tp.x + 0.5f) * 2 * blockSize, (tp.y + 0.5f) * 2 * blockSize);
+		return Vector2f((tp.x + 0.5f) * blockSize, (tp.y + 0.5f) * blockSize);
 	}
 
 	Vector2i PositionToBlock(const Vector2f& pos) const
@@ -99,7 +110,7 @@ public:
 
 	Vector2i PostionToTowerPos(const Vector2f& pos) const
 	{
-		return Vector2i(static_cast<int>(pos.x / (2*blockSize)), static_cast<int>(pos.y / (2*blockSize)));
+		return Vector2i(static_cast<int>(pos.x / (blockSize)), static_cast<int>(pos.y / (blockSize)));
 	}
 
 	void DebugToggleTowersAnywhere()

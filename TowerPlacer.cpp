@@ -14,8 +14,10 @@ TowerPlacer::TowerPlacer(const Map* map, TowerSettings* settings)
 	SetColor(ColorInvalidPosition);
 	SetImage(*settings->baseImage);
 	SetSize(settings->baseImage->GetWidth(), settings->baseImage->GetHeight());
+	SetCenter(GetWidth() / 2.f, GetHeight() - GetWidth() / 3.f);
 
 	rangeCircle = Shape::Circle(GetPosition(), settings->range, ColorRangeCircle);
+	highRangeCircle = Shape::Circle(GetPosition(), settings->range * 1.5f, ColorRangeCircle);
 }
 
 bool TowerPlacer::HandleEvent(Event& event)

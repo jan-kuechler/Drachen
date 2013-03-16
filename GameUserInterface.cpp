@@ -102,7 +102,7 @@ void GameUserInterface::Draw()
 		window.Draw(countdown);
 
 	if (towerPlacer) {
-		towerPlacer->DrawRangeCircle(window);
+		towerPlacer->DrawRangeCircle(window, map->IsHighRangeBlock(map->PositionToBlock(towerPlacer->GetPosition())));
 		window.Draw(*towerPlacer);
 	}
 }
@@ -148,7 +148,7 @@ void GameUserInterface::StartPlacingTower()
 		testSettings.baseImage = new sf::Image;
 		LoadFromFile(*testSettings.baseImage, "data/models/archer_level1.png");
 	}
-	testSettings.range = 4.0f * map->GetBlockSize();
+	testSettings.range = 2.0f * map->GetBlockSize();
 	testSettings.cooldown = 1.0f;
 
 	assert(towerPlacer == nullptr);
