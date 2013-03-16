@@ -41,6 +41,24 @@ std::string Theme::GetFileName(const std::string& path, int idx) const
 	return (GetThemePath(currentTheme) / fileName).string();
 }
 
+std::tuple<std::string, bool, int> GetArrayAccess(const std::string& part, int idx)
+{
+	size_t bracketPos = part.find('[');
+	if (bracketPos != part.npos) {
+		std::string name = part.substr(0, bracketPos);
+		std::string index = part.substr(bracketPos+1);
+		index.pop_back(); // remove the closing ]
+
+		int arrayIndex = idx;
+		if (!index.empty())
+			arrayIndex = boost::lexical_cast<int>(index);
+
+		return std::make_tuple(name, true, arrayIndex);
+	}
+
+	return std::make_tuple(part, false, 0);
+}
+
 const js::mValue& Theme::TraversePath(const std::string& path, int idx) const
 {
 	std::vector<std::string> parts;
@@ -54,18 +72,7 @@ const js::mValue& Theme::TraversePath(const std::string& path, int idx) const
 		int arrayIndex = 0;
 		std::string name = *it;
 
-		size_t bracketPos = it->find('[');
-		if (bracketPos != it->npos) {
-			arrayAccess = true;
-			name = it->substr(0, bracketPos);
-			std::string index = it->substr(bracketPos+1);
-			index.pop_back(); // remove the closing ]
-
-			if (!index.empty()) 
-				arrayIndex = boost::lexical_cast<int>(index);
-			else
-				arrayIndex = idx;
-		}
+		std::tie(name, arrayAccess, arrayIndex) = GetArrayAccess(*it, idx);
 
 		if (!arrayAccess) {
 			parent = &parent->at(name).get_obj();
@@ -76,5 +83,12 @@ const js::mValue& Theme::TraversePath(const std::string& path, int idx) const
 		}
 	}
 
-	return parent->at(last);
+	bool arrayAccess = false;
+	int arrayIndex = 0;
+	std::tie(last, arrayAccess, arrayIndex) = GetArrayAccess(last, idx);
+
+	if (!arrayAccess)
+		return parent->at(last);
+	else
+		return parent->at(last).get_array().at(arrayIndex);
 }
