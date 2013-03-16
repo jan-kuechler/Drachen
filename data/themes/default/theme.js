@@ -19,12 +19,16 @@
 			"font-size": 28
 		},
 		"lives" : {
-			"position" : [700, 38],
+			"position" : [700, 18],
 			"font-size" : 24		
 		},
 		"countdown" : {
 			"position" : [100, 38],
 			"font-size" : 24
+		},
+		"money": {
+			"position": [700, 48],
+			"font-size": 24
 		}
 	},
 	

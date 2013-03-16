@@ -101,6 +101,7 @@ void Game::Run()
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		it->Update(elapsed);
 
+	// grant money for dead enemies
 	boost::for_each(enemies, [&](const std::shared_ptr<Enemy>& e) {
 		if (e->IsDead())
 			gameStatus.money += gStatus.moneyPerEnemy * e->GetMoneyFactor();

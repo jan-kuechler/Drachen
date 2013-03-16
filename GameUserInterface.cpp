@@ -54,6 +54,10 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 	countdown.SetPosition(gTheme.GetPosition("text/countdown/position"));
 	countdown.SetSize(gTheme.GetFloat("text/countdown/font-size"));
 
+	money.SetFont(gTheme.GetMainFont());
+	money.SetPosition(gTheme.GetPosition("text/money/position"));
+	money.SetSize(gTheme.GetFloat("text/money/font-size"));
+
 	UpdateText();
 	textUpdateClock.Reset();
 }
@@ -89,6 +93,7 @@ void GameUserInterface::Draw()
 
 	window.Draw(levelName);
 	window.Draw(lives);
+	window.Draw(money);
 
 	for (auto it = towerButtons.begin(); it != towerButtons.end(); ++it)
 		window.Draw(*it);
@@ -117,6 +122,7 @@ bool GameUserInterface::HandleEvent(Event& event)
 void GameUserInterface::UpdateText()
 {
 	lives.SetText(lexical_cast<std::string>(gameStatus.lives));
+	money.SetText(lexical_cast<std::string>(gameStatus.money));
 
 	if (gameStatus.waveState == GameStatus::InCountdown && gameStatus.currentWave < gameStatus.waves.size()) {
 		countdown.SetText(lexical_cast<std::string>(gameStatus.waves[gameStatus.currentWave].countdown - static_cast<int>(gameStatus.countdownTimer.GetElapsedTime())));
