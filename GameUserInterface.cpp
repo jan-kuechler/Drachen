@@ -143,8 +143,6 @@ void GameUserInterface::StartPlacingTower()
 	if (gameStatus.money < 100)
 		return;
 
-	gameStatus.money -= 100;
-
 	static TowerSettings testSettings;
 	if (!testSettings.baseImage) {
 		testSettings.baseImage = new sf::Image;
@@ -154,7 +152,6 @@ void GameUserInterface::StartPlacingTower()
 	testSettings.cooldown = 1.0f;
 
 	assert(towerPlacer == nullptr);
-
 	towerPlacer.reset(new TowerPlacer(map, &testSettings));
 
 	const Input& input = window.GetInput();

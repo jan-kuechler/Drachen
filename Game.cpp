@@ -306,6 +306,8 @@ void Game::SpawnEnemy(size_t type)
 
 void Game::AddTower(TowerSettings* settings, Vector2f pos)
 {
+	gameStatus.money -= 100;
+
 	Tower t(&enemies, &projectiles);
 	t.SetImage(*settings->baseImage);
 	t.SetPosition(pos);
