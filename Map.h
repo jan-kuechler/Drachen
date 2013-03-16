@@ -93,24 +93,9 @@ public:
 		return Vector2f((blk.x + 0.5f) * blockSize, (blk.y + 0.5f) * blockSize);
 	}
 
-	Vector2i BlockToTowerPos(const Vector2i& blk) const
-	{
-		return blk;
-	}
-
-	Vector2f TowerPosToPosition(const Vector2i& tp) const
-	{
-		return Vector2f((tp.x + 0.5f) * blockSize, (tp.y + 0.5f) * blockSize);
-	}
-
 	Vector2i PositionToBlock(const Vector2f& pos) const
 	{
 		return Vector2i(static_cast<int>(pos.x / blockSize), static_cast<int>(pos.y / blockSize));
-	}
-
-	Vector2i PostionToTowerPos(const Vector2f& pos) const
-	{
-		return Vector2i(static_cast<int>(pos.x / (blockSize)), static_cast<int>(pos.y / (blockSize)));
 	}
 
 	void DebugToggleTowersAnywhere()

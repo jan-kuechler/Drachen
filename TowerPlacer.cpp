@@ -27,10 +27,10 @@ bool TowerPlacer::HandleEvent(Event& event)
 
 	if (event.Type == Event::MouseMoved) {
 		Vector2f pos(static_cast<float>(event.MouseMove.X), static_cast<float>(event.MouseMove.Y));
-		Vector2i tpos = map->PostionToTowerPos(pos);
+		Vector2i tpos = map->PositionToBlock(pos);
 
 		if (map->MayPlaceTower(tpos)) {
-			SetPosition(map->TowerPosToPosition(tpos));
+			SetPosition(map->BlockToPosition(tpos));
 			validPosition = true;
 			SetColor(ColorValidPosition);
 		}
