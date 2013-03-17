@@ -122,12 +122,12 @@ void Game::Run()
 			std::vector<std::shared_ptr<Tower>> revTowers = towers;
 			boost::reverse(revTowers);
 
-
 			auto it = boost::find_if(revTowers, boost::bind(IsAtPoint, _1, pos));
 			if (it != revTowers.end())
 				userInterface.TowerSelected(*it);
 			else
 				userInterface.TowerSelected(nullptr);
+
 		}
 	}
 

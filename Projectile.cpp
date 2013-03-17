@@ -8,7 +8,13 @@ static const Vector2f LEFT(-1.0f, 0.0f);
 
 Projectile::Projectile(std::weak_ptr<Enemy> target)
 : speed(100.f), target(target), hit(false)
-{ }
+{
+	std::shared_ptr<Enemy> tgt = target.lock();
+
+	if (tgt) {
+		targetPosition = tgt->GetPosition();
+	}
+}
 
 void Projectile::SetImage(const Image& img)
 {
