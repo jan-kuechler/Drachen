@@ -68,9 +68,14 @@ void Game::UpdateLoadingScreen(float pct)
 
 // Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
 // later, so the overlap is displayed correctly.
-static bool CompTowerY(const std::unique_ptr<Tower>& a, const std::unique_ptr<Tower>& b)
+static bool CompTowerY(const std::shared_ptr<Tower>& a, const std::shared_ptr<Tower>& b)
 {
 	return a->GetPosition().y < b->GetPosition().y;
+}
+
+static bool IsAtPoint(const std::shared_ptr<Tower>& twr, Vector2f pt)
+{
+	return PointInRect(pt, twr->GetPosition() - twr->GetCenter(), static_cast<float>(twr->GetWidth()), static_cast<float>(twr->GetHeight()));
 }
 
 static bool ShouldRemoveEnemy(const std::shared_ptr<Enemy>& e)
@@ -110,6 +115,20 @@ void Game::Run()
 				break;
 			}
 		}
+		else if (event.Type == Event::MouseButtonReleased && event.MouseButton.Button == Mouse::Left) {
+			Vector2f pos(static_cast<float>(event.MouseButton.X), static_cast<float>(event.MouseButton.Y));
+
+			// make a reversed copy of the towers so that the lowest one gets selected
+			std::vector<std::shared_ptr<Tower>> revTowers = towers;
+			boost::reverse(revTowers);
+
+
+			auto it = boost::find_if(revTowers, boost::bind(IsAtPoint, _1, pos));
+			if (it != revTowers.end())
+				userInterface.TowerSelected(*it);
+			else
+				userInterface.TowerSelected(nullptr);
+		}
 	}
 
 	float elapsed = window.GetFrameTime();
@@ -148,6 +167,7 @@ void Game::Run()
 	// And draw all the stuff
 	window.Clear();
 	map.Draw(window);
+	userInterface.PreDraw();
 	for (auto it = towers.begin(); it != towers.end(); ++it) {
 		window.Draw(*(*it));
 	}
@@ -342,9 +362,10 @@ void Game::AddTower(const TowerSettings* settings, Vector2f pos)
 {
 	gameStatus.money -= settings->baseCost;
 
-	std::unique_ptr<Tower> tower = Tower::CreateTower(settings, enemies, projectiles);
+	auto block = map.PositionToBlock(pos);
+	std::shared_ptr<Tower> tower = Tower::CreateTower(settings, enemies, projectiles, map.IsHighRangeBlock(block));
 	tower->SetPosition(pos);
 	towers.emplace_back(std::move(tower));
 	boost::sort(towers, CompTowerY);
-	map.PlaceTower(map.PositionToBlock(pos));
+	map.PlaceTower(block);
 }

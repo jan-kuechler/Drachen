@@ -15,9 +15,20 @@ using boost::lexical_cast;
 // do not update the text every frame
 static const float TEXT_UPDATE_TIME = 0.2f;
 
+static Color SelectionColor(255, 201, 0, 64);
+static Color SelectionBorder(255, 201, 0, 128);
+
 GameUserInterface::GameUserInterface(Game* game, RenderWindow& window, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map* map)
 : game(game), window(window), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
-{ }
+{
+	selectionCircle = Shape::Circle(0, 0, 20, SelectionColor, 2.5f, SelectionBorder);
+}
+
+void InitButton(Button& btn, std::string prefix, int idx = -1)
+{
+	btn.SetImage(gImageManager.getResource(gTheme.GetFileName(prefix + "/image", idx)));
+	btn.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
+}
 
 void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 {
@@ -38,6 +49,10 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 		towerButtons.push_back(btn);
 		towerButtonTypes.push_back(gTheme.GetInt("tower-buttons[]/tower", i));
 	}
+
+	InitButton(btnUpgrade, "buttons/upgrade");
+	InitButton(btnSell, "buttons/sell");
+	selectedTower.reset();
 
 	levelName.SetFont(gTheme.GetMainFont());
 	levelName.SetText(metaInfo.name);
@@ -74,6 +89,7 @@ void GameUserInterface::Update()
 
 	for (size_t i=0; i < towerButtons.size(); ++i) {
 		if (towerButtons[i].WasClicked()) {
+			selectedTower.reset(); // clear selected tower when placing a new one
 			StartPlacingTower(i);
 		}
 	}
@@ -87,6 +103,17 @@ void GameUserInterface::Update()
 			towerPlacer.release();
 		}
 	}
+
+	if (selectedTower) {
+		if (btnUpgrade.WasClicked() && selectedTower->CanUpgrade())
+			selectedTower->Upgrade();
+	}
+}
+
+void GameUserInterface::PreDraw()
+{
+	if (selectedTower)
+		window.Draw(selectionCircle);
 }
 
 void GameUserInterface::Draw()
@@ -97,6 +124,11 @@ void GameUserInterface::Draw()
 	window.Draw(levelName);
 	window.Draw(lives);
 	window.Draw(money);
+
+	if (selectedTower) {
+		window.Draw(btnUpgrade);
+		window.Draw(btnSell);
+	}
 
 	for (auto it = towerButtons.begin(); it != towerButtons.end(); ++it)
 		window.Draw(*it);
@@ -118,6 +150,13 @@ bool GameUserInterface::HandleEvent(Event& event)
 	for (auto it = towerButtons.begin(); it != towerButtons.end(); ++it)
 		if (it->HandleEvent(event))
 			return true;
+
+	if (selectedTower) {
+		if (btnUpgrade.HandleEvent(event))
+			return true;
+		if (btnSell.HandleEvent(event))
+			return true;
+	}
 
 	return false;
 }
@@ -152,4 +191,15 @@ void GameUserInterface::StartPlacingTower(size_t id)
 
 	const Input& input = window.GetInput();
 	towerPlacer->SetPosition(static_cast<float>(input.GetMouseX()), static_cast<float>(input.GetMouseY()));
+}
+
+void GameUserInterface::TowerSelected(std::shared_ptr<Tower> tower)
+{
+	if (selectedTower)
+		selectedTower.reset();
+
+	selectedTower = tower;
+
+	if (selectedTower)
+		selectionCircle.SetPosition(selectedTower->GetPosition());
 }

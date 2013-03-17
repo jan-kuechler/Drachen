@@ -2,8 +2,8 @@
 #include "ArrowTower.h"
 #include "Utility.h"
 
-ArrowTower::ArrowTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles)
-: Tower(settings, enemies, projectiles)
+ArrowTower::ArrowTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles, bool highRange)
+: Tower(settings, enemies, projectiles, highRange)
 { }
 
 void ArrowTower::Attack()
@@ -15,10 +15,16 @@ void ArrowTower::Attack()
 	if (!target)
 		return;
 
-	Projectile p(target);
-	p.SetImage(*settings->stage[stage].projectile);
-	p.SetPosition(GetPosition());
-	projectiles.push_back(p);
+	Vector2f offs; // per default use last valid offset
+	for (size_t i=0; i < attacks; ++i) {
+		if (i < settings->stage[stage].attackPosition.size())
+			offs = settings->stage[stage].attackPosition[i];
+
+		Projectile p(target);
+		p.SetImage(*settings->stage[stage].projectile);
+		p.SetPosition(GetPosition() - GetCenter() + offs);
+		projectiles.push_back(p);
+	}
 }
 
 bool CmpByDist(const std::shared_ptr<Enemy>& a, const std::shared_ptr<Enemy>& b, const Drawable* ref)

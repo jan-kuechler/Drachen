@@ -8,6 +8,7 @@
 class Map;
 class Game;
 class Theme;
+class Tower;
 struct GlobalStatus;
 struct GameStatus;
 struct LevelMetaInfo;
@@ -23,10 +24,14 @@ class GameUserInterface
 
 	Sprite topPanel, bottomPanel;
 
-	sf::String levelName;
-	sf::String lives;
-	sf::String countdown;
-	sf::String money;
+	Button btnUpgrade, btnSell;
+
+	String levelName;
+	String lives;
+	String countdown;
+	String money;
+
+	Shape selectionCircle;
 
 	std::vector<Button> towerButtons;
 	std::vector<int> towerButtonTypes;
@@ -37,12 +42,18 @@ class GameUserInterface
 
 	std::unique_ptr<TowerPlacer> towerPlacer;
 
+	std::shared_ptr<Tower> selectedTower;
+
 public:
 	GameUserInterface(Game* game, RenderWindow& window, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map *map);
 
 	void Update();
+
+	void PreDraw();
 	void Draw();
 	void Reset(const LevelMetaInfo& metaInfo);
+
+	void TowerSelected(std::shared_ptr<Tower> tower);
 
 	bool HandleEvent(sf::Event& event);
 

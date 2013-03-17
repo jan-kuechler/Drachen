@@ -31,14 +31,13 @@ class Game
 	std::vector<EnemySettings> enemySettings;
 	std::vector<std::shared_ptr<Enemy>> enemies;
 
-	std::vector<std::unique_ptr<Tower>> towers;
+	std::vector<std::shared_ptr<Tower>> towers;
 
 	std::vector<Projectile> projectiles;
 
 	Map map;
 	GameStatus gameStatus;
 	GameUserInterface userInterface;
-	//Theme theme;
 	LevelMetaInfo levelInfo;
 public:
 	Game(RenderWindow& win, GlobalStatus& gs);

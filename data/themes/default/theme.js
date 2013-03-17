@@ -5,6 +5,17 @@
 	
 	"bottom-panel": "bottom_panel.png",
 	
+	"buttons" : {
+		"upgrade" : {
+			"position": [320, 520],
+			"image": "ButtonUpgrade.png"
+		},
+		"sell": {
+			"position": [420, 520],
+			"image": "ButtonSell.png"		
+		}
+	},
+	
 	"tower-buttons" : [
 		{
 			"image" : "ButtonArcher.png",

@@ -9,9 +9,12 @@ struct TowerSettings
 	{
 		float range, cooldown;
 		Image *image, *projectile;
+		Vector2f center;
 
 		int attacks;
 		float power;
+
+		std::vector<Vector2f> attackPosition;
 	};
 
 	std::string type;

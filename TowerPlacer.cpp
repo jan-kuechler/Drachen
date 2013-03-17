@@ -15,7 +15,7 @@ TowerPlacer::TowerPlacer(const Map* map, const TowerSettings* settings)
 	Image *img = settings->stage.at(0).image;
 	SetImage(*img);
 	SetSize(img->GetWidth(), img->GetHeight());
-	SetCenter(GetWidth() / 2.f, GetHeight() - GetWidth() / 3.f);
+	SetCenter(settings->stage.at(0).center);
 
 	rangeCircle = Shape::Circle(GetPosition(), settings->stage[0].range, ColorRangeCircle);
 	highRangeCircle = Shape::Circle(GetPosition(), settings->stage[0].range * HIGH_RANGE_FACTOR, ColorRangeCircle);
@@ -41,7 +41,7 @@ bool TowerPlacer::HandleEvent(Event& event)
 			SetColor(ColorInvalidPosition);
 		}
 	}
-	else if (event.Type == Event::MouseButtonPressed) {
+	else if (event.Type == Event::MouseButtonReleased) {
 		if (event.MouseButton.Button == Mouse::Left && validPosition) {
 			placed = true;
 			SetColor(ColorPlaced);

@@ -39,6 +39,11 @@ void Theme::LoadTheme(const std::string& name)
 	LoadTowerSettings();
 }
 
+Vector2f GetVector2f(js::mArray& arr)
+{
+	return Vector2f(static_cast<float>(arr[0].get_real()), static_cast<float>(arr[1].get_real()));
+}
+
 void Theme::LoadTowerSettings()
 {
 	fs::path themePath = GetThemePath(currentTheme);
@@ -78,11 +83,18 @@ void Theme::LoadTowerSettings()
 
 				settings->stage[j].image = &gImageManager.getResource((themePath / stage["base"].get_str()).string());
 				settings->stage[j].projectile = &gImageManager.getResource((themePath / stage["projectile"].get_str()).string());
+				settings->stage[j].center = GetVector2f(stage["center"].get_array());
 
 				settings->stage[j].range = static_cast<float>(stage["range"].get_real());
 				settings->stage[j].cooldown = static_cast<float>(stage["cooldown"].get_real());
 				settings->stage[j].attacks = stage["attacks"].get_int();
 				settings->stage[j].power = static_cast<float>(stage["power"].get_real());
+
+				js::mArray& attackPosition = stage["attack-position"].get_array();
+				settings->stage[j].attackPosition.resize(attackPosition.size());
+				for (size_t k=0; k < attackPosition.size(); ++k) {
+					settings->stage[j].attackPosition[k] = GetVector2f(attackPosition[k].get_array());
+				}
 			}
 		}
 	}

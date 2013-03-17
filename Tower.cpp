@@ -4,18 +4,18 @@
 
 #include "ArrowTower.h"
 
-/*static*/ std::unique_ptr<Tower> Tower::CreateTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles)
+/*static*/ std::unique_ptr<Tower> Tower::CreateTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles, bool highRange)
 {
 	const std::string& type = settings->type;
 
 	if (type == "archer")
-		return std::unique_ptr<Tower>(new ArrowTower(settings, enemies, projectiles));
+		return std::unique_ptr<Tower>(new ArrowTower(settings, enemies, projectiles, highRange));
 	else
 		throw GameError() << ErrorInfo::Note("Unknown tower type '" + type + "'");
 }
 
-Tower::Tower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles)
-: settings(settings), enemies(enemies), projectiles(projectiles), stage(0)
+Tower::Tower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles, bool highRange)
+: settings(settings), enemies(enemies), projectiles(projectiles), hasHighRange(highRange), stage(0)
 {
 	ApplyStage();
 }
@@ -33,17 +33,31 @@ void Tower::Update(float elapsed)
 	AnimSprite::Update(elapsed);
 }
 
+void Tower::Upgrade()
+{
+	stage++;
+	ApplyStage();
+	if (cooldownTimer > cooldown)
+		cooldownTimer = cooldown;
+}
+
 void Tower::ApplyStage()
 {
 	assert(stage < settings->stage.size());
 
 	cooldown = settings->stage[stage].cooldown;
-	range = settings->stage[stage].range;
+	range    = settings->stage[stage].range;
+	attacks  = settings->stage[stage].attacks;
+	power    = settings->stage[stage].power;
+
+	if (hasHighRange)
+		range *= HIGH_RANGE_FACTOR;
 
 	Image* img = settings->stage[stage].image;
 	SetImage(*img);
 	SetSize(img->GetWidth(), img->GetHeight());
-	SetCenter(GetWidth() / 2.f, GetHeight() - GetWidth() / 3.f);
+	SetSubRect(IntRect(0, 0, GetWidth(), GetHeight()));
+	SetCenter(settings->stage[stage].center);
 }
 
 void Tower::Attack()
