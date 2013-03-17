@@ -25,6 +25,13 @@ void InitButton(Button& btn, std::string prefix, int idx = -1)
 	btn.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
 }
 
+void InitText(String& txt, std::string prefix, int idx = -1)
+{
+	txt.SetFont(gTheme.GetMainFont());
+	txt.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
+	txt.SetSize(gTheme.GetFloat(prefix + "/font-size", idx));
+}
+
 void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 {
 	topPanel.SetImage(gImageManager.getResource(gTheme.GetFileName("top-panel")));
@@ -39,8 +46,7 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 	towerButtonTypes.clear();
 	for (size_t i=0; i < nTowerButtons; ++i) {
 		Button btn;
-		btn.SetImage(gImageManager.getResource(gTheme.GetFileName("tower-buttons[]/image", i)));
-		btn.SetPosition(gTheme.GetPosition("tower-buttons[]/position", i));
+		InitButton(btn, "tower-buttons[]", i);
 		towerButtons.push_back(btn);
 		towerButtonTypes.push_back(gTheme.GetInt("tower-buttons[]/tower", i));
 	}
@@ -55,18 +61,9 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 	levelName.SetPosition(gTheme.GetPosition("text/level-name/position") - Vector2f(boundaryBox.GetWidth() / 2, boundaryBox.GetHeight() / 2));
 	levelName.SetSize(gTheme.GetFloat("text/level-name/font-size"));
 
-	lives.SetFont(gTheme.GetMainFont());
-	lives.SetText(lexical_cast<std::string>(gameStatus.lives));
-	lives.SetPosition(gTheme.GetPosition("text/lives/position"));
-	lives.SetSize(gTheme.GetFloat("text/lives/font-size"));
-
-	countdown.SetFont(gTheme.GetMainFont());
-	countdown.SetPosition(gTheme.GetPosition("text/countdown/position"));
-	countdown.SetSize(gTheme.GetFloat("text/countdown/font-size"));
-
-	money.SetFont(gTheme.GetMainFont());
-	money.SetPosition(gTheme.GetPosition("text/money/position"));
-	money.SetSize(gTheme.GetFloat("text/money/font-size"));
+	InitText(lives, "text/lives");
+	InitText(countdown, "text/countdown");
+	InitText(money, "text/money");
 
 	// release any towerPlacer left from the previous round
 	towerPlacer.release();
