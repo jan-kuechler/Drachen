@@ -55,33 +55,38 @@ void Theme::LoadTowerSettings()
 	if (rootValue.type() != js::obj_type)
 		throw GameError() << ErrorInfo::Desc("Root value is not an object");
 
-	rootObj = rootValue.get_obj();
+	js::mObject& rootObject = rootValue.get_obj();
 
-	js::mArray& towers = rootObj["towers"].get_array();
+	try {
+		js::mArray& towers = rootObject["towers"].get_array();
 
-	towerSettings.clear();
-	towerSettings.resize(towers.size());
-	for (size_t i=0; i < towers.size(); ++i) {
-		js::mObject& def = towers[i].get_obj();
+		towerSettings.clear();
+		towerSettings.resize(towers.size());
+		for (size_t i=0; i < towers.size(); ++i) {
+			js::mObject& def = towers[i].get_obj();
 
-		TowerSettings* settings = &towerSettings[i];
+			TowerSettings* settings = &towerSettings[i];
 
-		settings->name = def["name"].get_str();
-		settings->type = def["type"].get_str();
+			settings->name = def["name"].get_str();
+			settings->type = def["type"].get_str();
 
-		js::mArray& stages = def["stages"].get_array();
-		settings->stages.resize(stages.size());
-		for (size_t j=0; j < stages.size(); ++j) {
-			js::mObject& stage = stages[j].get_obj();
+			js::mArray& stages = def["stages"].get_array();
+			settings->stages.resize(stages.size());
+			for (size_t j=0; j < stages.size(); ++j) {
+				js::mObject& stage = stages[j].get_obj();
 
-			settings->stages[j].image = &gImageManager.getResource((themePath / stage["base"].get_str()).string());
-			settings->stages[j].projectile = &gImageManager.getResource((themePath / stage["projectile"].get_str()).string());
+				settings->stages[j].image = &gImageManager.getResource((themePath / stage["base"].get_str()).string());
+				settings->stages[j].projectile = &gImageManager.getResource((themePath / stage["projectile"].get_str()).string());
 
-			settings->stages[j].range = static_cast<float>(stage["range"].get_real());
-			settings->stages[j].cooldown = static_cast<float>(stage["cooldown"].get_real());
-			settings->stages[j].attacs = stage["attacs"].get_int();
-			settings->stages[j].power = static_cast<float>(stage["power"].get_real());
+				settings->stages[j].range = static_cast<float>(stage["range"].get_real());
+				settings->stages[j].cooldown = static_cast<float>(stage["cooldown"].get_real());
+				settings->stages[j].attacks = stage["attacks"].get_int();
+				settings->stages[j].power = static_cast<float>(stage["power"].get_real());
+			}
 		}
+	}
+	catch (std::runtime_error err) {
+		throw GameError() << ErrorInfo::Desc("Json error") << ErrorInfo::Note(err.what()) << boost::errinfo_file_name(towerDef.string());
 	}
 }
 

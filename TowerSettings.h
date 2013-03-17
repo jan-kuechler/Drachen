@@ -13,7 +13,7 @@ struct TowerSettings
 		float range, cooldown;
 		Image *image, *projectile;
 
-		int attacs;
+		int attacks;
 		float power;
 	};
 
