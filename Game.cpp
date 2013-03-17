@@ -68,9 +68,9 @@ void Game::UpdateLoadingScreen(float pct)
 
 // Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
 // later, so the overlap is displayed correctly.
-static bool CompTowerY(const Tower& a, const Tower& b)
+static bool CompTowerY(const std::unique_ptr<Tower>& a, const std::unique_ptr<Tower>& b)
 {
-	return a.GetPosition().y < b.GetPosition().y;
+	return a->GetPosition().y < b->GetPosition().y;
 }
 
 static bool ShouldRemoveEnemy(const std::shared_ptr<Enemy>& e)
@@ -131,7 +131,7 @@ void Game::Run()
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		it->Update(elapsed);
 	for (auto it = towers.begin(); it != towers.end(); ++it)
-		it->Update(elapsed);
+		(*it)->Update(elapsed);
 
 	// grant money for dead enemies
 	boost::for_each(enemies, [&](const std::shared_ptr<Enemy>& e) {
@@ -149,7 +149,7 @@ void Game::Run()
 	window.Clear();
 	map.Draw(window);
 	for (auto it = towers.begin(); it != towers.end(); ++it) {
-		window.Draw(*it);
+		window.Draw(*(*it));
 	}
 	for (auto it = enemies.begin(); it != enemies.end(); ++it) {
 		(*it)->DrawHpBar(window);
@@ -340,15 +340,11 @@ void Game::SpawnEnemy(size_t type)
 
 void Game::AddTower(const TowerSettings* settings, Vector2f pos)
 {
-	gameStatus.money -= 100;
+	gameStatus.money -= settings->baseCost;
 
-	Tower t(&enemies, &projectiles);
-	Image* img = settings->stage.at(0).image;
-	t.SetImage(*img);
-	t.SetPosition(pos);
-	t.SetSize(img->GetWidth(), img->GetHeight());
-	t.SetCenter(t.GetWidth() / 2.f, t.GetHeight() - t.GetWidth() / 3.f);
-	towers.push_back(t);
-	map.PlaceTower(map.PositionToBlock(pos));
+	std::unique_ptr<Tower> tower = Tower::CreateTower(settings, &enemies, &projectiles);
+	tower->SetPosition(pos);
+	towers.emplace_back(std::move(tower));
 	boost::sort(towers, CompTowerY);
+	map.PlaceTower(map.PositionToBlock(pos));
 }

@@ -31,7 +31,7 @@ class Game
 	std::vector<EnemySettings> enemySettings;
 	std::vector<std::shared_ptr<Enemy>> enemies;
 
-	std::vector<Tower> towers;
+	std::vector<std::unique_ptr<Tower>> towers;
 
 	std::vector<Projectile> projectiles;
 

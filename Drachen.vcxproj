@@ -112,6 +112,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AnimSprite.cpp" />
+    <ClCompile Include="ArrowTower.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameUserInterface.cpp" />
@@ -151,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimSprite.h" />
+    <ClInclude Include="ArrowTower.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="DataPaths.h" />
     <ClInclude Include="Enemy.h" />
