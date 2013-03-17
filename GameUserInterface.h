@@ -31,8 +31,6 @@ class GameUserInterface
 	String countdown;
 	String money;
 
-	Shape selectionCircle;
-
 	std::vector<Button> towerButtons;
 	std::vector<int> towerButtonTypes;
 

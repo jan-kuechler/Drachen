@@ -15,14 +15,9 @@ using boost::lexical_cast;
 // do not update the text every frame
 static const float TEXT_UPDATE_TIME = 0.2f;
 
-static Color SelectionColor(255, 201, 0, 64);
-static Color SelectionBorder(255, 201, 0, 128);
-
 GameUserInterface::GameUserInterface(Game* game, RenderWindow& window, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map* map)
 : game(game), window(window), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
-{
-	selectionCircle = Shape::Circle(0, 0, 20, SelectionColor, 2.5f, SelectionBorder);
-}
+{ }
 
 void InitButton(Button& btn, std::string prefix, int idx = -1)
 {
@@ -113,7 +108,7 @@ void GameUserInterface::Update()
 void GameUserInterface::PreDraw()
 {
 	if (selectedTower)
-		window.Draw(selectionCircle);
+		selectedTower->DrawRangeCircle(window);
 }
 
 void GameUserInterface::Draw()
@@ -199,7 +194,4 @@ void GameUserInterface::TowerSelected(std::shared_ptr<Tower> tower)
 		selectedTower.reset();
 
 	selectedTower = tower;
-
-	if (selectedTower)
-		selectionCircle.SetPosition(selectedTower->GetPosition());
 }

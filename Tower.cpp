@@ -4,6 +4,9 @@
 
 #include "ArrowTower.h"
 
+static Color RangeCircleColor(255, 201, 0, 64);
+static Color RangeCircleOutline(255, 201, 0, 128);
+
 /*static*/ std::unique_ptr<Tower> Tower::CreateTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles, bool highRange)
 {
 	const std::string& type = settings->type;
@@ -56,8 +59,10 @@ void Tower::ApplyStage()
 	Image* img = settings->stage[stage].image;
 	SetImage(*img);
 	SetSize(img->GetWidth(), img->GetHeight());
-	SetSubRect(IntRect(0, 0, GetWidth(), GetHeight()));
+	SetSubRect(IntRect(0, 0, GetWidth(), GetHeight())); // reset the subrect incase the image size has changed
 	SetCenter(settings->stage[stage].center);
+
+	rangeCircle = Shape::Circle(GetPosition(), range, RangeCircleColor, 2.5f, RangeCircleOutline);
 }
 
 void Tower::Attack()

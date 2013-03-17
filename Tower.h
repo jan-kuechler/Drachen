@@ -15,6 +15,8 @@ protected:
 
 	bool hasHighRange;
 
+	Shape rangeCircle;
+
 	float  range;
 	float  cooldown;
 	size_t attacks;
@@ -36,6 +38,23 @@ public:
 	}
 
 	void Upgrade();
+
+	void DrawRangeCircle(RenderWindow& tgt)
+	{
+		tgt.Draw(rangeCircle);
+	}
+
+	void SetPosition(float x, float y)
+	{
+		AnimSprite::SetPosition(x, y);
+		rangeCircle.SetPosition(x, y);
+	}
+
+	void SetPosition(Vector2f pos)
+	{
+		AnimSprite::SetPosition(pos);
+		rangeCircle.SetPosition(pos);
+	}
 
 protected:
 	Tower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles, bool highRange);
