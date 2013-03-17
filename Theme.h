@@ -1,6 +1,7 @@
 #ifndef THEME_H
 #define THEME_H
 
+#include "TowerSettings.h"
 #include "json_spirit/json_spirit.h"
 
 class Theme
@@ -41,6 +42,11 @@ public:
 		return TraversePath(path, idx).get_array().size();
 	}
 
+	const TowerSettings* GetTowerSettings(size_t i) const
+	{
+		return &towerSettings.at(i);
+	}
+
 private:
 	json_spirit::mObject rootObj;
 
@@ -49,6 +55,10 @@ private:
 	std::string currentTheme;
 
 	sf::Font mainFont;
+
+	std::vector<TowerSettings> towerSettings;
+
+	void LoadTowerSettings();
 };
 
 extern Theme gTheme;
