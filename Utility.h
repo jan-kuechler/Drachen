@@ -17,6 +17,11 @@ inline float norm(const Vector2f& v)
 	return sqrt(abs(v));
 }
 
+inline float dist(const Drawable& a, const Drawable& b)
+{
+	return norm(a.GetPosition() - b.GetPosition());
+}
+
 inline float dot(const Vector2f& a, const Vector2f& b)
 {
 	return a.x * b.x + a.y * b.y;

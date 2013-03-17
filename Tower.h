@@ -10,8 +10,8 @@
 class Tower : public AnimSprite
 {
 protected:
-	std::vector<std::shared_ptr<Enemy>>* enemies;
-	std::vector<Projectile>* projectiles;
+	const std::vector<std::shared_ptr<Enemy>>& enemies;
+	std::vector<Projectile>& projectiles;
 
 	float range;
 	float cooldown;
@@ -22,12 +22,12 @@ protected:
 	size_t stage;
 
 public:
-	static std::unique_ptr<Tower> CreateTower(const TowerSettings* settings, std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles);
+	static std::unique_ptr<Tower> CreateTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles);
 
 	void Update(float elapsed) /* override */;
 
 protected:
-	Tower(const TowerSettings* settings, std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles);
+	Tower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles);
 
 	virtual void ApplyStage();
 	virtual void Attack();

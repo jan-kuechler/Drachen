@@ -4,7 +4,7 @@
 
 #include "ArrowTower.h"
 
-/*static*/ std::unique_ptr<Tower> Tower::CreateTower(const TowerSettings* settings, std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles)
+/*static*/ std::unique_ptr<Tower> Tower::CreateTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles)
 {
 	const std::string& type = settings->type;
 
@@ -14,7 +14,7 @@
 		throw GameError() << ErrorInfo::Note("Unknown tower type '" + type + "'");
 }
 
-Tower::Tower(const TowerSettings* settings, std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles)
+Tower::Tower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles)
 : settings(settings), enemies(enemies), projectiles(projectiles), stage(0)
 {
 	ApplyStage();
@@ -48,12 +48,12 @@ void Tower::ApplyStage()
 
 void Tower::Attack()
 {
-	for (auto it = enemies->begin(); it != enemies->end(); ++it) {
+	for (auto it = enemies.begin(); it != enemies.end(); ++it) {
 		if (!(*it)->IsIrrelevant() && norm((*it)->GetPosition() - GetPosition()) <= range) {
 			Projectile p(*it);
 			p.SetImage(*settings->stage[stage].projectile);
 			p.SetPosition(GetPosition());
-			projectiles->push_back(p);
+			projectiles.push_back(p);
 			break;
 		}
 	}

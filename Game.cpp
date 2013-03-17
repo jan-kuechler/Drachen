@@ -342,7 +342,7 @@ void Game::AddTower(const TowerSettings* settings, Vector2f pos)
 {
 	gameStatus.money -= settings->baseCost;
 
-	std::unique_ptr<Tower> tower = Tower::CreateTower(settings, &enemies, &projectiles);
+	std::unique_ptr<Tower> tower = Tower::CreateTower(settings, enemies, projectiles);
 	tower->SetPosition(pos);
 	towers.emplace_back(std::move(tower));
 	boost::sort(towers, CompTowerY);

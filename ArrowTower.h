@@ -5,8 +5,16 @@
 
 class ArrowTower : public Tower
 {
+	std::weak_ptr<Enemy> currentTarget;
+
 public:
-	ArrowTower(const TowerSettings* settings, std::vector<std::shared_ptr<Enemy>>* enemies, std::vector<Projectile>* projectiles);
+	ArrowTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles);
+
+protected:
+	void Attack();
+
+private:
+	void ChooseTarget();
 };
 
 #endif //ARROW_TOWER_H
