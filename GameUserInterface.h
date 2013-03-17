@@ -49,7 +49,7 @@ public:
 private:
 	void UpdateText();
 
-	void StartPlacingTower();
+	void StartPlacingTower(size_t id);
 
 	void LoadDefinition();
 };

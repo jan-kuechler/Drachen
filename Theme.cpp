@@ -69,19 +69,20 @@ void Theme::LoadTowerSettings()
 
 			settings->name = def["name"].get_str();
 			settings->type = def["type"].get_str();
+			settings->baseCost = def["base-cost"].get_int();
 
 			js::mArray& stages = def["stages"].get_array();
-			settings->stages.resize(stages.size());
+			settings->stage.resize(stages.size());
 			for (size_t j=0; j < stages.size(); ++j) {
 				js::mObject& stage = stages[j].get_obj();
 
-				settings->stages[j].image = &gImageManager.getResource((themePath / stage["base"].get_str()).string());
-				settings->stages[j].projectile = &gImageManager.getResource((themePath / stage["projectile"].get_str()).string());
+				settings->stage[j].image = &gImageManager.getResource((themePath / stage["base"].get_str()).string());
+				settings->stage[j].projectile = &gImageManager.getResource((themePath / stage["projectile"].get_str()).string());
 
-				settings->stages[j].range = static_cast<float>(stage["range"].get_real());
-				settings->stages[j].cooldown = static_cast<float>(stage["cooldown"].get_real());
-				settings->stages[j].attacks = stage["attacks"].get_int();
-				settings->stages[j].power = static_cast<float>(stage["power"].get_real());
+				settings->stage[j].range = static_cast<float>(stage["range"].get_real());
+				settings->stage[j].cooldown = static_cast<float>(stage["cooldown"].get_real());
+				settings->stage[j].attacks = stage["attacks"].get_int();
+				settings->stage[j].power = static_cast<float>(stage["power"].get_real());
 			}
 		}
 	}

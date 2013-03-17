@@ -74,7 +74,7 @@ void GameUserInterface::Update()
 
 	for (size_t i=0; i < towerButtons.size(); ++i) {
 		if (towerButtons[i].WasClicked()) {
-			StartPlacingTower();
+			StartPlacingTower(i);
 		}
 	}
 
@@ -136,26 +136,19 @@ void GameUserInterface::UpdateText()
 	}
 }
 
-void GameUserInterface::StartPlacingTower()
+void GameUserInterface::StartPlacingTower(size_t id)
 {
 	// check if tower placing is already in progress
 	if (towerPlacer) 
 		return;
 
-	// TODO: Fix hard coded tower cost
-	if (gameStatus.money < 100)
+	const TowerSettings* settings = gTheme.GetTowerSettings(id);
+
+	if (gameStatus.money < settings->baseCost)
 		return;
 
-	static TowerSettings testSettings;
-	if (!testSettings.baseImage) {
-		testSettings.baseImage = new sf::Image;
-		LoadFromFile(*testSettings.baseImage, "data/models/archer_level1.png");
-	}
-	testSettings.range = 2.0f * map->GetBlockSize();
-	testSettings.cooldown = 1.0f;
-
 	assert(towerPlacer == nullptr);
-	towerPlacer.reset(new TowerPlacer(map, &testSettings));
+	towerPlacer.reset(new TowerPlacer(map, settings));
 
 	const Input& input = window.GetInput();
 	towerPlacer->SetPosition(static_cast<float>(input.GetMouseX()), static_cast<float>(input.GetMouseY()));

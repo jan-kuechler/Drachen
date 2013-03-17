@@ -9,7 +9,7 @@ struct TowerSettings;
 class TowerPlacer : public AnimSprite
 {
 	const Map* map;
-	TowerSettings* settings;
+	const TowerSettings* settings;
 
 	static Color ColorInvalidPosition, ColorValidPosition, ColorPlaced, ColorRangeCircle;
 	Shape rangeCircle, highRangeCircle;
@@ -17,7 +17,7 @@ class TowerPlacer : public AnimSprite
 	bool validPosition;
 	bool placed, cancelPlacing;
 public:
-	TowerPlacer(const Map* map, TowerSettings* settings);
+	TowerPlacer(const Map* map, const TowerSettings* settings);
 
 	bool HandleEvent(sf::Event& event);
 
@@ -53,7 +53,7 @@ public:
 			target.Draw(rangeCircle);
 	}
 
-	TowerSettings* GetSettings()
+	const TowerSettings* GetSettings()
 	{
 		return settings;
 	}

@@ -338,14 +338,15 @@ void Game::SpawnEnemy(size_t type)
 	enemies.push_back(e);
 }
 
-void Game::AddTower(TowerSettings* settings, Vector2f pos)
+void Game::AddTower(const TowerSettings* settings, Vector2f pos)
 {
 	gameStatus.money -= 100;
 
 	Tower t(&enemies, &projectiles);
-	t.SetImage(*settings->baseImage);
+	Image* img = settings->stage.at(0).image;
+	t.SetImage(*img);
 	t.SetPosition(pos);
-	t.SetSize(settings->baseImage->GetWidth(), settings->baseImage->GetHeight());
+	t.SetSize(img->GetWidth(), img->GetHeight());
 	t.SetCenter(t.GetWidth() / 2.f, t.GetHeight() - t.GetWidth() / 3.f);
 	towers.push_back(t);
 	map.PlaceTower(map.PositionToBlock(pos));

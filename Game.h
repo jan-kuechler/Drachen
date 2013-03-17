@@ -49,7 +49,7 @@ public:
 	bool IsRunning();
 	State GetNextState();
 
-	void AddTower(TowerSettings* settings, Vector2f pos);
+	void AddTower(const TowerSettings* settings, Vector2f pos);
 
 private:
 	bool running;

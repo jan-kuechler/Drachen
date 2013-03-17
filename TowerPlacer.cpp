@@ -8,16 +8,17 @@ Color TowerPlacer::ColorValidPosition(0, 255, 0, 128);
 Color TowerPlacer::ColorPlaced(255, 255, 255);
 Color TowerPlacer::ColorRangeCircle(64, 255, 64, 128);
 
-TowerPlacer::TowerPlacer(const Map* map, TowerSettings* settings)
+TowerPlacer::TowerPlacer(const Map* map, const TowerSettings* settings)
 : map(map), settings(settings), placed(false), cancelPlacing(false)
 {
 	SetColor(ColorInvalidPosition);
-	SetImage(*settings->baseImage);
-	SetSize(settings->baseImage->GetWidth(), settings->baseImage->GetHeight());
+	Image *img = settings->stage.at(0).image;
+	SetImage(*img);
+	SetSize(img->GetWidth(), img->GetHeight());
 	SetCenter(GetWidth() / 2.f, GetHeight() - GetWidth() / 3.f);
 
-	rangeCircle = Shape::Circle(GetPosition(), settings->range, ColorRangeCircle);
-	highRangeCircle = Shape::Circle(GetPosition(), settings->range * 1.5f, ColorRangeCircle);
+	rangeCircle = Shape::Circle(GetPosition(), settings->stage[0].range, ColorRangeCircle);
+	highRangeCircle = Shape::Circle(GetPosition(), settings->stage[0].range * HIGH_RANGE_FACTOR, ColorRangeCircle);
 }
 
 bool TowerPlacer::HandleEvent(Event& event)
