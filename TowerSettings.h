@@ -13,8 +13,16 @@ struct TowerSettings
 
 		int attacks;
 		float power;
+		float speed;
+
+		float splashPower;
+		float splashRange;
 
 		std::vector<Vector2f> attackPosition;
+
+		Stage()
+		: range(25.f), cooldown(2.f), attacks(1), power(1.f), speed(100.f), splashPower(0), splashRange(0)
+		{ }
 	};
 
 	std::string type;

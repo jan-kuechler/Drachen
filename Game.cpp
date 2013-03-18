@@ -78,11 +78,6 @@ static bool IsAtPoint(const std::shared_ptr<Tower>& twr, Vector2f pt)
 	return PointInRect(pt, twr->GetPosition() - twr->GetCenter(), static_cast<float>(twr->GetWidth()), static_cast<float>(twr->GetHeight()));
 }
 
-static bool ShouldRemoveEnemy(const std::shared_ptr<Enemy>& e)
-{
-	return e->IsIrrelevant();
-}
-
 // Main function of the game class, this gets called every frame.
 void Game::Run()
 {
@@ -148,7 +143,7 @@ void Game::Run()
 		}
 	}
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
-		it->Update(elapsed);
+		(*it)->Update(elapsed);
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		(*it)->Update(elapsed);
 
@@ -159,8 +154,19 @@ void Game::Run()
 	});
 
 	// Remove all the things no longer needed
-	projectiles.erase(boost::remove_if(projectiles, boost::bind(&Projectile::DidHit, _1)), projectiles.end());
-	enemies.erase(boost::remove_if(enemies, ShouldRemoveEnemy), enemies.end());
+	projectiles.erase(boost::remove_if(projectiles, [](const std::unique_ptr<Projectile>& p) {
+			return p->DidHit();
+		}), projectiles.end());
+	enemies.erase(boost::remove_if(enemies, [](const std::shared_ptr<Enemy>& e) {
+			return e->IsIrrelevant();
+		}), enemies.end());
+	towers.erase(boost::remove_if(towers, [&](const std::shared_ptr<Tower>& t) mutable -> bool {
+			if (t->IsSold()) {
+				this->map.RemoveTower(this->map.PositionToBlock(t->GetPosition()));
+				return true;
+			}
+			return false;
+		}), towers.end());
 
 	userInterface.Update();
 
@@ -177,7 +183,7 @@ void Game::Run()
 	}
 	
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
-		window.Draw(*it);
+		window.Draw(*(*it));
 
 	// Draw the user interface at last, so it does not get hidden by any objects
 	userInterface.Draw();
@@ -252,7 +258,9 @@ bool Game::IsRunning()
 
 State Game::GetNextState()
 {
-	return ST_MAIN_MENU;
+	if (gameStatus.lives > 0)
+		return ST_WIN;
+	return ST_LOOSE;
 }
 
 void Game::LoadLevel(const std::string& level)

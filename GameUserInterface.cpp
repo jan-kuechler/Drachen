@@ -32,6 +32,12 @@ void InitText(String& txt, std::string prefix, int idx = -1)
 	txt.SetSize(gTheme.GetFloat(prefix + "/font-size", idx));
 }
 
+void InitImage(Sprite& img, std::string prefix, int idx = -1)
+{
+	img.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
+	img.SetImage(gImageManager.getResource(gTheme.GetFileName(prefix + "/image", idx)));
+}
+
 void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 {
 	topPanel.SetImage(gImageManager.getResource(gTheme.GetFileName("top-panel")));
@@ -49,6 +55,14 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 		InitButton(btn, "tower-buttons[]", i);
 		towerButtons.push_back(btn);
 		towerButtonTypes.push_back(gTheme.GetInt("tower-buttons[]/tower", i));
+	}
+
+	size_t nDeco = gTheme.GetArrayLength("decorations");
+	decoration.clear();
+	for (size_t i=0; i < nDeco; ++i) {
+		Sprite sp;
+		InitImage(sp, "decorations[]", i);
+		decoration.push_back(sp);
 	}
 
 	InitButton(btnUpgrade, "buttons/upgrade");
@@ -99,6 +113,10 @@ void GameUserInterface::Update()
 	if (selectedTower) {
 		if (btnUpgrade.WasClicked() && selectedTower->CanUpgrade())
 			selectedTower->Upgrade();
+		if (btnSell.WasClicked()) {
+			gameStatus.money += selectedTower->Sell();
+			selectedTower.reset();
+		}
 	}
 }
 
@@ -116,6 +134,10 @@ void GameUserInterface::Draw()
 	window.Draw(levelName);
 	window.Draw(lives);
 	window.Draw(money);
+
+	boost::for_each(decoration, [&](const Sprite& sp) {
+			window.Draw(sp);
+		});
 
 	if (selectedTower) {
 		window.Draw(btnUpgrade);

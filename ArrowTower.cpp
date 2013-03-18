@@ -2,7 +2,7 @@
 #include "ArrowTower.h"
 #include "Utility.h"
 
-ArrowTower::ArrowTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles, bool highRange)
+ArrowTower::ArrowTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles, bool highRange)
 : Tower(settings, enemies, projectiles, highRange)
 { }
 
@@ -20,21 +20,23 @@ void ArrowTower::Attack()
 		if (i < settings->stage[stage].attackPosition.size())
 			offs = settings->stage[stage].attackPosition[i];
 
-		Projectile p(target);
-		p.SetImage(*settings->stage[stage].projectile);
-		p.SetPosition(GetPosition() - GetCenter() + offs);
-		projectiles.push_back(p);
+		std::unique_ptr<Projectile> p(new Projectile(target, settings->stage[stage].power, settings->stage[stage].speed));
+		p->SetImage(*settings->stage[stage].projectile);
+		p->SetPosition(GetPosition() - GetCenter() + offs);
+		projectiles.emplace_back(std::move(p));
 	}
 }
 
-bool CmpByDist(const std::shared_ptr<Enemy>& a, const std::shared_ptr<Enemy>& b, const Drawable* ref)
+static bool CmpByDist(const std::shared_ptr<Enemy>& a, const std::shared_ptr<Enemy>& b, const Drawable* ref)
 {
 	return dist(*a, *ref) < dist(*b, *ref);
 }
 
 void ArrowTower::ChooseTarget()
 {
-	auto it = boost::min_element(enemies, boost::bind(CmpByDist, _1, _2, this));
+	auto it = boost::min_element(enemies | boost::adaptors::filtered([](const std::shared_ptr<Enemy>& e){
+			return !e->IsIrrelevant();
+		}), boost::bind(CmpByDist, _1, _2, this)).base();
 	if (it == enemies.end() || dist(*(*it), *this) > range)
 		currentTarget.reset();
 	else

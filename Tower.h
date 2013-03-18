@@ -11,7 +11,7 @@ class Tower : public AnimSprite
 {
 protected:
 	const std::vector<std::shared_ptr<Enemy>>& enemies;
-	std::vector<Projectile>& projectiles;
+	std::vector<std::unique_ptr<Projectile>>& projectiles;
 
 	bool hasHighRange;
 
@@ -27,8 +27,10 @@ protected:
 	const TowerSettings* settings;
 	size_t stage;
 
+	bool isSold;
+
 public:
-	static std::unique_ptr<Tower> CreateTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles, bool highRange);
+	static std::unique_ptr<Tower> CreateTower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles, bool highRange);
 
 	void Update(float elapsed) /* override */;
 
@@ -38,6 +40,17 @@ public:
 	}
 
 	void Upgrade();
+
+	size_t Sell()
+	{
+		isSold = true;
+		return settings->baseCost;
+	}
+
+	bool IsSold()
+	{
+		return isSold;
+	}
 
 	void DrawRangeCircle(RenderWindow& tgt)
 	{
@@ -57,7 +70,7 @@ public:
 	}
 
 protected:
-	Tower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<Projectile>& projectiles, bool highRange);
+	Tower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles, bool highRange);
 
 	virtual void ApplyStage();
 	virtual void Attack();

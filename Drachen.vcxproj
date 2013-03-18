@@ -114,6 +114,8 @@
     <ClCompile Include="AnimSprite.cpp" />
     <ClCompile Include="ArrowTower.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="CanonBall.cpp" />
+    <ClCompile Include="CanonTower.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="GameUserInterface.cpp" />
     <ClCompile Include="json_spirit\json_spirit_reader.cpp">
@@ -131,10 +133,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Loose.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="TeaTower.cpp" />
     <ClCompile Include="Theme.cpp" />
     <ClCompile Include="Tower.cpp" />
     <ClCompile Include="TowerPlacer.cpp" />
@@ -149,11 +153,14 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Win.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AnimSprite.h" />
     <ClInclude Include="ArrowTower.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="CanonBall.h" />
+    <ClInclude Include="CanonTower.h" />
     <ClInclude Include="DataPaths.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySettings.h" />
@@ -169,11 +176,13 @@
     <ClInclude Include="json_spirit\json_spirit_writer.h" />
     <ClInclude Include="json_spirit\json_spirit_writer_template.h" />
     <ClInclude Include="LevelMetaInfo.h" />
+    <ClInclude Include="Loose.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Projectile.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="TeaTower.h" />
     <ClInclude Include="Theme.h" />
     <ClInclude Include="Tower.h" />
     <ClInclude Include="GameUserInterface.h" />
@@ -184,6 +193,7 @@
     <ClInclude Include="GlobalStatus.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="State.h" />
+    <ClInclude Include="Win.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

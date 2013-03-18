@@ -6,8 +6,8 @@ static const float HIT_DISTANCE = 10.f;
 
 static const Vector2f LEFT(-1.0f, 0.0f);
 
-Projectile::Projectile(std::weak_ptr<Enemy> target)
-: speed(100.f), target(target), hit(false)
+Projectile::Projectile(std::weak_ptr<Enemy> target, float power, float speed)
+: speed(speed), power(power), target(target), hit(false)
 {
 	std::shared_ptr<Enemy> tgt = target.lock();
 
@@ -15,6 +15,7 @@ Projectile::Projectile(std::weak_ptr<Enemy> target)
 		targetPosition = tgt->GetPosition();
 	}
 }
+
 
 void Projectile::SetImage(const Image& img)
 {
@@ -31,19 +32,14 @@ void Projectile::Update(float elapsed)
 
 	std::shared_ptr<Enemy> tgt = target.lock();
 
-	if (tgt) {
+	if (tgt)
 		targetPosition = tgt->GetPosition();
-	}
 
 	Vector2f dir = targetPosition - GetPosition();
 	float r = norm(dir);
 	if (r < HIT_DISTANCE) {
 		hit = true;
-
-		if (tgt) {
-			tgt->Hit(2);
-			tgt.reset(); // release the shared ptr
-		}
+		Hit(tgt);
 		return;
 	}
 
@@ -54,4 +50,10 @@ void Projectile::Update(float elapsed)
 
 	Move(dir * speed * elapsed);
 	SetRotation(angle * 180/PI);
+}
+
+void Projectile::Hit(std::shared_ptr<Enemy>& tgt)
+{
+	if (tgt)
+		tgt->Hit(power);
 }

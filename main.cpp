@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Game.h"
 #include "MainMenu.h"
+#include "Win.h"
+#include "Loose.h"
 #include "Utility.h"
 #include "ResourceManager.h"
 #include "Theme.h"
@@ -31,6 +33,8 @@ int main(int argc, char **argv)
 		gTheme.LoadTheme("default");
 
 		MainMenu mainMenu(window);
+		Win winState(window);
+		Loose looseState(window);
 		Game game(window, gStatus);
 
 		State state = ST_MAIN_MENU;
@@ -58,6 +62,30 @@ int main(int argc, char **argv)
 				game.Run();
 				if (!game.IsRunning()) {
 					state = game.GetNextState();
+					newState = true;
+				}
+				break;
+
+			case ST_WIN:
+				if (newState) {
+					winState.Reset();
+					newState = false;
+				}
+				winState.Run();
+				if (!winState.IsRunning()) {
+					state = winState.GetNextState();
+					newState = true;
+				}
+				break;
+
+			case ST_LOOSE:
+				if (newState) {
+					looseState.Reset();
+					newState = false;
+				}
+				looseState.Run();
+				if (!looseState.IsRunning()) {
+					state = looseState.GetNextState();
 					newState = true;
 				}
 				break;

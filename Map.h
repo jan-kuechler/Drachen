@@ -73,6 +73,7 @@ public:
 
 	bool MayPlaceTower(const Vector2i& tpos) const;
 	void PlaceTower(const Vector2i& tpos);
+	void RemoveTower(const Vector2i& tpos);
 
 	bool IsHighRangeBlock(const Vector2i& tpos) const
 	{

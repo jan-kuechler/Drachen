@@ -18,7 +18,7 @@ class Enemy : public AnimSprite
 	Path path;
 	size_t blockSize;
 
-	int life, initialLife;
+	float life, initialLife;
 	sfext::Rectangle hpBarGreen, hpBarRed;
 
 	Vector2i target;
@@ -40,13 +40,13 @@ public:
 
 	void Update(float elapsed) /*override*/;
 
-	void Hit(int strength)
+	void Hit(float power)
 	{
-		life -= strength;
+		life -= power;
 		if (life < 0)
 			life = 0;
 
-		float greenPct = static_cast<float>(life) / initialLife;
+		float greenPct = life / initialLife;
 
 		hpBarGreen.SetWidth(greenPct * 30);
 		hpBarRed.SetWidth((1 - greenPct) * 30);

@@ -116,6 +116,11 @@ void Map::PlaceTower(const Vector2i& tpos)
 	towers.insert(tpos);
 }
 
+void Map::RemoveTower(const Vector2i& tpos)
+{
+	towers.erase(tpos);
+}
+
 bool Map::MayPlaceTower(const Vector2i& tpos) const
 {
 	if (dbgTowersAnywhere)

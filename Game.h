@@ -33,7 +33,7 @@ class Game
 
 	std::vector<std::shared_ptr<Tower>> towers;
 
-	std::vector<Projectile> projectiles;
+	std::vector<std::unique_ptr<Projectile>> projectiles;
 
 	Map map;
 	GameStatus gameStatus;

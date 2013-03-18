@@ -31,6 +31,8 @@ class GameUserInterface
 	String countdown;
 	String money;
 
+	std::vector<Sprite> decoration;
+
 	std::vector<Button> towerButtons;
 	std::vector<int> towerButtonTypes;
 
