@@ -7,8 +7,10 @@
 #include "ResourceManager.h"
 #include "Theme.h"
 
+#ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#endif
 
 // global resource manager variables
 ResourceManager<sf::Image> gImageManager;
@@ -142,5 +144,7 @@ void HandleException(boost::exception& ex)
 	std::ofstream out("crash.log");
 	out << msg.str();
 
+#ifdef WIN32
 	MessageBoxA(0, msg.str().c_str(), "Error", 0);
+#endif
 }
