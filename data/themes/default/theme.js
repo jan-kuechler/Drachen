@@ -91,6 +91,22 @@
 	},
 
     "level-picker": {
-        "background": "picker/LevelPickerBackground.png"
+        "background": "picker/LevelPickerBackground.png",
+
+        "name": {
+            "position": [220, 180],
+            "font-size": 28,
+            "color": [255, 201, 15]
+        },
+
+        "desc": {
+            "position": [425, 300],
+            "font-size": 20,
+            "color": "black"
+        },
+
+        "preview": {
+            "position": [447, 124]
+        }
     }
 }

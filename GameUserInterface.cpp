@@ -9,6 +9,7 @@
 #include "TowerSettings.h"
 #include "ResourceManager.h"
 #include "Utility.h"
+#include "UiHelper.h"
 
 using boost::lexical_cast;
 
@@ -18,25 +19,6 @@ static const float TEXT_UPDATE_TIME = 0.2f;
 GameUserInterface::GameUserInterface(Game* game, RenderWindow& window, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map* map)
 : game(game), window(window), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
 { }
-
-void InitButton(Button& btn, std::string prefix, int idx = -1)
-{
-	btn.SetImage(gImageManager.getResource(gTheme.GetFileName(prefix + "/image", idx)));
-	btn.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
-}
-
-void InitText(String& txt, std::string prefix, int idx = -1)
-{
-	txt.SetFont(gTheme.GetMainFont());
-	txt.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
-	txt.SetSize(gTheme.GetFloat(prefix + "/font-size", idx));
-}
-
-void InitImage(Sprite& img, std::string prefix, int idx = -1)
-{
-	img.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
-	img.SetImage(gImageManager.getResource(gTheme.GetFileName(prefix + "/image", idx)));
-}
 
 void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 {

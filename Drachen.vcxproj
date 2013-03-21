@@ -191,6 +191,7 @@
     <ClInclude Include="GameUserInterface.h" />
     <ClInclude Include="TowerPlacer.h" />
     <ClInclude Include="TowerSettings.h" />
+    <ClInclude Include="UiHelper.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GlobalStatus.h" />
@@ -199,8 +200,8 @@
     <ClInclude Include="Win.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\levels\pack1\level1.js" />
     <None Include="data\levels\packs.js" />
-    <None Include="data\levels\test\level.js" />
     <None Include="data\maps\test\map.js" />
     <None Include="data\themes\default\enemies.js" />
     <None Include="data\themes\default\theme.js" />

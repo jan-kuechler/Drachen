@@ -36,6 +36,7 @@ public:
 	}
 
 	std::string GetFileName(const std::string& path, int idx = -1) const;
+	Color GetColor(const std::string& path, int idx = -1) const;
 
 	size_t GetArrayLength(const std::string& path, int idx = -1) const
 	{

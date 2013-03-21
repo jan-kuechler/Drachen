@@ -28,6 +28,11 @@ static inline boost::filesystem::path GetLevelFile(const std::string& level)
 	return level;
 }
 
+static inline boost::filesystem::path GetLevelPackFile(const std::string& path)
+{
+	return boost::filesystem::path("data/levels") / path;
+}
+
 static inline boost::filesystem::path GetMapPath(const std::string& map)
 {
 	return boost::filesystem::path("data/maps") / map;

@@ -5,6 +5,7 @@ struct LevelPack
 {
 	std::string name;
 	std::string desc;
+	std::string image;
 	std::vector<std::string> levels;
 };
 

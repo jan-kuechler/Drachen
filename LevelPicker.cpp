@@ -5,6 +5,7 @@
 #include "GlobalStatus.h"
 #include "DataPaths.h"
 #include "Utility.h"
+#include "UiHelper.h"
 
 #include "json_spirit/json_spirit.h"
 
@@ -26,8 +27,16 @@ void LevelPicker::Reset()
 
 	background.SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/background")));
 
+	InitText(strName, "level-picker/name");
+	InitText(strDesc, "level-picker/desc");
+	strName.SetColor(gTheme.GetColor("level-picker/name/color"));
+	strDesc.SetColor(gTheme.GetColor("level-picker/desc/color"));
 	strName.SetText(pack.name);
 	strDesc.SetText(pack.desc);
+	CenterText(strName);
+
+	previewImage.SetPosition(gTheme.GetPosition("level-picker/preview/position"));
+	previewImage.SetImage(gImageManager.getResource(GetLevelPackFile(pack.image).string()));
 }
 
 void LevelPicker::Run()
@@ -45,6 +54,11 @@ void LevelPicker::Run()
 	}
 
 	window.Draw(background);
+
+	window.Draw(strName);
+	window.Draw(strDesc);
+	window.Draw(previewImage);
+
 	window.Display();
 }
 
@@ -75,6 +89,7 @@ void LevelPicker::LoadLevelPacks()
 
 			pack.name = def["name"].get_str();
 			pack.desc = def["desc"].get_str();
+			pack.image = def["image"].get_str();
 
 			js::mArray& levels = def["levels"].get_array();
 			pack.levels.reserve(levels.size());

@@ -18,6 +18,7 @@ class LevelPicker : public StateDef
 
 	String strName;
 	String strDesc;
+	Sprite previewImage;
 
 	bool running;
 	State nextState;

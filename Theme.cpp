@@ -128,6 +128,38 @@ std::string Theme::GetFileName(const std::string& path, int idx) const
 	return (GetThemePath(currentTheme) / fileName).string();
 }
 
+
+sf::Color Theme::GetColor(const std::string& path, int idx) const
+{
+	auto val = TraversePath(path, idx);
+	if (val.type() == js::array_type) {
+		const js::mArray& arr = val.get_array();
+		if (arr.size() == 4)
+			return Color(arr.at(0).get_int(), arr.at(1).get_int(), arr.at(2).get_int(), arr.at(3).get_int());
+		else
+			return Color(arr.at(0).get_int(), arr.at(1).get_int(), arr.at(2).get_int());
+	}
+	auto str = val.get_str();
+	boost::to_lower(str);
+	if (str == "black")
+		return Color::Black;
+	if (str == "blue")
+		return Color::Blue;
+	if (str == "cyan")
+		return Color::Cyan;
+	if (str == "green")
+		return Color::Green;
+	if (str == "magenta")
+		return Color::Magenta;
+	if (str == "red")
+		return Color::Red;
+	if (str == "white")
+		return Color::White;
+	if (str == "yellow")
+		return Color::Yellow;
+	return Color::Black;
+}
+
 std::tuple<std::string, bool, int> GetArrayAccess(const std::string& part, int idx)
 {
 	size_t bracketPos = part.find('[');
