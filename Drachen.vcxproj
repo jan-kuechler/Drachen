@@ -177,6 +177,7 @@
     <ClInclude Include="json_spirit\json_spirit_writer.h" />
     <ClInclude Include="json_spirit\json_spirit_writer_template.h" />
     <ClInclude Include="LevelMetaInfo.h" />
+    <ClInclude Include="LevelPack.h" />
     <ClInclude Include="LevelPicker.h" />
     <ClInclude Include="Loose.h" />
     <ClInclude Include="MainMenu.h" />
@@ -196,6 +197,14 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Win.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data\levels\packs.js" />
+    <None Include="data\levels\test\level.js" />
+    <None Include="data\maps\test\map.js" />
+    <None Include="data\themes\default\enemies.js" />
+    <None Include="data\themes\default\theme.js" />
+    <None Include="data\themes\default\towers.js" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

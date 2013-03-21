@@ -3,6 +3,7 @@
 
 #include "Button.h"
 #include "State.h"
+#include "LevelPack.h"
 
 class LevelPicker : public StateDef
 {
@@ -10,8 +11,13 @@ class LevelPicker : public StateDef
 
 	Sprite background;
 
-	std::array<Button, 3> buttons;
-	std::array<State, 3>  states;
+	std::map<std::string,LevelPack> levelPacks;
+
+	//std::array<Button, 3> buttons;
+	//std::array<State, 3>  states;
+
+	String strName;
+	String strDesc;
 
 	bool running;
 	State nextState;
@@ -29,8 +35,11 @@ public:
 
 	State GetNextState()
 	{
-		return nextState;
+		return ST_GAME;
 	}
+
+private:
+	void LoadLevelPacks();
 };
 
 #endif //LEVEL_PICKER_H

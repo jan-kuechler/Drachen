@@ -3,6 +3,7 @@
 #include "MainMenu.h"
 #include "Win.h"
 #include "Loose.h"
+#include "LevelPicker.h"
 #include "Utility.h"
 #include "ResourceManager.h"
 #include "Theme.h"
@@ -24,7 +25,7 @@ void HandleException(boost::exception& ex);
 int main(int argc, char **argv)
 {
 	try {
-		gStatus.level = "test";
+		gStatus.level = "pack1/level1.js";
 		gStatus.startLives = 6;
 		gStatus.moneyPerEnemy = 10;
 		gStatus.startMoney = 10000;
@@ -38,6 +39,7 @@ int main(int argc, char **argv)
 		Win winState(window);
 		Loose looseState(window);
 		Game game(window, gStatus);
+		LevelPicker levelPicker(window);
 
 		State state = ST_MAIN_MENU;
 		bool newState = true;
@@ -92,6 +94,17 @@ int main(int argc, char **argv)
 				}
 				break;
 
+			case ST_LEVEL_PICKER:
+				if (newState) {
+					levelPicker.Reset();
+					newState = false;
+				}
+				levelPicker.Run();
+				if (!levelPicker.IsRunning()) {
+					state = levelPicker.GetNextState();
+					newState = true;
+				}
+				break;
 			case ST_OPTIONS_MENU:
 			case ST_QUIT:
 				window.Close();
@@ -106,7 +119,7 @@ int main(int argc, char **argv)
 	catch (boost::exception& ex) {
 		HandleException(ex);
 	}
-    
+
 	return 0;
 }
 

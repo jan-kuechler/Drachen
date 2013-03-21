@@ -9,7 +9,7 @@
 MainMenu::MainMenu(RenderWindow& win)
 : window(win), running(true), nextState(ST_QUIT)
 { 
-	states[0] = ST_GAME;
+	states[0] = ST_LEVEL_PICKER;
 	states[1] = ST_OPTIONS_MENU;
 	states[2] = ST_QUIT;
 }

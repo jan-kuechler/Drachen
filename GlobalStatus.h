@@ -4,6 +4,7 @@
 struct GlobalStatus
 {
 	std::string level;
+	std::string levelPack;
 
 	size_t startLives;
 	size_t startMoney;

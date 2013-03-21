@@ -88,5 +88,9 @@
 			"menu/button_options.png",
 			"menu/button_quit.png"
 		]
-	}
+	},
+
+    "level-picker": {
+        "background": "picker/LevelPickerBackground.png"
+    }
 }

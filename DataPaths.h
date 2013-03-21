@@ -6,10 +6,26 @@ static const std::string MapDefinitionFile = "map.js";
 static const std::string ThemeDefinitionFile = "theme.js";
 static const std::string EnemyDefinitionFile = "enemies.js";
 static const std::string TowerDefinitionFile = "towers.js";
+static const boost::filesystem::path LevelPacksFile = "data/levels/packs.js";
 
 static inline boost::filesystem::path GetLevelPath(const std::string& level)
 {
-	return boost::filesystem::path("data/levels") / level;
+	auto pos = level.find_last_of('/');
+	if (pos != level.npos) {
+		auto levelDir = level.substr(0, pos);
+		return boost::filesystem::path("data/levels") / levelDir;
+	}
+	return boost::filesystem::path("data/levels");
+}
+
+static inline boost::filesystem::path GetLevelFile(const std::string& level)
+{
+	auto pos = level.find_last_of('/');
+	if (pos != level.npos) {
+		auto levelFile = level.substr(pos+1);
+		return levelFile;
+	}
+	return level;
 }
 
 static inline boost::filesystem::path GetMapPath(const std::string& map)

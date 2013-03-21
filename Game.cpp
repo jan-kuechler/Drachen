@@ -266,7 +266,7 @@ State Game::GetNextState()
 void Game::LoadLevel(const std::string& level)
 {
 	fs::path levelPath = GetLevelPath(level);
-	fs::path levelDef = levelPath / LevelDefinitionFile;
+	fs::path levelDef = levelPath / GetLevelFile(level);
 
 	std::ifstream in(levelDef.string());
 	js::mValue rootValue;
