@@ -124,16 +124,20 @@ void Theme::LoadTowerSettings()
 
 std::string Theme::GetFileName(const std::string& path, int idx) const
 {
-	std::string fileName = TraversePath(path, idx).get_str();
+	auto val = TraversePath(path, idx);
+	assert(std::get<0>(val));
+	std::string fileName = std::get<1>(val).get_str();
 	return (GetThemePath(currentTheme) / fileName).string();
 }
 
 
 sf::Color Theme::GetColor(const std::string& path, int idx) const
 {
-	auto val = TraversePath(path, idx);
+	auto value = TraversePath(path, idx);
+	assert(std::get<0>(value));
+	js::mValue& val = std::get<1>(value);
 	if (val.type() == js::array_type) {
-		const js::mArray& arr = val.get_array();
+		js::mArray arr = val.get_array();
 		if (arr.size() == 4)
 			return Color(arr.at(0).get_int(), arr.at(1).get_int(), arr.at(2).get_int(), arr.at(3).get_int());
 		else
@@ -178,7 +182,14 @@ std::tuple<std::string, bool, int> GetArrayAccess(const std::string& part, int i
 	return std::make_tuple(part, false, 0);
 }
 
-const js::mValue& Theme::TraversePath(const std::string& path, int idx) const
+static const js::mValue DUMMY_VALUE;
+
+bool CheckExistsAndType(const std::string& name, const js::mObject* p, js::Value_type type)
+{
+	return p->count(name) && p->at(name).type() == type;
+}
+
+std::tuple<bool, json_spirit::mValue> Theme::TraversePath(const std::string& path, int idx) const
 {
 	std::vector<std::string> parts;
 	boost::split(parts, path, boost::is_any_of("/"));
@@ -194,10 +205,16 @@ const js::mValue& Theme::TraversePath(const std::string& path, int idx) const
 		std::tie(name, arrayAccess, arrayIndex) = GetArrayAccess(*it, idx);
 
 		if (!arrayAccess) {
+			if (!CheckExistsAndType(name, parent, js::obj_type))
+				return std::make_tuple(false, DUMMY_VALUE);
 			parent = &parent->at(name).get_obj();
 		}
 		else {
+			if (!CheckExistsAndType(name, parent, js::array_type))
+				return std::make_tuple(false, DUMMY_VALUE);
 			const js::mArray& arr = parent->at(name).get_array();
+			if (arrayIndex >= static_cast<int>(arr.size()))
+				return std::make_tuple(false, DUMMY_VALUE);
 			parent = &arr.at(arrayIndex).get_obj();
 		}
 	}
@@ -206,8 +223,14 @@ const js::mValue& Theme::TraversePath(const std::string& path, int idx) const
 	int arrayIndex = 0;
 	std::tie(last, arrayAccess, arrayIndex) = GetArrayAccess(last, idx);
 
-	if (!arrayAccess)
-		return parent->at(last);
-	else
-		return parent->at(last).get_array().at(arrayIndex);
+	if (!parent->count(last))
+		return std::make_tuple(false, DUMMY_VALUE);
+	if (!arrayAccess) {
+		return std::make_tuple(true, parent->at(last));
+	}
+	else {
+		if (parent->at(last).type() != js::array_type || arrayIndex >= static_cast<int>(parent->at(last).get_array().size()))
+			return std::make_tuple(false, DUMMY_VALUE);
+		return std::make_tuple(true, parent->at(last).get_array().at(arrayIndex));
+	}
 }

@@ -16,23 +16,31 @@ public:
 
 	const sf::Vector2f GetPosition(const std::string& path, int idx = -1) const
 	{
-		const json_spirit::mArray& arr = TraversePath(path, idx).get_array();
+		auto val = TraversePath(path, idx);
+		assert(std::get<0>(val));
+		json_spirit::mArray arr = std::get<1>(val).get_array();
 		return sf::Vector2f(static_cast<float>(arr[0].get_real()), static_cast<float>(arr[1].get_real()));
 	}
 
 	int GetInt(const std::string& path, int idx = -1) const
 	{
-		return TraversePath(path, idx).get_int();
+		auto val = TraversePath(path, idx);
+		assert(std::get<0>(val));
+		return std::get<1>(val).get_int();
 	}
 
 	float GetFloat(const std::string& path, int idx = -1) const
 	{
-		return static_cast<float>(TraversePath(path, idx).get_real());
+		auto val = TraversePath(path, idx);
+		assert(std::get<0>(val));
+		return static_cast<float>(std::get<1>(val).get_real());
 	}
 
 	std::string GetString(const std::string& path, int idx = -1) const
 	{
-		return TraversePath(path, idx).get_str();
+		auto val = TraversePath(path, idx);
+		assert(std::get<0>(val));
+		return std::get<1>(val).get_str();
 	}
 
 	std::string GetFileName(const std::string& path, int idx = -1) const;
@@ -40,7 +48,9 @@ public:
 
 	size_t GetArrayLength(const std::string& path, int idx = -1) const
 	{
-		return TraversePath(path, idx).get_array().size();
+		auto val = TraversePath(path, idx);
+		assert(std::get<0>(val));
+		return std::get<1>(val).get_array().size();
 	}
 
 	const TowerSettings* GetTowerSettings(size_t i) const
@@ -48,10 +58,17 @@ public:
 		return &towerSettings.at(i);
 	}
 
+	bool KeyExists(const std::string& path, int idx = -1) const
+	{
+		return std::get<0>(TraversePath(path, idx));
+	}
+
 private:
 	json_spirit::mObject rootObj;
 
-	const json_spirit::mValue& TraversePath(const std::string& path, int idx = -1) const;
+	std::tuple<bool, json_spirit::mValue> TraversePath(const std::string& path, int idx = -1) const;
+
+	//const json_spirit::mValue& TraversePath(const std::string& path, int idx = -1) const;
 
 	std::string currentTheme;
 
