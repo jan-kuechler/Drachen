@@ -6,6 +6,7 @@ const Vector2f Button::ImageArea(-1, -1);
 
 bool Button::HandleEvent(Event& event)
 {
+	bool handled = false;
 	switch (event.Type) {
 	case Event::MouseMoved:
 		{
@@ -17,13 +18,35 @@ bool Button::HandleEvent(Event& event)
 			else
 				mouseOver = PointInRect(mousePos, GetPosition(), activeSize.x, activeSize.y);
 		}
+		UpdateImage();
+		break;
+	case Event::MouseButtonPressed:
+		if (mouseOver && event.MouseButton.Button == Mouse::Left) {
+			mouseDown = true;
+			handled = true;
+		}
+		UpdateImage();
 		break;
 	case Event::MouseButtonReleased:
+		mouseDown = false;
+
 		if (mouseOver && event.MouseButton.Button == Mouse::Left) {
 			clicked = true;
-			return true;
+			handled = true;
 		}
+		UpdateImage();
 		break;
 	}
-	return false;
+
+	return handled;
+}
+
+void Button::UpdateImage()
+{
+	if (imgDown && mouseDown && mouseOver)
+		Sprite::SetImage(*imgDown);
+	else if (imgHighlight && mouseOver)
+		Sprite::SetImage(*imgHighlight);
+	else
+		Sprite::SetImage(*imgNormal);
 }

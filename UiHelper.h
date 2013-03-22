@@ -3,15 +3,36 @@
 
 static inline void InitButton(Button& btn, std::string prefix, int idx = -1)
 {
-	btn.SetImage(gImageManager.getResource(gTheme.GetFileName(prefix + "/image", idx)));
-	btn.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
+	namespace fs = boost::filesystem;
+
+	if (gTheme.KeyExists(prefix + "/image", idx)) {
+		auto fn = gTheme.GetFileName(prefix + "/image", idx);
+		btn.SetImage(gImageManager.getResource(fn));
+
+		if (fn.find("-normal") != fn.npos) {
+			auto fnHighlight = boost::replace_last_copy(fn, "-normal", "-highlight");
+			if (fs::exists(fnHighlight))
+				btn.SetHighlightImage(gImageManager.getResource(fnHighlight));
+
+			auto fnDown = boost::replace_last_copy(fn, "-normal", "-down");
+			if (fs::exists(fnHighlight))
+				btn.SetDownImage(gImageManager.getResource(fnDown));
+		}
+	}
+
+	if (gTheme.KeyExists(prefix + "/position", idx))
+		btn.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
 }
 
 static inline void InitText(String& txt, std::string prefix, int idx = -1)
 {
 	txt.SetFont(gTheme.GetMainFont());
-	txt.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
-	txt.SetSize(gTheme.GetFloat(prefix + "/font-size", idx));
+	if (gTheme.KeyExists(prefix + "/position", idx))
+		txt.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
+	if (gTheme.KeyExists(prefix + "/font-size", idx))
+		txt.SetSize(gTheme.GetFloat(prefix + "/font-size", idx));
+	if (gTheme.KeyExists(prefix + "/color", idx))
+		txt.SetColor(gTheme.GetColor(prefix + "/color", idx));
 }
 
 static inline void CenterText(String& txt)
@@ -23,8 +44,10 @@ static inline void CenterText(String& txt)
 
 static inline void InitImage(Sprite& img, std::string prefix, int idx = -1)
 {
-	img.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
-	img.SetImage(gImageManager.getResource(gTheme.GetFileName(prefix + "/image", idx)));
+	if (gTheme.KeyExists(prefix + "/position", idx))
+		img.SetPosition(gTheme.GetPosition(prefix + "/position", idx));
+	if (gTheme.KeyExists(prefix + "/image", idx))
+		img.SetImage(gImageManager.getResource(gTheme.GetFileName(prefix + "/image", idx)));
 }
 
 #endif //UI_HELPER_H
