@@ -12,7 +12,6 @@
 namespace fs = boost::filesystem;
 namespace js = json_spirit;
 
-
 LevelPicker::LevelPicker(RenderWindow& win)
 : window(win)
 {
@@ -35,6 +34,24 @@ void LevelPicker::Reset()
 	strDesc.SetText(pack.desc);
 	CenterText(strName);
 
+
+	auto startPos = gTheme.GetPosition("level-picker/level-buttons/start");
+	auto lineOffset = gTheme.GetPosition("level-picker/level-buttons/line-offset");
+	auto textOffset = gTheme.GetPosition("level-picker/level-buttons/text-offset");
+	levelButtons.resize(pack.levels.size());
+	levelStrings.resize(pack.levels.size());
+	for (size_t i=0; i < pack.levels.size(); ++i) {
+		levelButtons[i].SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/level-buttons/red")));
+		levelButtons[i].SetPosition(startPos + lineOffset * static_cast<float>(i));
+		levelButtons[i].SetActiveSize(Vector2f(gTheme.GetFloat("level-picker/level-buttons/line-width"), static_cast<float>(levelButtons[i].GetImage()->GetHeight())));
+
+		levelStrings[i].SetFont(gTheme.GetMainFont());
+		levelStrings[i].SetSize(gTheme.GetFloat("level-picker/level-buttons/font-size"));
+		levelStrings[i].SetColor(gTheme.GetColor("level-picker/level-buttons/color"));
+		levelStrings[i].SetText(std::get<0>(pack.levels[i]));
+		levelStrings[i].SetPosition(startPos + textOffset + lineOffset * static_cast<float>(i));
+	}
+
 	previewImage.SetPosition(gTheme.GetPosition("level-picker/preview/position"));
 	previewImage.SetImage(gImageManager.getResource(GetLevelPackFile(pack.image).string()));
 }
@@ -48,6 +65,14 @@ void LevelPicker::Run()
 		if (DefaultHandleEvent(window, event))
 			continue;
 
+		bool handled = false;
+		boost::for_each(levelButtons, [&handled, &event](Button& btn) mutable {
+				if (btn.HandleEvent(event))
+					handled = true;
+			});
+		if (handled)
+			continue;
+
 		if (event.Type == Event::MouseButtonReleased) {
 			running = false;
 		}
@@ -58,6 +83,11 @@ void LevelPicker::Run()
 	window.Draw(strName);
 	window.Draw(strDesc);
 	window.Draw(previewImage);
+
+	for (size_t i=0; i < levelButtons.size(); ++i) {
+		window.Draw(levelButtons[i]);
+		window.Draw(levelStrings[i]);
+	}
 
 	window.Display();
 }
@@ -94,7 +124,9 @@ void LevelPicker::LoadLevelPacks()
 			js::mArray& levels = def["levels"].get_array();
 			pack.levels.reserve(levels.size());
 			for (size_t i=0; i < levels.size(); ++i) {
-				pack.levels.push_back(levels[i].get_str());
+				js::mArray& arr = levels[i].get_array();
+
+				pack.levels.push_back(std::make_tuple(arr[0].get_str(), arr[1].get_str()));
 			}
 
 			levelPacks[id] = pack;

@@ -6,7 +6,7 @@ struct LevelPack
 	std::string name;
 	std::string desc;
 	std::string image;
-	std::vector<std::string> levels;
+	std::vector<std::tuple<std::string,std::string>> levels;
 };
 
 #endif //LEVEL_PACK_H

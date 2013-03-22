@@ -13,8 +13,8 @@ class LevelPicker : public StateDef
 
 	std::map<std::string,LevelPack> levelPacks;
 
-	//std::array<Button, 3> buttons;
-	//std::array<State, 3>  states;
+	std::vector<Button> levelButtons;
+	std::vector<String> levelStrings;
 
 	String strName;
 	String strDesc;

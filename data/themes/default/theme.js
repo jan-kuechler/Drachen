@@ -93,8 +93,19 @@
     "level-picker": {
         "background": "picker/LevelPickerBackground.png",
 
+        "level-buttons": {
+            "start": [110, 190],
+            "line-offset": [0, 55],
+            "text-offset": [65,10],
+            "line-width": 350,
+            "font-size": 25,
+            "color": "black",
+            "red": "picker/DiamondButtonRed.png",
+            "green": "picker/DiamondButtonGreen.png"
+        },
+
         "name": {
-            "position": [220, 180],
+            "position": [230, 185],
             "font-size": 28,
             "color": [255, 201, 15]
         },
