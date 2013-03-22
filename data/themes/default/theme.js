@@ -114,7 +114,7 @@
 
         "back-button": {
             "position": [20, 550],
-            "image": "picker/ButtonBack.png"
+            "image": "picker/ButtonBack-normal.png"
         },
 
         "desc": {
