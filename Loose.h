@@ -25,7 +25,7 @@ public:
 
 	State GetNextState()
 	{
-		return ST_MAIN_MENU;
+		return ST_LEVEL_PICKER;
 	}
 };
 

@@ -21,15 +21,12 @@ Theme gTheme;
 GlobalStatus gStatus;
 
 void HandleException(boost::exception& ex);
+void InitDebugStatus();
 
 int main(int argc, char **argv)
 {
 	try {
-		gStatus.level = "pack1/level1.js";
-		gStatus.levelPack = "pack1";
-		gStatus.startLives = 6;
-		gStatus.moneyPerEnemy = 10;
-		gStatus.startMoney = 10000;
+		InitDebugStatus();
 
 		RenderWindow window(sf::VideoMode(800, 600, 32), "Drachen");
 		window.SetFramerateLimit(100);
@@ -161,4 +158,17 @@ void HandleException(boost::exception& ex)
 #ifdef WIN32
 	MessageBoxA(0, msg.str().c_str(), "Error", 0);
 #endif
+}
+
+void InitDebugStatus()
+{
+		gStatus.level = "pack1/level1.js";
+		gStatus.levelPack = "pack1";
+		gStatus.startLives = 6;
+		gStatus.moneyPerEnemy = 10;
+		gStatus.startMoney = 10000;
+
+		gStatus.enabledPacks.insert("pack1");
+		gStatus.enabledPacks.insert("pack2");
+		gStatus.lastWonLevel["pack1"] = 1;
 }

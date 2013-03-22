@@ -95,13 +95,15 @@
 
         "level-buttons": {
             "start": [110, 190],
-            "line-offset": [0, 55],
-            "text-offset": [65,10],
+            "line-offset": [0, 52],
+            "text-offset": [65,9],
             "line-width": 350,
             "font-size": 25,
             "color": "black",
+            "color-gray": [128,128,128],
             "red": "picker/DiamondButtonRed.png",
-            "green": "picker/DiamondButtonGreen.png"
+            "green": "picker/DiamondButtonGreen.png",
+            "gray": "picker/DiamondButtonGray.png"
         },
 
         "name": {
@@ -110,8 +112,13 @@
             "color": [255, 201, 15]
         },
 
+        "back-button": {
+            "position": [20, 550],
+            "image": "picker/ButtonBack.png"
+        },
+
         "desc": {
-            "position": [425, 300],
+            "position": [425, 320],
             "font-size": 20,
             "color": "black"
         },

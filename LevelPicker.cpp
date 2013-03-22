@@ -34,22 +34,41 @@ void LevelPicker::Reset()
 	strDesc.SetText(pack.desc);
 	CenterText(strName);
 
+	InitButton(backButton, "level-picker/back-button");
+
+	bool packEnabled = gStatus.enabledPacks.count(gStatus.levelPack) > 0;
 
 	auto startPos = gTheme.GetPosition("level-picker/level-buttons/start");
 	auto lineOffset = gTheme.GetPosition("level-picker/level-buttons/line-offset");
 	auto textOffset = gTheme.GetPosition("level-picker/level-buttons/text-offset");
 	levelButtons.resize(pack.levels.size());
 	levelStrings.resize(pack.levels.size());
-	for (size_t i=0; i < pack.levels.size(); ++i) {
-		levelButtons[i].SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/level-buttons/red")));
+	levelEnabled.resize(pack.levels.size());
+	for (int i=0; i < static_cast<int>(pack.levels.size()); ++i) {
+
+		bool enabled = packEnabled && i <= gStatus.lastWonLevel[gStatus.levelPack] + 1;
+		bool greenLevel = enabled && i <= gStatus.lastWonLevel[gStatus.levelPack];
+
+		if (greenLevel)
+			levelButtons[i].SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/level-buttons/green")));
+		else if (enabled)
+			levelButtons[i].SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/level-buttons/red")));
+		else
+			levelButtons[i].SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/level-buttons/gray")));
 		levelButtons[i].SetPosition(startPos + lineOffset * static_cast<float>(i));
 		levelButtons[i].SetActiveSize(Vector2f(gTheme.GetFloat("level-picker/level-buttons/line-width"), static_cast<float>(levelButtons[i].GetImage()->GetHeight())));
 
 		levelStrings[i].SetFont(gTheme.GetMainFont());
 		levelStrings[i].SetSize(gTheme.GetFloat("level-picker/level-buttons/font-size"));
-		levelStrings[i].SetColor(gTheme.GetColor("level-picker/level-buttons/color"));
+
+		if (enabled)
+			levelStrings[i].SetColor(gTheme.GetColor("level-picker/level-buttons/color"));
+		else
+			levelStrings[i].SetColor(gTheme.GetColor("level-picker/level-buttons/color-gray"));
 		levelStrings[i].SetText(std::get<0>(pack.levels[i]));
 		levelStrings[i].SetPosition(startPos + textOffset + lineOffset * static_cast<float>(i));
+
+		levelEnabled[i] = enabled;
 	}
 
 	previewImage.SetPosition(gTheme.GetPosition("level-picker/preview/position"));
@@ -67,15 +86,28 @@ void LevelPicker::Run()
 
 		bool handled = false;
 		boost::for_each(levelButtons, [&handled, &event](Button& btn) mutable {
-				if (btn.HandleEvent(event))
-					handled = true;
-			});
+			if (btn.HandleEvent(event))
+				handled = true;
+		});
 		if (handled)
 			continue;
 
-		if (event.Type == Event::MouseButtonReleased) {
+		if (backButton.HandleEvent(event))
+			continue;
+	}
+
+	for (size_t i=0; i < levelButtons.size(); ++i) {
+		if (levelEnabled[i] && levelButtons[i].WasClicked()) {
 			running = false;
+			nextState = ST_GAME;
+			gStatus.level = std::get<1>(levelPacks[gStatus.levelPack].levels[i]);
+			gStatus.levelIndex = i;
 		}
+	}
+
+	if (backButton.WasClicked()) {
+		running = false;
+		nextState = ST_MAIN_MENU;
 	}
 
 	window.Draw(background);
@@ -83,6 +115,7 @@ void LevelPicker::Run()
 	window.Draw(strName);
 	window.Draw(strDesc);
 	window.Draw(previewImage);
+	window.Draw(backButton);
 
 	for (size_t i=0; i < levelButtons.size(); ++i) {
 		window.Draw(levelButtons[i]);

@@ -15,10 +15,13 @@ class LevelPicker : public StateDef
 
 	std::vector<Button> levelButtons;
 	std::vector<String> levelStrings;
+	std::vector<bool>   levelEnabled;
 
 	String strName;
 	String strDesc;
 	Sprite previewImage;
+
+	Button backButton;
 
 	bool running;
 	State nextState;
@@ -36,7 +39,7 @@ public:
 
 	State GetNextState()
 	{
-		return ST_GAME;
+		return nextState;
 	}
 
 private:
