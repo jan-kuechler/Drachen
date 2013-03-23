@@ -43,4 +43,9 @@ static inline boost::filesystem::path GetThemePath(const std::string& theme)
 	return boost::filesystem::path("data/themes") / theme;
 }
 
+static inline boost::filesystem::path GetStatusFile()
+{
+	return boost::filesystem::path("drachen.st");
+}
+
 #endif //DATA_PATHS_H

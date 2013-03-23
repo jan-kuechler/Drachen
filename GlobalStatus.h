@@ -14,6 +14,10 @@ struct GlobalStatus
 
 	std::set<std::string> enabledPacks;
 	std::map<std::string,int> lastWonLevel;
+
+	void Reset();
+	void LoadFromFile(const std::string& fn);
+	void WriteToFile(const std::string& fn);
 };
 
 extern GlobalStatus gStatus;

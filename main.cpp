@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "DataPaths.h"
 #include "Game.h"
 #include "MainMenu.h"
 #include "Win.h"
@@ -13,6 +14,8 @@
 #include <Windows.h>
 #endif
 
+namespace fs = boost::filesystem;
+
 // global resource manager variables
 ResourceManager<sf::Image> gImageManager;
 
@@ -26,7 +29,11 @@ void InitDebugStatus();
 int main(int argc, char **argv)
 {
 	try {
-		InitDebugStatus();
+		auto fn = GetStatusFile();
+		if (fs::exists(fn))
+			gStatus.LoadFromFile(fn.string());
+		else
+			gStatus.Reset();
 
 		RenderWindow window(sf::VideoMode(800, 600, 32), "Drachen");
 		window.SetFramerateLimit(100);
@@ -109,11 +116,13 @@ int main(int argc, char **argv)
 				break;
 			}
 		}
+
+		gStatus.WriteToFile("drachen.st");
 	}
-	//catch (std::runtime_error err) {
-	//	std::ofstream out("crash.log");
-	//	out << err.what() << "\n";
-	//}
+	catch (std::runtime_error err) {
+		std::ofstream out("crash.log");
+		out << err.what() << "\n";
+	}
 	catch (boost::exception& ex) {
 		HandleException(ex);
 	}
