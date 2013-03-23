@@ -110,10 +110,10 @@ int main(int argc, char **argv)
 			}
 		}
 	}
-	catch (std::runtime_error err) {
-		std::ofstream out("crash.log");
-		out << err.what() << "\n";
-	}
+	//catch (std::runtime_error err) {
+	//	std::ofstream out("crash.log");
+	//	out << err.what() << "\n";
+	//}
 	catch (boost::exception& ex) {
 		HandleException(ex);
 	}
