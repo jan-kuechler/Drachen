@@ -464,7 +464,7 @@ namespace json_spirit
                     ;
 
                 members_
-                    = pair_ >> *( ',' >> pair_ )
+                    = pair_ >> *( ',' >> pair_ ) >> !ch_p(',')
                     ;
 
                 pair_
@@ -480,7 +480,7 @@ namespace json_spirit
                     ;
 
                 elements_
-                    = value_ >> *( ',' >> value_ )
+                    = value_ >> *( ',' >> value_ ) >> !ch_p(',')
                     ;
 
                 string_ 

@@ -120,11 +120,11 @@
         "desc": {
             "position": [425, 320],
             "font-size": 20,
-            "color": "black"
+            "color": "black",
         },
 
         "preview": {
-            "position": [447, 124]
-        }
-    }
+            "position": [447, 124],
+        },
+    },
 }
