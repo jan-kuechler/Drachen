@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Drachen", "Drachen.vcxproj", "{C83C278A-FA29-433A-B63C-E5A104CDD819}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MapEditor", "MapEditor\MapEditor.vcxproj", "{3DB50900-A3B2-46C6-A97F-28BDF114DCEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -16,6 +18,12 @@ Global
 		{C83C278A-FA29-433A-B63C-E5A104CDD819}.Profile|Win32.Build.0 = Profile|Win32
 		{C83C278A-FA29-433A-B63C-E5A104CDD819}.Release|Win32.ActiveCfg = Release|Win32
 		{C83C278A-FA29-433A-B63C-E5A104CDD819}.Release|Win32.Build.0 = Release|Win32
+		{3DB50900-A3B2-46C6-A97F-28BDF114DCEF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3DB50900-A3B2-46C6-A97F-28BDF114DCEF}.Debug|Win32.Build.0 = Debug|Win32
+		{3DB50900-A3B2-46C6-A97F-28BDF114DCEF}.Profile|Win32.ActiveCfg = Release|Win32
+		{3DB50900-A3B2-46C6-A97F-28BDF114DCEF}.Profile|Win32.Build.0 = Release|Win32
+		{3DB50900-A3B2-46C6-A97F-28BDF114DCEF}.Release|Win32.ActiveCfg = Release|Win32
+		{3DB50900-A3B2-46C6-A97F-28BDF114DCEF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
