@@ -25,6 +25,7 @@
 #include <boost/bind.hpp>
 #include <boost/exception/all.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/optional.hpp>
 
 // SFML Header
 #include <SFML/System.hpp>
