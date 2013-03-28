@@ -23,8 +23,6 @@ void Enemy::Update(float elapsed)
 	if (IsDead() || IsAtTarget())
 		return;
 
-	AnimSprite::Update(elapsed);
-
 	if (!path.empty()) {
 		Vector2f tgt = path.top();
 		Vector2f dist = tgt - GetPosition();
@@ -40,11 +38,20 @@ void Enemy::Update(float elapsed)
 		dir /= r;
 
 		Move(dir * speed * elapsed);
+
+		if (abs(dir.x) > abs(dir.y)) { // left/right
+			SetDirection(dir.x > 0 ? Right : Left);
+		}
+		else { // up/down
+			SetDirection(dir.y > 0 ? Down : Up);
+		}
 	}
 	
 	if (map->IsInTargetArea(map->PositionToBlock(GetPosition()))) {
 		atTarget = true;
 	}
+
+	AnimSprite::Update(elapsed);
 }
 
 void Enemy::DrawHpBar(RenderTarget& target)

@@ -7,12 +7,12 @@
 			"speed": 40,
 			"money-factor": 1,
 			
-			"image": "enemy_a.png",
-			"width":  50,
-			"height": 50,
-			"offset":  1,
-			"frames":  4,
-			"frame-time": 0.2
+			"image": "enemies/Footmen_4.png",
+			"width":  24,
+			"height": 32,
+			"offset":  0,
+			"frames":  3,
+			"frame-time": 0.2,
 		},
 		{
 			"name": "B",
@@ -21,11 +21,11 @@
 			"speed": 30,
 			"money-factor": 1,
 			
-			"image": "enemy_b.png",
-			"width":  50,
-			"height": 50,
-			"offset":  1,
-			"frames":  4,
+			"image": "enemies/Templar-1.png",
+			"width":  24,
+			"height": 32,
+			"offset":  0,
+			"frames":  3,
 			"frame-time": 0.2			
 		}
 	]
