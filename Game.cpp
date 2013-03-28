@@ -68,7 +68,7 @@ void Game::UpdateLoadingScreen(float pct)
 
 // Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
 // later, so the overlap is displayed correctly.
-static bool CompTowerY(const std::shared_ptr<Tower>& a, const std::shared_ptr<Tower>& b)
+static bool CompByY(const std::shared_ptr<sf::Drawable>& a, const std::shared_ptr<sf::Drawable>& b)
 {
 	return a->GetPosition().y < b->GetPosition().y;
 }
@@ -169,6 +169,8 @@ void Game::Run()
 		}), towers.end());
 
 	userInterface.Update();
+
+	boost::sort(enemies, CompByY);
 
 	// And draw all the stuff
 	window.Clear();
@@ -374,6 +376,6 @@ void Game::AddTower(const TowerSettings* settings, Vector2f pos)
 	std::shared_ptr<Tower> tower = Tower::CreateTower(settings, enemies, projectiles, map.IsHighRangeBlock(block));
 	tower->SetPosition(pos);
 	towers.emplace_back(std::move(tower));
-	boost::sort(towers, CompTowerY);
+	boost::sort(towers, CompByY);
 	map.PlaceTower(block);
 }
