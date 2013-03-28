@@ -1,0 +1,1 @@
+@FOR %%F IN (*.png) DO @convert -transparent "#209C00" %%F %%F
