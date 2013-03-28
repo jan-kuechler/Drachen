@@ -3,6 +3,16 @@
 
 class AnimSprite : public sf::Sprite
 {
+public:
+	enum Direction {
+		Up    = 0,
+		Right = 1,
+		Down  = 2,
+		Left  = 3,
+	};
+
+private:
+
 	size_t frames;
 	size_t width, height;
 	size_t offset;
@@ -10,6 +20,8 @@ class AnimSprite : public sf::Sprite
 	float frameTime;
 
 	float curTime;
+
+	Direction direction;
 
 public:
 	AnimSprite();
@@ -47,6 +59,11 @@ public:
 	size_t GetHeight() const
 	{
 		return height;
+	}
+
+	void SetDirection(Direction dir)
+	{
+		direction = dir;
 	}
 };
 

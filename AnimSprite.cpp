@@ -2,7 +2,7 @@
 #include "AnimSprite.h"
 
 AnimSprite::AnimSprite()
-: width(0), height(0), offset(0), frames(1), frameTime(0), curTime(0)
+: width(0), height(0), offset(0), frames(1), frameTime(0), curTime(0), direction(Up)
 { }
 
 void AnimSprite::Update(float elapsed)
@@ -19,6 +19,9 @@ void AnimSprite::Update(float elapsed)
 
 	frame = static_cast<size_t>(curTime / frameTime);
 
-	IntRect subrect(frame * width + (frame + 1) * offset, offset, (frame + 1) * width + (frame + 1) * offset, height);
+	size_t xoffs = frame * width + (frame + 1) * offset;
+	size_t yoffs = static_cast<int>(direction) * height + (static_cast<int>(direction) + 1) * offset;
+
+	IntRect subrect(xoffs, yoffs, xoffs + width, yoffs + height);
 	SetSubRect(subrect);
 }
