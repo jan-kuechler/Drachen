@@ -15,12 +15,15 @@ static Color ColorPlaceGood(0, 255, 0, 64);
 static Color ColorPlaceBad(255, 0, 0, 64);
 static Color ColorPlaceSnapped(255, 0, 0);
 static Color ColorPlace(0, 0, 255, 128);
+static Color ColorSpawn(255, 255, 0, 128);
+
+static Color ColorTarget(0, 255, 255, 128);
 
 static const float MIN_PLACE_DIST = 30;
 static const float PLACE_RADIUS = 12.5;
 
 MapEditor::MapEditor(RenderWindow& win)
-: window(win), mode(M_NONE), gridSize(25), leftDown(false), rightDown(false)
+: window(win), mode(M_NONE), gridSize(25), leftDown(false), rightDown(false), mouseDown(false), showTarget(false)
 { 
 	defBgImg.Create(win.GetWidth(), win.GetHeight(), Color::White);
 	background.SetImage(defBgImg);
@@ -31,6 +34,9 @@ MapEditor::MapEditor(RenderWindow& win)
 	goodPlace = Shape::Circle(Vector2f(0, 0), PLACE_RADIUS, ColorPlaceGood);
 	badPlace = Shape::Circle(Vector2f(0, 0), PLACE_RADIUS, ColorPlaceBad);
 	snappedPlace = Shape::Circle(Vector2f(0, 0), PLACE_RADIUS, ColorPlaceSnapped);
+
+	gridInfo.SetPosition(650, 25);
+	gridInfo.SetSize(20.f);
 
 	UpdateGrid();
 }
@@ -99,8 +105,16 @@ void MapEditor::HandleKey(Event::KeyEvent key)
 		mode = M_PATH;
 		break;
 
+	case Key::E:
+		mode = M_SPAWN;
+		break;
+
 	case Key::T:
 		mode = M_TOWER;
+		break;
+
+	case Key::G:
+		mode = M_TARGET;
 		break;
 	}
 }
@@ -156,13 +170,17 @@ void MapEditor::HandleMouse(Event& event)
 			}
 		}
 	}
-	else if (mode == M_TOWER) {
+	else if (mode == M_TOWER || mode == M_SPAWN) {
+		auto& places = mode == M_TOWER ? towerPlaces : spawnPlaces;
+		auto& placeMarker = mode == M_TOWER ? towerPlaceMarker : spawnPlaceMarker;
+		auto& markerColor = mode == M_TOWER ? ColorPlace : ColorSpawn;
+
 		if (event.Type == Event::MouseMoved) {
 			Vector2f pos(static_cast<float>(event.MouseMove.X), static_cast<float>(event.MouseMove.Y));
 
 			isGoodPlace = true;
 			placeSnapped = false;
-			for (auto it = towerPlaces.begin(); it != towerPlaces.end(); ++it) {
+			for (auto it = places.begin(); it != places.end(); ++it) {
 				if (dist(pos, *it) < MIN_PLACE_DIST) {
 					isGoodPlace = false;
 
@@ -181,17 +199,34 @@ void MapEditor::HandleMouse(Event& event)
 		else if (event.Type == Event::MouseButtonReleased) {
 			Vector2f pos(static_cast<float>(event.MouseButton.X), static_cast<float>(event.MouseButton.Y));
 			if (event.MouseButton.Button == Mouse::Left && isGoodPlace) {
-				towerPlaces.push_back(pos);
-				towerPlaceMarker.push_back(Shape::Circle(pos, PLACE_RADIUS, ColorPlace));
+				places.push_back(pos);
+				placeMarker.push_back(Shape::Circle(pos, PLACE_RADIUS, markerColor));
 			}
 			else if (event.MouseButton.Button == Mouse::Right && placeSnapped) {
-				towerPlaces.erase(boost::remove(towerPlaces, snappedPlace.GetPosition()), towerPlaces.end());
-				towerPlaceMarker.clear();
-				boost::for_each(towerPlaces, [&](const Vector2f& pos) {
-					towerPlaceMarker.push_back(Shape::Circle(pos, PLACE_RADIUS, ColorPlace));
-				});
+				places.erase(boost::remove(places, snappedPlace.GetPosition()), places.end());
+				UpdateMarker(mode);
 			}
 
+		}
+	}
+	else if (mode == M_TARGET) {
+		if (event.Type == Event::MouseButtonPressed && event.MouseButton.Button == Mouse::Left) {
+			targetFrom = Vector2f(static_cast<float>(event.MouseButton.X), static_cast<float>(event.MouseButton.Y));
+			mouseDown = true;
+			showTarget = false;
+		}
+		else if (event.Type == Event::MouseButtonReleased && event.MouseButton.Button == Mouse::Left) {
+			targetTo = Vector2f(static_cast<float>(event.MouseButton.X), static_cast<float>(event.MouseButton.Y));
+			mouseDown = false;
+			showTarget = true;
+		}
+		else if (event.Type == Event::MouseMoved && mouseDown) {
+			targetTo = Vector2f(static_cast<float>(event.MouseMove.X), static_cast<float>(event.MouseMove.Y));
+			showTarget = true;
+		}
+
+		if (showTarget) {
+			targetAreaMarker = Shape::Rectangle(targetFrom, targetTo, ColorTarget);
 		}
 	}
 }
@@ -202,6 +237,7 @@ void MapEditor::Draw()
 
 	if (mode == M_PATH) {
 		window.Draw(gridOverlay);
+		window.Draw(gridInfo);
 	}
 	else if (mode == M_TOWER) {
 		boost::for_each(towerPlaceMarker, [&](Shape& s) {
@@ -214,6 +250,22 @@ void MapEditor::Draw()
 			window.Draw(snappedPlace);
 		else
 			window.Draw(badPlace);
+	}
+	else if (mode == M_SPAWN) {
+		boost::for_each(spawnPlaceMarker, [&](Shape& s) {
+			window.Draw(s);
+		});
+
+		if (isGoodPlace)
+			window.Draw(goodPlace);
+		else if (placeSnapped)
+			window.Draw(snappedPlace);
+		else
+			window.Draw(badPlace);
+	}
+	else if (mode == M_TARGET) {
+		if (showTarget)
+			window.Draw(targetAreaMarker);
 	}
 
 	window.Display();
@@ -251,6 +303,8 @@ void MapEditor::UpdateGrid()
 	gridWidth = gridOverlayImg.GetWidth() / gridSize;
 	gridHeight = gridOverlayImg.GetHeight() / gridSize;
 
+	gridInfo.SetText("Grid size: " + boost::lexical_cast<std::string>(gridSize));
+
 	pathGrid.clear();
 	pathGrid.resize(gridWidth * gridHeight, false);
 }
@@ -268,6 +322,59 @@ void MapEditor::UpdatePath()
 				}
 			}
 		}
+	}
+}
+
+void MapEditor::UpdateMarker(Mode md)
+{
+	assert(md == M_TOWER || md == M_SPAWN);
+
+	auto& places = md == M_TOWER ? towerPlaces : spawnPlaces;
+	auto& placeMarker = md == M_TOWER ? towerPlaceMarker : spawnPlaceMarker;
+	auto& markerColor = md == M_TOWER ? ColorPlace : ColorSpawn;
+
+	placeMarker.clear();
+	boost::for_each(places, [&](const Vector2f& pos) {
+		placeMarker.push_back(Shape::Circle(pos, PLACE_RADIUS, markerColor));
+	});
+}
+
+js::mArray PosToJsArray(Vector2f pos)
+{
+	js::mArray arr;
+	arr.push_back(pos.x);
+	arr.push_back(pos.y);
+	return arr;
+}
+
+Vector2f JsArrayToPos(const js::mArray& arr)
+{
+	return Vector2f(static_cast<float>(arr[0].get_real()), static_cast<float>(arr[1].get_real()));
+}
+
+js::mArray PosVectorToJsArray(const std::vector<Vector2f>& positions)
+{
+	js::mArray arr;
+	arr.resize(positions.size());
+	for (size_t i=0; i < positions.size(); ++i) {
+		js::mArray pos;
+		pos.push_back(positions[i].x);
+		pos.push_back(positions[i].y);
+
+		arr[i] = pos;
+	}
+	return arr;
+}
+
+void JsArrayToPosVector(const js::mArray& arr, std::vector<Vector2f>& positions)
+{
+	positions.clear();
+	positions.resize(arr.size());
+	for (size_t i=0; i < arr.size(); ++i) {
+		const js::mArray& parr = arr[i].get_array();
+
+		Vector2f pos(static_cast<float>(parr[0].get_real()), static_cast<float>(parr[1].get_real()));
+		positions[i] = pos;
 	}
 }
 
@@ -296,16 +403,22 @@ void MapEditor::SaveMap()
 
 	rootObj["path"] = path;
 
-	js::mArray towers;
-	towers.resize(towerPlaces.size());
-	for (size_t i=0; i < towerPlaces.size(); ++i) {
-		js::mArray pos;
-		pos.push_back(towerPlaces[i].x);
-		pos.push_back(towerPlaces[i].y);
+	rootObj["tower-places"] = PosVectorToJsArray(towerPlaces);
+	rootObj["spawn-places"] = PosVectorToJsArray(spawnPlaces);
 
-		towers[i] = pos;
-	}
-	rootObj["tower-places"] = towers;
+	FloatRect targetArea;
+	targetArea.Left = std::min(targetFrom.x, targetTo.x);
+	targetArea.Right = std::max(targetFrom.x, targetTo.x);
+	targetArea.Top = std::min(targetFrom.y, targetTo.y);
+	targetArea.Bottom = std::max(targetFrom.y, targetTo.y);
+
+	js::mObject target;
+	js::mArray targetTopLeft;
+	target["width"] = targetArea.GetWidth();
+	target["height"] = targetArea.GetHeight();
+	target["top-left"] = PosToJsArray(Vector2f(targetArea.Left, targetArea.Top));
+	rootObj["target-area"] = target;
+	rootObj["default-target"] = PosToJsArray(Vector2f(targetArea.Left + targetArea.GetWidth() / 2.f, targetArea.Top + targetArea.GetHeight() / 2.f));
 
 	std::ofstream out(outPath.string());
 	js::write_formatted(rootObj, out);
@@ -322,16 +435,17 @@ void MapEditor::LoadMap(fs::path inPath)
 
 	js::mObject& rootObj = rootValue.get_obj();
 
-	towerPlaces.clear();
-	towerPlaceMarker.clear();
 	js::mArray& towers = rootObj["tower-places"].get_array();
-	for (size_t i=0; i < towers.size(); ++i) {
-		js::mArray& arr = towers[i].get_array();
+	js::mArray& spawns = rootObj["spawn-places"].get_array();
+	JsArrayToPosVector(towers, towerPlaces);
+	JsArrayToPosVector(spawns, spawnPlaces);
+	UpdateMarker(M_TOWER);
+	UpdateMarker(M_SPAWN);
 
-		Vector2f pos(static_cast<float>(arr[0].get_real()), static_cast<float>(arr[1].get_real()));
-		towerPlaces.push_back(pos);
-		towerPlaceMarker.push_back(Shape::Circle(pos, PLACE_RADIUS, ColorPlace));
-	}
+	js::mObject& target = rootObj["target-area"].get_obj();
+	js::mArray& targetTopLeft = target["top-left"].get_array();
+	targetFrom = JsArrayToPos(targetTopLeft);
+	targetTo = Vector2f(targetTopLeft[0].get_real() + target["width"].get_real(), targetTopLeft[1].get_real() + target["height"].get_real());
 
 	js::mObject& path = rootObj["path"].get_obj();
 	gridSize = path["block-size"].get_int();

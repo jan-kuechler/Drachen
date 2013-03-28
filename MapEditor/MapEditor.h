@@ -5,7 +5,7 @@ class MapEditor
 {
 	enum Mode
 	{
-		M_NONE, M_PATH, M_TOWER,
+		M_NONE, M_PATH, M_TOWER, M_SPAWN, M_TARGET,
 	};
 
 	RenderWindow& window;
@@ -15,6 +15,7 @@ class MapEditor
 
 	Image gridOverlayImg;
 	Sprite gridOverlay;
+	String gridInfo;
 
 	Mode mode;
 
@@ -32,6 +33,15 @@ class MapEditor
 	bool isGoodPlace, placeSnapped;
 	Shape goodPlace, badPlace, snappedPlace;
 
+	// spawn mode
+	std::vector<Vector2f> spawnPlaces;
+	std::vector<Shape> spawnPlaceMarker;
+
+	// target mode
+	Vector2f targetFrom, targetTo;
+	Shape targetAreaMarker;
+	bool showTarget;
+	bool mouseDown;
 
 public:
 	MapEditor(RenderWindow& win);
@@ -48,6 +58,8 @@ private:
 	void LoadBackground();
 	void UpdateGrid();
 	void UpdatePath();
+
+	void UpdateMarker(Mode md);
 
 	void LoadMap(boost::filesystem::path path);
 	void SaveMap();
