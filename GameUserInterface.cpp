@@ -133,7 +133,7 @@ void GameUserInterface::Draw()
 		window.Draw(countdown);
 
 	if (towerPlacer) {
-		towerPlacer->DrawRangeCircle(window, map->IsHighRangeBlock(map->PositionToBlock(towerPlacer->GetPosition())));
+		towerPlacer->DrawRangeCircle(window, map->IsHighRange(towerPlacer->GetPosition()));
 		window.Draw(*towerPlacer);
 	}
 }
