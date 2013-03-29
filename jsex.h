@@ -6,9 +6,12 @@ namespace jsex
 	namespace js = json_spirit;
 
 	template <typename T>
-	T get(const js::mValue& v)
+	T get(const js::mValue& v);
+
+	template <>
+	bool get(const js::mValue& v)
 	{
-		throw std::runtime_error("no matching overload found for jsex::get<T>");
+		return v.get_bool();
 	}
 
 	template <>

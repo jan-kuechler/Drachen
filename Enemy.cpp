@@ -62,10 +62,10 @@ void Enemy::DrawHpBar(RenderTarget& target)
 	target.Draw(hpBarRed);
 }
 
-void Enemy::SetTarget(const Vector2i& pos)
+void Enemy::SetTarget(const Vector2f& pos)
 {
-	target = pos;
-	FindPath(pos.x, pos.y);
+	target = map->PositionToBlock(pos);
+	FindPath(target.x, target.y);
 }
 
 struct Node

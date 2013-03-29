@@ -27,11 +27,7 @@ class Enemy : public AnimSprite
 public:
 	Enemy(const EnemySettings& settings, const Map* map);
 
-	void SetTarget(const Vector2i& pos);
-	Vector2i GetTarget() const
-	{
-		return target;
-	}
+	void SetTarget(const Vector2f& pos);
 
 	void SetSpeed(float v)
 	{

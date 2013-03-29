@@ -97,12 +97,6 @@ void Game::Run()
 			case Key::G:
 				SpawnEnemy(0);
 				break;
-			case Key::F2:
-				map.ToggleOverlay();
-				break;
-			case Key::F3:
-				map.DebugToggleTowersAnywhere();
-				break;
 
 			case Key::Q:
 				gameStatus.lives = 1;
@@ -162,7 +156,7 @@ void Game::Run()
 		}), enemies.end());
 	towers.erase(boost::remove_if(towers, [&](const std::shared_ptr<Tower>& t) mutable -> bool {
 			if (t->IsSold()) {
-				this->map.RemoveTower(this->map.PositionToBlock(t->GetPosition()));
+				this->map.RemoveTower(t->GetPosition());
 				return true;
 			}
 			return false;
@@ -372,10 +366,9 @@ void Game::AddTower(const TowerSettings* settings, Vector2f pos)
 {
 	gameStatus.money -= settings->baseCost;
 
-	auto block = map.PositionToBlock(pos);
-	std::shared_ptr<Tower> tower = Tower::CreateTower(settings, enemies, projectiles, map.IsHighRangeBlock(block));
+	std::shared_ptr<Tower> tower = Tower::CreateTower(settings, enemies, projectiles, map.IsHighRange(pos));
 	tower->SetPosition(pos);
 	towers.emplace_back(std::move(tower));
 	boost::sort(towers, CompByY);
-	map.PlaceTower(block);
+	map.PlaceTower(pos);
 }
