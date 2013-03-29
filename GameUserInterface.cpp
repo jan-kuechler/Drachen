@@ -16,6 +16,9 @@ using boost::lexical_cast;
 // do not update the text every frame
 static const float TEXT_UPDATE_TIME = 0.2f;
 
+static const float MARKER_RADIUS = 12.5f;
+static const Color ColorMarker(0, 0, 255, 32);
+
 GameUserInterface::GameUserInterface(Game* game, RenderWindow& window, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map* map)
 : game(game), window(window), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
 { }
@@ -133,6 +136,10 @@ void GameUserInterface::Draw()
 		window.Draw(countdown);
 
 	if (towerPlacer) {
+		boost::for_each(towerMarkers, [&](const Shape& s) {
+			window.Draw(s);
+		});
+
 		towerPlacer->DrawRangeCircle(window, map->IsHighRange(towerPlacer->GetPosition()));
 		window.Draw(*towerPlacer);
 	}
@@ -187,6 +194,14 @@ void GameUserInterface::StartPlacingTower(size_t id)
 
 	const Input& input = window.GetInput();
 	towerPlacer->SetPosition(static_cast<float>(input.GetMouseX()), static_cast<float>(input.GetMouseY()));
+
+	auto places = map->GetTowerPlaces();
+	towerMarkers.clear();
+	towerMarkers.reserve(places.size());
+	for (size_t i=0; i < places.size(); ++i) {
+		towerMarkers.push_back(Shape::Circle(places[i], MARKER_RADIUS, ColorMarker));
+	}
+	(void)0;
 }
 
 void GameUserInterface::TowerSelected(std::shared_ptr<Tower> tower)

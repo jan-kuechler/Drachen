@@ -1,7 +1,7 @@
 {
 	"name" : "Test Level 3",
 	"theme" : "default",
-	"map" : "test",
+	"map" : "forest",
 	
 	"waves" : [
 		{ 

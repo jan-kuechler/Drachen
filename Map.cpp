@@ -75,7 +75,7 @@ void Map::Reset()
 void Map::PlaceTower(Vector2f pos)
 {
 	assert(boost::range::find(towerPlaces, pos) != towerPlaces.end());
-	boost::remove(towerPlaces, pos);
+	towerPlaces.erase(boost::remove(towerPlaces, pos), towerPlaces.end());
 }
 
 void Map::RemoveTower(Vector2f pos)
