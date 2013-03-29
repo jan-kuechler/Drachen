@@ -41,6 +41,7 @@ class GameUserInterface
 	sf::Clock textUpdateClock;
 
 	std::unique_ptr<TowerPlacer> towerPlacer;
+	std::vector<Shape> towerMarkers;
 
 	std::shared_ptr<Tower> selectedTower;
 

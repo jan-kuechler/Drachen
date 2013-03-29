@@ -47,7 +47,7 @@ void Enemy::Update(float elapsed)
 		}
 	}
 	
-	if (map->IsInTargetArea(map->PositionToBlock(GetPosition()))) {
+	if (map->IsInTargetArea(GetPosition())) {
 		atTarget = true;
 	}
 
@@ -62,10 +62,10 @@ void Enemy::DrawHpBar(RenderTarget& target)
 	target.Draw(hpBarRed);
 }
 
-void Enemy::SetTarget(const Vector2i& pos)
+void Enemy::SetTarget(const Vector2f& pos)
 {
-	target = pos;
-	FindPath(pos.x, pos.y);
+	target = map->PositionToBlock(pos);
+	FindPath(target.x, target.y);
 }
 
 struct Node
@@ -122,8 +122,8 @@ struct NodeEqPos
 static bool ValidNeighbor(int x, int y, const Map& map)
 {
 	return (x >= 0) && (y >= 0)
-		&& (static_cast<size_t>(x) < map.GetWidth()) && (static_cast<size_t>(y) < map.GetHeight()) 
-		&& map.GetGrid()[x][y] == Map::Path;
+		&& (static_cast<size_t>(x) < map.GetWidthBlocks()) && (static_cast<size_t>(y) < map.GetHeightBlocks()) 
+		&& map.GetPathGrid()[x + y * map.GetWidthBlocks()];
 }
 
 static void FillNeighbors(std::vector<Vector2i>& c, const Map& map, int x, int y)

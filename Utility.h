@@ -37,6 +37,11 @@ inline bool PointInRect(sf::Vector2f pt, sf::Vector2f topLeft, float width, floa
 	return pt.x >= topLeft.x && pt.x <= topLeft.x + width && pt.y > topLeft.y && pt.y <= topLeft.y + height;
 }
 
+inline Vector2f GetCenter(const FloatRect& r)
+{
+	return Vector2f(r.Left + r.GetWidth() / 2.f, r.Top + r.GetHeight() / 2.f);
+}
+
 template <typename Res>
 void LoadFromFile(Res& res, const std::string& fileName)
 {

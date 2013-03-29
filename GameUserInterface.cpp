@@ -16,6 +16,9 @@ using boost::lexical_cast;
 // do not update the text every frame
 static const float TEXT_UPDATE_TIME = 0.2f;
 
+static const float MARKER_RADIUS = 12.5f;
+static const Color ColorMarker(0, 0, 255, 32);
+
 GameUserInterface::GameUserInterface(Game* game, RenderWindow& window, GlobalStatus& globalStatus, GameStatus& gameStatus, const Map* map)
 : game(game), window(window), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
 { }
@@ -106,10 +109,19 @@ void GameUserInterface::PreDraw()
 {
 	if (selectedTower)
 		selectedTower->DrawRangeCircle(window);
+
 }
 
 void GameUserInterface::Draw()
 {
+	if (towerPlacer) {
+		boost::for_each(towerMarkers, [&](const Shape& s) {
+			window.Draw(s);
+		});
+		towerPlacer->DrawRangeCircle(window, map->IsHighRange(towerPlacer->GetPosition()));
+		window.Draw(*towerPlacer);
+	}
+
 	window.Draw(topPanel);
 	window.Draw(bottomPanel);
 
@@ -131,11 +143,6 @@ void GameUserInterface::Draw()
 
 	if (showCountdown)
 		window.Draw(countdown);
-
-	if (towerPlacer) {
-		towerPlacer->DrawRangeCircle(window, map->IsHighRangeBlock(map->PositionToBlock(towerPlacer->GetPosition())));
-		window.Draw(*towerPlacer);
-	}
 }
 
 bool GameUserInterface::HandleEvent(Event& event)
@@ -187,6 +194,14 @@ void GameUserInterface::StartPlacingTower(size_t id)
 
 	const Input& input = window.GetInput();
 	towerPlacer->SetPosition(static_cast<float>(input.GetMouseX()), static_cast<float>(input.GetMouseY()));
+
+	auto places = map->GetTowerPlaces();
+	towerMarkers.clear();
+	towerMarkers.reserve(places.size());
+	for (size_t i=0; i < places.size(); ++i) {
+		towerMarkers.push_back(Shape::Circle(places[i], MARKER_RADIUS, ColorMarker));
+	}
+	(void)0;
 }
 
 void GameUserInterface::TowerSelected(std::shared_ptr<Tower> tower)
