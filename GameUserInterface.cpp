@@ -109,10 +109,19 @@ void GameUserInterface::PreDraw()
 {
 	if (selectedTower)
 		selectedTower->DrawRangeCircle(window);
+
 }
 
 void GameUserInterface::Draw()
 {
+	if (towerPlacer) {
+		boost::for_each(towerMarkers, [&](const Shape& s) {
+			window.Draw(s);
+		});
+		towerPlacer->DrawRangeCircle(window, map->IsHighRange(towerPlacer->GetPosition()));
+		window.Draw(*towerPlacer);
+	}
+
 	window.Draw(topPanel);
 	window.Draw(bottomPanel);
 
@@ -134,15 +143,6 @@ void GameUserInterface::Draw()
 
 	if (showCountdown)
 		window.Draw(countdown);
-
-	if (towerPlacer) {
-		boost::for_each(towerMarkers, [&](const Shape& s) {
-			window.Draw(s);
-		});
-
-		towerPlacer->DrawRangeCircle(window, map->IsHighRange(towerPlacer->GetPosition()));
-		window.Draw(*towerPlacer);
-	}
 }
 
 bool GameUserInterface::HandleEvent(Event& event)
