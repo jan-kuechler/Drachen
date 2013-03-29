@@ -47,7 +47,7 @@ void Enemy::Update(float elapsed)
 		}
 	}
 	
-	if (map->IsInTargetArea(map->PositionToBlock(GetPosition()))) {
+	if (map->IsInTargetArea(GetPosition())) {
 		atTarget = true;
 	}
 
@@ -122,8 +122,8 @@ struct NodeEqPos
 static bool ValidNeighbor(int x, int y, const Map& map)
 {
 	return (x >= 0) && (y >= 0)
-		&& (static_cast<size_t>(x) < map.GetWidth()) && (static_cast<size_t>(y) < map.GetHeight()) 
-		&& map.GetGrid()[x][y] == Map::Path;
+		&& (static_cast<size_t>(x) < map.GetWidthBlocks()) && (static_cast<size_t>(y) < map.GetHeightBlocks()) 
+		&& map.GetPathGrid()[x + y * map.GetWidthBlocks()];
 }
 
 static void FillNeighbors(std::vector<Vector2i>& c, const Map& map, int x, int y)
