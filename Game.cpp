@@ -170,13 +170,18 @@ void Game::Run()
 	window.Clear();
 	map.Draw(window);
 	userInterface.PreDraw();
-	for (auto it = towers.begin(); it != towers.end(); ++it) {
-		window.Draw(*(*it));
-	}
-	for (auto it = enemies.begin(); it != enemies.end(); ++it) {
-		(*it)->DrawHpBar(window);
-		window.Draw(*(*it));
-	}
+
+	std::vector<std::shared_ptr<Drawable>> sprites;
+	sprites.reserve(towers.size() + enemies.size());
+
+	boost::merge(towers, enemies, std::back_inserter(sprites), CompByY);
+
+	boost::for_each(sprites, [&](const std::shared_ptr<Drawable>& sprite) {
+		std::shared_ptr<Enemy> e = std::dynamic_pointer_cast<Enemy>(sprite);
+		if (e)
+			e->DrawHpBar(window);
+		window.Draw(*sprite);
+	});
 	
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		window.Draw(*(*it));
