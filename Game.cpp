@@ -24,7 +24,6 @@ void Game::Reset()
 {
 	postfx.LoadFromFile("data/postfx.sfx");
 	postfx.SetTexture("framebuffer", nullptr);
-	disableShader = false;
 
 	loadingScreenBackground.SetImage(gImageManager.getResource(gTheme.GetFileName("main-menu/background")));
 	loadingScreenBackground.SetPosition(0, 0);
@@ -108,7 +107,7 @@ void Game::Run()
 				break;
 
 			case Key::X:
-				disableShader = !disableShader;
+				gStatus.settings.useShader = !gStatus.settings.useShader;
 				break;
 			}
 		}
@@ -194,7 +193,7 @@ void Game::Run()
 	for (auto it = projectiles.begin(); it != projectiles.end(); ++it)
 		window.Draw(*(*it));
 
-	if (gStatus.settings.useShader && !disableShader)
+	if (gStatus.settings.useShader)
 		window.Draw(postfx);
 
 	// Draw the user interface at last, so it does not get hidden by any objects

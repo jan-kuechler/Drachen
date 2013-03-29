@@ -25,7 +25,6 @@ class Game
 	Sprite bg;
 
 	PostFX postfx;
-	bool disableShader;
 
 	Sprite loadingScreenBackground;
 	sfext::Rectangle loadingScreenBar;
