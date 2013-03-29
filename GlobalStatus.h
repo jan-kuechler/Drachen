@@ -15,6 +15,12 @@ struct GlobalStatus
 	std::set<std::string> enabledPacks;
 	std::map<std::string,int> lastWonLevel;
 
+	struct Settings
+	{
+		bool useShader;
+	
+	} settings;
+
 	void Reset();
 	void LoadFromFile(const std::string& fn);
 	void WriteToFile(const std::string& fn);

@@ -5,11 +5,12 @@
 #include <string>
 
 #include "json_spirit\json_spirit.h"
+#include "jsex.h"
 
 namespace js = json_spirit;
 namespace fs = boost::filesystem;
 
-static const uint64_t GameStatusVersion = 1;
+static const uint64_t GameStatusVersion = 2;
 
 void GlobalStatus::Reset()
 {
@@ -24,6 +25,8 @@ void GlobalStatus::Reset()
 
 	enabledPacks.insert(levelPack);
 	lastWonLevel[levelPack] = -1;
+
+	settings.useShader = true;
 }
 
 void GlobalStatus::LoadFromFile(const std::string& fn)
@@ -65,6 +68,9 @@ void GlobalStatus::LoadFromFile(const std::string& fn)
 			lastWonLevel.insert(std::make_pair<std::string, int>(it->first, it->second.get_int()));
 		}
 
+		js::mObject& set = gameStatus["settings"].get_obj();
+		settings.useShader = jsex::get<bool>(set["use-shader"]);
+
 	}
 	catch (js::Error_position err) {
 		throw GameError() << ErrorInfo::Desc("Json format error") << ErrorInfo::Note(err.reason_) << boost::errinfo_at_line(err.line_) << boost::errinfo_file_name(fn);
@@ -104,6 +110,12 @@ void GlobalStatus::WriteToFile(const std::string& fn)
 		lastWon[it->first] = js::mValue(it->second);
 	}
 	gameStatus["last-won-level"] = lastWon;
+
+	js::mObject set;
+
+	set["use-shader"] = js::mValue(settings.useShader);
+
+	gameStatus["settings"] = set;
 
 	std::ofstream out(fn);
 	js::write_formatted(rootObj, out);

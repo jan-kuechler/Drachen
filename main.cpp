@@ -28,12 +28,20 @@ void InitDebugStatus();
 
 int main(int argc, char **argv)
 {
+	std::ofstream fcerr("cerr.log");
+	std::cerr.rdbuf(fcerr.rdbuf());
+
+	std::ofstream fcout("cout.log");
+	std::cout.rdbuf(fcout.rdbuf());
+
 	try {
 		auto fn = GetStatusFile();
 		if (fs::exists(fn))
 			gStatus.LoadFromFile(fn.string());
 		else
 			gStatus.Reset();
+
+		gStatus.settings.useShader = true;
 
 		RenderWindow window(sf::VideoMode(800, 600, 32), "Drachen");
 		window.SetFramerateLimit(100);

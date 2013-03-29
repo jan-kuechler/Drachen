@@ -24,6 +24,9 @@ class Game
 	Image imgBg;
 	Sprite bg;
 
+	PostFX postfx;
+	bool disableShader;
+
 	Sprite loadingScreenBackground;
 	sfext::Rectangle loadingScreenBar;
 
