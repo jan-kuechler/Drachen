@@ -64,6 +64,8 @@ bool Map::LoadFromFile(const std::string& map)
 		throw GameError() << ErrorInfo::Desc("Json error") << ErrorInfo::Note(err.what()) << boost::errinfo_file_name(filePath.string());
 	}
 
+	prevMap = map;
+	
 	return true;
 }
 
