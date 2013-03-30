@@ -13,6 +13,7 @@ class Map
 	// Only access these sets in Map.cpp, the operator < for Vector2i is only defined there.
 	std::set<Vector2i> towers;
 	std::vector<Vector2f> towerPlaces, origTowerPlaces;
+	std::vector<Vector2f> highRangePlaces;
 
 	FloatRect targetArea;
 	Vector2f defaultTarget;
@@ -35,7 +36,7 @@ public:
 
 	bool IsHighRange(const Vector2f& pos) const
 	{
-		return false; // FIXME
+		return boost::range::find(highRangePlaces, pos) != highRangePlaces.end();
 	}
 
 

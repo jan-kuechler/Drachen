@@ -50,6 +50,10 @@ bool Map::LoadFromFile(const std::string& map)
 	try {
 		towerPlaces = jsex::read_vector<Vector2f>(rootObj["tower-places"].get_array());
 		origTowerPlaces = towerPlaces;
+		if (rootObj.count("high-range"))
+			highRangePlaces = jsex::read_vector<Vector2f>(rootObj["high-range"].get_array());
+		else
+			highRangePlaces.clear();
 		spawnPlaces = jsex::read_vector<Vector2f>(rootObj["spawn-places"].get_array());
 
 		targetArea = jsex::get<FloatRect>(rootObj["target-area"]);
