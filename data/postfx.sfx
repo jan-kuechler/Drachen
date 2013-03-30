@@ -2,31 +2,40 @@ texture framebuffer;
 
 effect
 {
-	vec4 sum = vec4(0);
-	vec2 texcoord = vec2(gl_TexCoord[0]);
-	int j;
-	int i;
+	float threshold = 0.3;
+	
+	float BloomIntensity = 1.3;
+	float OrigIntensity = 1.0;
+	float BloomSaturation = 1.0;
+	float OrigSaturation = 1.0;
+	
 
-	for( i= -4 ;i < 4; i++)
-	{
-		for (j = -3; j < 3; j++)
-		{
-			sum += texture2D(framebuffer, texcoord + vec2(j, i)*0.003) * 0.1;
+	vec4 clr = texture2D(framebuffer, _in);
+	
+	vec4 origClr = texture2D(framebuffer, _in);
+	
+	vec4 bloomClr = vec4(0);
+	
+	int i;
+	int j;
+	
+	// blurr and saturate
+	for( i= -4 ;i < 4; i++) {
+		for (j = -3; j < 3; j++) {
+			vec4 thisClr = clamp((texture2D(framebuffer, _in + vec2(j, i)*0.003) - threshold) / (1.0 - threshold), 0.0, 1.0);
+			bloomClr += thisClr;
 		}
 	}
-	if (texture2D(framebuffer, texcoord).r < 0.3)
-	{
-		gl_FragColor = sum*sum*0.012 + texture2D(framebuffer, texcoord);
-	}
-	else
-	{
-		if (texture2D(framebuffer, texcoord).r < 0.5)
-		{
-			gl_FragColor = sum*sum*0.009 + texture2D(framebuffer, texcoord);
-		}
-		else
-		{
-			gl_FragColor = sum*sum*0.009 + texture2D(framebuffer, texcoord);
-		}
-	}
+	bloomClr *= 0.012;
+	
+	// and mix
+	float bloomGray = dot(bloomClr, vec4(0.3, 0.59, 0.11, 0.0));
+	vec4 bloomClr2 = mix(bloomGray, bloomClr, BloomSaturation);
+	
+	float origGray = dot(origClr, vec4(0.3, 0.59, 0.11, 0.0));
+	vec4 origClr2 = mix(origGray, origClr, OrigSaturation);
+	
+	origClr2 *= (1.0 - clamp(bloomClr2, 0.0, 1.0));
+	
+	_out = bloomClr2 + origClr2;
 }

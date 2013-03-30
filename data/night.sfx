@@ -1,0 +1,10 @@
+texture framebuffer;
+
+effect
+{
+	float threshold = 0.3;
+
+	vec4 clr = texture2D(framebuffer, _in);
+	
+	_out = clamp((clr - threshold) / (1.0 - threshold), 0.0, 1.0);
+}

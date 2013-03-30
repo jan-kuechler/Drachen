@@ -7,6 +7,7 @@
 #include "ResourceManager.h"
 
 #include "json_spirit/json_spirit.h"
+#include "jsex.h"
 
 namespace fs = boost::filesystem;
 namespace js = json_spirit;
@@ -24,6 +25,9 @@ void Game::Reset()
 {
 	postfx.LoadFromFile("data/postfx.sfx");
 	postfx.SetTexture("framebuffer", nullptr);
+
+	nightModeFx.LoadFromFile("data/night.sfx");
+	nightModeFx.SetTexture("framebuffer", nullptr);
 
 	loadingScreenBackground.SetImage(gImageManager.getResource(gTheme.GetFileName("main-menu/background")));
 	loadingScreenBackground.SetPosition(0, 0);
@@ -109,6 +113,9 @@ void Game::Run()
 			case Key::X:
 				gStatus.settings.useShader = !gStatus.settings.useShader;
 				break;
+
+			case Key::N:
+				levelInfo.nightMode = !levelInfo.nightMode;
 			}
 		}
 		else if (event.Type == Event::MouseButtonReleased && event.MouseButton.Button == Mouse::Left) {
@@ -195,6 +202,8 @@ void Game::Run()
 
 	if (gStatus.settings.useShader)
 		window.Draw(postfx);
+	if (levelInfo.nightMode)
+		window.Draw(nightModeFx);
 
 	// Draw the user interface at last, so it does not get hidden by any objects
 	userInterface.Draw();
@@ -297,6 +306,7 @@ void Game::LoadLevel(const std::string& level)
 		levelInfo.name = rootObj["name"].get_str();
 		levelInfo.map = rootObj["map"].get_str();
 		levelInfo.theme = rootObj["theme"].get_str();
+		levelInfo.nightMode = jsex::get_opt<bool>(rootObj, "night-mode", false);
 
 		js::mArray& waves = rootObj["waves"].get_array();
 		for (size_t i=0; i < waves.size(); ++i) {

@@ -25,6 +25,8 @@ class Game
 	Sprite bg;
 
 	PostFX postfx;
+	PostFX nightModeFx;
+	bool nightMode;
 
 	Sprite loadingScreenBackground;
 	sfext::Rectangle loadingScreenBar;
