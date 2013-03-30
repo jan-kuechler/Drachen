@@ -15,6 +15,7 @@ static Color ColorPlaceGood(0, 255, 0, 64);
 static Color ColorPlaceBad(255, 0, 0, 64);
 static Color ColorPlaceSnapped(255, 0, 0);
 static Color ColorPlace(0, 0, 255, 128);
+static Color ColorHighRange(255, 0, 255, 128);
 static Color ColorSpawn(255, 255, 0, 128);
 
 static Color ColorTarget(0, 255, 255, 128);
@@ -116,6 +117,14 @@ void MapEditor::HandleKey(Event::KeyEvent key)
 	case Key::G:
 		mode = M_TARGET;
 		break;
+
+	case Key::H:
+		if (mode == M_TOWER) {
+			if (placeSnapped) {
+				highRangePlaces.push_back(snappedPlace.GetPosition());
+				UpdateMarker(M_TOWER);
+			}
+		}
 	}
 }
 
@@ -204,6 +213,9 @@ void MapEditor::HandleMouse(Event& event)
 			}
 			else if (event.MouseButton.Button == Mouse::Right && placeSnapped) {
 				places.erase(boost::remove(places, snappedPlace.GetPosition()), places.end());
+				if (mode == M_TOWER) {
+					highRangePlaces.erase(boost::remove(highRangePlaces, snappedPlace.GetPosition()), highRangePlaces.end());
+				}
 				UpdateMarker(mode);
 			}
 
@@ -335,7 +347,13 @@ void MapEditor::UpdateMarker(Mode md)
 
 	placeMarker.clear();
 	boost::for_each(places, [&](const Vector2f& pos) {
-		placeMarker.push_back(Shape::Circle(pos, PLACE_RADIUS, markerColor));
+		Color clr = markerColor;
+
+		if (mode == M_TOWER && boost::range::find(highRangePlaces, pos) != highRangePlaces.end()) {
+			clr = ColorHighRange;
+		}
+
+		placeMarker.push_back(Shape::Circle(pos, PLACE_RADIUS, clr));
 	});
 }
 
@@ -404,6 +422,7 @@ void MapEditor::SaveMap()
 	rootObj["path"] = path;
 
 	rootObj["tower-places"] = PosVectorToJsArray(towerPlaces);
+	rootObj["high-range"]   = PosVectorToJsArray(highRangePlaces);
 	rootObj["spawn-places"] = PosVectorToJsArray(spawnPlaces);
 
 	FloatRect targetArea;
@@ -436,9 +455,17 @@ void MapEditor::LoadMap(fs::path inPath)
 	js::mObject& rootObj = rootValue.get_obj();
 
 	js::mArray& towers = rootObj["tower-places"].get_array();
+
 	js::mArray& spawns = rootObj["spawn-places"].get_array();
 	JsArrayToPosVector(towers, towerPlaces);
 	JsArrayToPosVector(spawns, spawnPlaces);
+	if (rootObj.count("high-range")) {
+		js::mArray& highRange = rootObj["high-range"].get_array();
+		JsArrayToPosVector(highRange, highRangePlaces);
+	}
+	else {
+		highRangePlaces.clear();
+	}
 	UpdateMarker(M_TOWER);
 	UpdateMarker(M_SPAWN);
 

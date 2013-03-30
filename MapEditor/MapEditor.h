@@ -28,6 +28,7 @@ class MapEditor
 
 	// tower mode
 	std::vector<Vector2f> towerPlaces;
+	std::vector<Vector2f> highRangePlaces;
 	std::vector<Shape> towerPlaceMarker;
 
 	bool isGoodPlace, placeSnapped;
