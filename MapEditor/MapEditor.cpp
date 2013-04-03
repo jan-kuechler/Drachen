@@ -17,6 +17,7 @@ static Color ColorPlaceSnapped(255, 0, 0);
 static Color ColorPlace(0, 0, 255, 128);
 static Color ColorHighRange(255, 0, 255, 128);
 static Color ColorSpawn(255, 255, 0, 128);
+static Color ColorFire(255, 128, 0, 128);
 
 static Color ColorTarget(0, 255, 255, 128);
 
@@ -118,6 +119,10 @@ void MapEditor::HandleKey(Event::KeyEvent key)
 		mode = M_TARGET;
 		break;
 
+	case Key::F:
+		mode = M_FIRE;
+		break;
+
 	case Key::H:
 		if (mode == M_TOWER) {
 			if (placeSnapped) {
@@ -179,10 +184,10 @@ void MapEditor::HandleMouse(Event& event)
 			}
 		}
 	}
-	else if (mode == M_TOWER || mode == M_SPAWN) {
-		auto& places = mode == M_TOWER ? towerPlaces : spawnPlaces;
-		auto& placeMarker = mode == M_TOWER ? towerPlaceMarker : spawnPlaceMarker;
-		auto& markerColor = mode == M_TOWER ? ColorPlace : ColorSpawn;
+	else if (mode == M_TOWER || mode == M_SPAWN || mode == M_FIRE) {
+		auto& places = mode == M_TOWER ? towerPlaces : (mode == M_SPAWN ? spawnPlaces : firePlaces);
+		auto& placeMarker = mode == M_TOWER ? towerPlaceMarker : (mode == M_SPAWN ? spawnPlaceMarker : firePlaceMarker);
+		auto& markerColor = mode == M_TOWER ? ColorPlace : (mode == M_SPAWN ? ColorSpawn : ColorFire);
 
 		if (event.Type == Event::MouseMoved) {
 			Vector2f pos(static_cast<float>(event.MouseMove.X), static_cast<float>(event.MouseMove.Y));
@@ -275,6 +280,18 @@ void MapEditor::Draw()
 		else
 			window.Draw(badPlace);
 	}
+	else if (mode == M_FIRE) {
+		boost::for_each(firePlaceMarker, [&](Shape& s) {
+			window.Draw(s);
+		});
+
+		if (isGoodPlace)
+			window.Draw(goodPlace);
+		else if (placeSnapped)
+			window.Draw(snappedPlace);
+		else
+			window.Draw(badPlace);
+	}
 	else if (mode == M_TARGET) {
 		if (showTarget)
 			window.Draw(targetAreaMarker);
@@ -339,17 +356,17 @@ void MapEditor::UpdatePath()
 
 void MapEditor::UpdateMarker(Mode md)
 {
-	assert(md == M_TOWER || md == M_SPAWN);
+	assert(md == M_TOWER || md == M_SPAWN || md == M_FIRE);
 
-	auto& places = md == M_TOWER ? towerPlaces : spawnPlaces;
-	auto& placeMarker = md == M_TOWER ? towerPlaceMarker : spawnPlaceMarker;
-	auto& markerColor = md == M_TOWER ? ColorPlace : ColorSpawn;
+	auto& places = md == M_TOWER ? towerPlaces : (md == M_SPAWN ? spawnPlaces : firePlaces);
+	auto& placeMarker = md == M_TOWER ? towerPlaceMarker : (md == M_SPAWN ? spawnPlaceMarker : firePlaceMarker);
+	auto& markerColor = md == M_TOWER ? ColorPlace : (md == M_SPAWN ? ColorSpawn : ColorFire);
 
 	placeMarker.clear();
 	boost::for_each(places, [&](const Vector2f& pos) {
 		Color clr = markerColor;
 
-		if (mode == M_TOWER && boost::range::find(highRangePlaces, pos) != highRangePlaces.end()) {
+		if (md == M_TOWER && boost::range::find(highRangePlaces, pos) != highRangePlaces.end()) {
 			clr = ColorHighRange;
 		}
 
@@ -424,6 +441,7 @@ void MapEditor::SaveMap()
 	rootObj["tower-places"] = PosVectorToJsArray(towerPlaces);
 	rootObj["high-range"]   = PosVectorToJsArray(highRangePlaces);
 	rootObj["spawn-places"] = PosVectorToJsArray(spawnPlaces);
+	rootObj["fire-places"]  = PosVectorToJsArray(firePlaces);
 
 	FloatRect targetArea;
 	targetArea.Left = std::min(targetFrom.x, targetTo.x);
@@ -466,13 +484,21 @@ void MapEditor::LoadMap(fs::path inPath)
 	else {
 		highRangePlaces.clear();
 	}
+	if (rootObj.count("fire-places"))
+		JsArrayToPosVector(rootObj["fire-places"].get_array(), firePlaces);
+	else
+		firePlaces.clear();
+
 	UpdateMarker(M_TOWER);
 	UpdateMarker(M_SPAWN);
+	UpdateMarker(M_FIRE);
 
 	js::mObject& target = rootObj["target-area"].get_obj();
 	js::mArray& targetTopLeft = target["top-left"].get_array();
 	targetFrom = JsArrayToPos(targetTopLeft);
 	targetTo = Vector2f(targetTopLeft[0].get_real() + target["width"].get_real(), targetTopLeft[1].get_real() + target["height"].get_real());
+	targetAreaMarker = Shape::Rectangle(targetFrom, targetTo, ColorTarget);
+	showTarget = true;
 
 	js::mObject& path = rootObj["path"].get_obj();
 	gridSize = path["block-size"].get_int();

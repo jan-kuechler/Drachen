@@ -5,7 +5,7 @@ class MapEditor
 {
 	enum Mode
 	{
-		M_NONE, M_PATH, M_TOWER, M_SPAWN, M_TARGET,
+		M_NONE, M_PATH, M_TOWER, M_SPAWN, M_TARGET, M_FIRE,
 	};
 
 	RenderWindow& window;
@@ -37,6 +37,10 @@ class MapEditor
 	// spawn mode
 	std::vector<Vector2f> spawnPlaces;
 	std::vector<Shape> spawnPlaceMarker;
+
+	// fire mode
+	std::vector<Vector2f> firePlaces;
+	std::vector<Shape> firePlaceMarker;
 
 	// target mode
 	Vector2f targetFrom, targetTo;
