@@ -54,6 +54,11 @@ bool Map::LoadFromFile(const std::string& map)
 			highRangePlaces = jsex::read_vector<Vector2f>(rootObj["high-range"].get_array());
 		else
 			highRangePlaces.clear();
+		if (rootObj.count("fire-places"))
+			firePlaces = jsex::read_vector<Vector2f>(rootObj["fire-places"].get_array());
+		else
+			firePlaces.clear();
+
 		spawnPlaces = jsex::read_vector<Vector2f>(rootObj["spawn-places"].get_array());
 
 		targetArea = jsex::get<FloatRect>(rootObj["target-area"]);

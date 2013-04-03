@@ -14,6 +14,7 @@ class Map
 	std::set<Vector2i> towers;
 	std::vector<Vector2f> towerPlaces, origTowerPlaces;
 	std::vector<Vector2f> highRangePlaces;
+	std::vector<Vector2f> firePlaces;
 
 	FloatRect targetArea;
 	Vector2f defaultTarget;
@@ -56,6 +57,11 @@ public:
 	bool IsInTargetArea(const Vector2f& pos) const
 	{
 		return targetArea.Contains(pos.x, pos.y);
+	}
+
+	const std::vector<Vector2f>& GetFirePlaces() const
+	{
+		return firePlaces;
 	}
 
 

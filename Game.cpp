@@ -21,6 +21,13 @@ Game::Game(RenderWindow& win, GlobalStatus& gs)
 : window(win), globalStatus(gs), userInterface(this, window, globalStatus, gameStatus, &map), running(true), loadingScreenBar(LOADING_BAR_WIDTH, 20)
 { }
 
+// Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
+// later, so the overlap is displayed correctly.
+static bool CompByY(const std::shared_ptr<sf::Drawable>& a, const std::shared_ptr<sf::Drawable>& b)
+{
+	return a->GetPosition().y < b->GetPosition().y;
+}
+
 void Game::Reset()
 {
 	postfx.LoadFromFile("data/postfx.sfx");
@@ -52,6 +59,21 @@ void Game::Reset()
 	map.Reset();
 	UpdateLoadingScreen(0.7f);
 
+	fireEffects.clear();
+	boost::for_each(map.GetFirePlaces(), [&](const Vector2f& pos) {
+		std::shared_ptr<FireEffect> fire(new FireEffect(window.GetWidth(), window.GetHeight()));
+		fire->SetFireTexture(&gImageManager.getResource("data/effects/fire.png"));
+		fire->SetNoiseTexture(&gImageManager.getResource("data/effects/noise.png"));
+		fire->SetAlphaTexture(&gImageManager.getResource("data/effects/alpha.png"));
+
+		fire->SetWidth(25);
+		fire->SetHeight(25);
+		fire->SetPosition(pos - Vector2f(12.5, 22));
+
+		fireEffects.emplace_back(std::move(fire));
+	});
+	boost::sort(fireEffects, CompByY);
+
 	gTheme.LoadTheme(levelInfo.theme);
 	userInterface.Reset(levelInfo);
 	UpdateLoadingScreen(0.9f);
@@ -71,13 +93,6 @@ void Game::UpdateLoadingScreen(float pct)
 	window.Draw(loadingScreenBackground);
 	window.Draw(loadingScreenBar);
 	window.Display();
-}
-
-// Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
-// later, so the overlap is displayed correctly.
-static bool CompByY(const std::shared_ptr<sf::Drawable>& a, const std::shared_ptr<sf::Drawable>& b)
-{
-	return a->GetPosition().y < b->GetPosition().y;
 }
 
 static bool IsAtPoint(const std::shared_ptr<Tower>& twr, Vector2f pt)
@@ -155,6 +170,12 @@ void Game::Run()
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		(*it)->Update(elapsed);
 
+	if (levelInfo.nightMode) {
+		boost::for_each(fireEffects, [&](const std::shared_ptr<FireEffect>& fire) {
+			fire->Update(elapsed);
+		});
+	}
+
 	// grant money for dead enemies
 	boost::for_each(enemies, [&](const std::shared_ptr<Enemy>& e) {
 		if (e->IsDead())
@@ -186,10 +207,25 @@ void Game::Run()
 	userInterface.PreDraw();
 
 	std::vector<std::shared_ptr<Drawable>> sprites;
-	sprites.reserve(towers.size() + enemies.size());
 
-	boost::merge(towers, enemies, std::back_inserter(sprites), CompByY);
+	if (levelInfo.nightMode) {
+		sprites.reserve(towers.size() + enemies.size() + fireEffects.size());
 
+		std::vector<std::shared_ptr<Drawable>> towersAndFires;
+		boost::merge(towers, fireEffects, std::back_inserter(towersAndFires), CompByY);
+		boost::merge(towersAndFires, enemies, std::back_inserter(sprites), CompByY);
+	}
+	else {
+		sprites.reserve(towers.size() + enemies.size());
+		boost::merge(towers, enemies, std::back_inserter(sprites), CompByY);
+	}
+
+	if (levelInfo.nightMode) {
+		window.Draw(nightModeFx);
+		//boost::for_each(fireEffects, [&](const std::unique_ptr<FireEffect>& fire) {
+		//	window.Draw(*fire);
+		//});
+	}
 	boost::for_each(sprites, [&](const std::shared_ptr<Drawable>& sprite) {
 		std::shared_ptr<Enemy> e = std::dynamic_pointer_cast<Enemy>(sprite);
 		if (e)
@@ -202,8 +238,6 @@ void Game::Run()
 
 	if (gStatus.settings.useShader)
 		window.Draw(postfx);
-	if (levelInfo.nightMode)
-		window.Draw(nightModeFx);
 
 	// Draw the user interface at last, so it does not get hidden by any objects
 	userInterface.Draw();

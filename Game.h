@@ -13,6 +13,7 @@
 #include "LevelMetaInfo.h"
 #include "EnemySettings.h"
 #include "Rectangle.h"
+#include "FireEffect.h"
 
 struct TowerSettings;
 
@@ -35,9 +36,12 @@ class Game
 	std::vector<EnemySettings> enemySettings;
 	std::vector<std::shared_ptr<Enemy>> enemies;
 
+	// TODO: replace by std::set?
 	std::vector<std::shared_ptr<Tower>> towers;
 
 	std::vector<std::unique_ptr<Projectile>> projectiles;
+
+	std::vector<std::shared_ptr<FireEffect>> fireEffects;
 
 	Map map;
 	GameStatus gameStatus;
