@@ -206,6 +206,7 @@ void Game::Run()
 	map.Draw(window);
 	userInterface.PreDraw();
 
+	// keep towers, enemies and possibly fires sorted by their y position to correctly treat overlap
 	std::vector<std::shared_ptr<Drawable>> sprites;
 
 	if (levelInfo.nightMode) {
@@ -220,12 +221,10 @@ void Game::Run()
 		boost::merge(towers, enemies, std::back_inserter(sprites), CompByY);
 	}
 
-	if (levelInfo.nightMode) {
+	// draw the night mode shader before the towers, so they do not get too dark
+	if (levelInfo.nightMode)
 		window.Draw(nightModeFx);
-		//boost::for_each(fireEffects, [&](const std::unique_ptr<FireEffect>& fire) {
-		//	window.Draw(*fire);
-		//});
-	}
+
 	boost::for_each(sprites, [&](const std::shared_ptr<Drawable>& sprite) {
 		std::shared_ptr<Enemy> e = std::dynamic_pointer_cast<Enemy>(sprite);
 		if (e)
@@ -359,11 +358,7 @@ void Game::LoadLevel(const std::string& level)
 					wave.enemies.push(type);
 			}
 
-			if (waveDef.count("max-time"))
-				wave.maxTime = waveDef["max-time"].get_int();
-			else
-				wave.maxTime = 0;
-
+			wave.maxTime = jsex::get_opt<int>(waveDef, "max-time", 0);
 			gameStatus.waves.push_back(wave);
 		}
 	}
@@ -405,10 +400,10 @@ void Game::LoadEnemySettings()
 		enemySettings[i].height    = def["height"].get_int();
 		enemySettings[i].offset    = def["offset"].get_int();
 		enemySettings[i].numFrames = def["frames"].get_int();
-		enemySettings[i].frameTime = static_cast<float>(def["frame-time"].get_real());
+		enemySettings[i].frameTime = jsex::get<float>(def["frame-time"]);
 		
 		enemySettings[i].life  = def["life"].get_int();
-		enemySettings[i].speed = static_cast<float>(def["speed"].get_real());
+		enemySettings[i].speed = jsex::get<float>(def["speed"]);
 		enemySettings[i].moneyFactor = def["money-factor"].get_int();
 	}
 }

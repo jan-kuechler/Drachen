@@ -60,6 +60,13 @@ namespace jsex
 	}
 
 	template <typename T>
+	static void get_opt(T& var, const js::mObject& obj, const std::string& idx)
+	{
+		if (obj.count(idx))
+			var = get<T>(obj.at(idx));
+	}
+
+	template <typename T>
 	static std::vector<T> read_vector(const js::mArray& arr)
 	{
 		std::vector<T> vec;
