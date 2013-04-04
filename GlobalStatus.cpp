@@ -65,7 +65,7 @@ void GlobalStatus::LoadFromFile(const std::string& fn)
 		lastWonLevel.clear();
 		js::mObject& lastWon = gameStatus["last-won-level"].get_obj();
 		for (auto it = lastWon.cbegin(); it != lastWon.cend(); ++it) {
-			lastWonLevel.insert(std::make_pair<std::string, int>(it->first, it->second.get_int()));
+			lastWonLevel.insert(std::make_pair<std::string, int>(std::string(it->first), it->second.get_int()));
 		}
 
 		js::mObject& set = gameStatus["settings"].get_obj();
