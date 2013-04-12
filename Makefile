@@ -5,12 +5,12 @@
 ## variables there. See local.config.sample for an example and a description
 ## of all used variables.
 
-CXX = /usr/local/bin/g++
-CPPFLAGS +=  -Iinclude -Ijson_spirit -std=c++11 -O4
+CXX = g++
+CPPFLAGS +=  -Iinclude -Ijson_spirit -std=c++11  -O2 
 CPPFLAGS_DEBUG += -g
 CPPFLAGS_RELEASE += -O2 -DNDEBUG
 
-LD = /usr/local/bin/g++
+LD = g++
 LDFLAGS = 
 LDFLAGS_DEBUG +=
 LDFLAGS_RELEASE += 
@@ -31,8 +31,8 @@ OBJ_FILES = $(patsubst $(SRC)/%.cpp,$(BUILD)/%.o,$(SRC_FILES))
 DEP_FILES = $(patsubst $(SRC)/%.cpp,$(BUILD)/%.d,$(SRC_FILES))
 
 
-BOOSTDIR = -I/Users/wutzi/src/boost_1_49_0/
-BOOSTLIBSDIR = -L/Users/wutzi/src/boost_1_49_0/stage/lib/
+BOOSTDIR = 
+BOOSTLIBSDIR = 
 BOOSTLIBS =  -lboost_system -lboost_filesystem 
 
 ######
