@@ -1,15 +1,19 @@
 {
     "level-packs": {
         "pack1": {
-            "name": "Test Level",
-            "desc": "Eine kleine Sammlung von\nTest Levels zum testen,\ndeshalb auch der Name.",
+            "name": "Der Ostwald",
+            "desc": "Eine Horde von Banditen\nschickt sich an, die Ost-\ngrenze des Herzogtums zu\nüberfallen.\nWehrt den Angrif aus dem\nOstwald mit Euren Türmen\nab!",
             "image": "pack1/pack.png",
             "levels": [
-                ["Level 1" ,"pack1/level1.js"],
-                ["Level 2" ,"pack1/level2.js"],
-                ["Level 3" ,"pack1/level3.js"],
-                ["Level 4", "pack1/level4.js"]
-            ]
+                ["Kapitel 1" ,"pack1/level1.js"],
+                ["Kapitel 2" ,"pack1/level2.js"],
+                ["Kapitel 3" ,"pack1/level3.js"],
+                ["Kapitel 4", "pack1/level4.js"]
+            ],
+            "texts": {
+            	"pre-pack": "#F:pack1/pre-pack.txt",
+            	"pre-level-1": "Bla",
+            },
         }
     }
 }

@@ -10,7 +10,11 @@
 namespace js = json_spirit;
 namespace fs = boost::filesystem;
 
-static const uint64_t GameStatusVersion = 2;
+static const uint64_t GameStatusVersion = 3;
+
+GlobalStatus::Debug::Debug()
+: enabled(false)
+{ }
 
 void GlobalStatus::Reset()
 {
@@ -24,7 +28,7 @@ void GlobalStatus::Reset()
 	moneyPerEnemy = 10;
 
 	enabledPacks.insert(levelPack);
-	lastWonLevel[levelPack] = -1;
+	packInfo.clear();
 
 	settings.useShader = true;
 }
@@ -62,10 +66,15 @@ void GlobalStatus::LoadFromFile(const std::string& fn)
 			enabledPacks.insert(packs[i].get_str());
 		}
 
-		lastWonLevel.clear();
-		js::mObject& lastWon = gameStatus["last-won-level"].get_obj();
-		for (auto it = lastWon.cbegin(); it != lastWon.cend(); ++it) {
-			lastWonLevel.insert(std::make_pair<std::string, int>(std::string(it->first), it->second.get_int()));
+		js::mObject& packInfoObj = gameStatus["pack-info"].get_obj();
+		for (const auto& it: packInfoObj) {
+			const js::mObject& thisInfo = it.second.get_obj();
+
+			PackInfo info;
+			info.lastWonLevel = jsex::get<int>(thisInfo.at("last-won-level"));
+			info.textsRead = jsex::read_set<std::string>(thisInfo.at("texts-read").get_array());
+
+			packInfo[it.first] = info;
 		}
 
 		js::mObject& set = gameStatus["settings"].get_obj();
@@ -105,11 +114,14 @@ void GlobalStatus::WriteToFile(const std::string& fn)
 	}
 	gameStatus["enabled-packs"] = packs;
 
-	js::mObject lastWon;
-	for (auto it = lastWonLevel.cbegin(); it != lastWonLevel.cend(); ++it) {
-		lastWon[it->first] = js::mValue(it->second);
+	js::mObject packInfoObj;
+	for (const auto& it: packInfo) {
+		js::mObject thisPackInfo;
+		thisPackInfo["last-won-level"] = js::mValue(it.second.lastWonLevel);
+		thisPackInfo["texts-read"] = jsex::write_set(it.second.textsRead);
+		packInfoObj[it.first] = thisPackInfo;
 	}
-	gameStatus["last-won-level"] = lastWon;
+	gameStatus["pack-info"] = packInfoObj;
 
 	js::mObject set;
 

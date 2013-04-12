@@ -107,7 +107,7 @@
         },
 
         "name": {
-            "position": [230, 185],
+            "position": [230, 130],
             "font-size": 28,
             "color": [255, 201, 15]
         },
@@ -126,5 +126,15 @@
         "preview": {
             "position": [447, 124],
         },
+    },
+    
+    "text-display": {
+    	"background": "text/TextDisplayBackground.png",
+    	
+    	"text": {
+    		"position": [75, 75],
+    		"font-size": 22,
+    		"color": "black",
+    	},
     },
 }

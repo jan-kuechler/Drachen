@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Utility.h"
+#include "GlobalStatus.h"
 
 namespace fs = boost::filesystem;
 
@@ -17,9 +18,20 @@ bool DefaultHandleEvent(RenderWindow& win, Event& event)
 			win.Close();
 			return true;
 		}
+		// enable/disable debug with F12/Shift-F12
+		else if (event.Key.Code == Key::F12) {
+			gStatus.debug.enabled = !event.Key.Shift;
+		}
+		else if (event.Key.Code == Key::R) {
+			if (gStatus.debug.enabled) {
+				gStatus.Reset();
+			}
+		}
 		else if (event.Key.Code == Key::P) {
 			MakeScreenshot(win);
 		}
+
+
 
 	default:
 		return false;

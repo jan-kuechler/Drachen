@@ -44,6 +44,9 @@ public:
 
 private:
 	void LoadLevelPacks();
+
+	bool ShouldDisplayText(const std::string& id);
+	void DisplayText(const std::string& id, State nextState);
 };
 
 #endif //LEVEL_PICKER_H

@@ -5,6 +5,7 @@
 #include "Win.h"
 #include "Loose.h"
 #include "LevelPicker.h"
+#include "TextDisplay.h"
 #include "Utility.h"
 #include "ResourceManager.h"
 #include "Theme.h"
@@ -53,6 +54,7 @@ int main(int argc, char **argv)
 		Loose looseState(window);
 		Game game(window, gStatus);
 		LevelPicker levelPicker(window);
+		TextDisplay textDisplay(window);
 
 		State state = ST_MAIN_MENU;
 		bool newState = true;
@@ -118,6 +120,19 @@ int main(int argc, char **argv)
 					newState = true;
 				}
 				break;
+
+			case ST_TEXT_DISPLAY:
+				if (newState) {
+					textDisplay.Reset();
+					newState = false;
+				}
+				textDisplay.Run();
+				if (!textDisplay.IsRunning()) {
+					state = textDisplay.GetNextState();
+					newState = true;
+				}
+				break;
+
 			case ST_OPTIONS_MENU:
 			case ST_QUIT:
 				window.Close();
@@ -187,5 +202,5 @@ void InitDebugStatus()
 
 		gStatus.enabledPacks.insert("pack1");
 		gStatus.enabledPacks.insert("pack2");
-		gStatus.lastWonLevel["pack1"] = 1;
+		gStatus.packInfo["pack1"].lastWonLevel = 1;
 }

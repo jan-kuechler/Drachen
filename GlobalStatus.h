@@ -1,6 +1,8 @@
 #ifndef GLOBAL_STATUS_H
 #define GLOBAL_STATUS_H
 
+#include "State.h"
+
 struct GlobalStatus
 {
 	std::string level;
@@ -13,13 +15,46 @@ struct GlobalStatus
 	size_t moneyPerEnemy;
 
 	std::set<std::string> enabledPacks;
-	std::map<std::string,int> lastWonLevel;
+
+	struct PackInfo
+	{
+		int lastWonLevel;
+		std::set<std::string> textsRead;
+	};
+	std::map<std::string,PackInfo> packInfo;
 
 	struct Settings
 	{
 		bool useShader;
 	
 	} settings;
+
+	struct Debug
+	{
+		bool enabled;
+
+		Debug();
+	} debug; // does not get saved
+
+	struct RunTime
+	{
+		struct 
+		{
+			std::string text;
+			State nextState;
+		} textDisplay;
+
+		struct LevelPicker
+		{
+			int commingFromLevel;
+			bool didWin;
+
+			LevelPicker()
+			: commingFromLevel(-1), didWin(false)
+			{ }
+		} levelPicker;
+
+	} runTime; // does not get saved
 
 	void Reset();
 	void LoadFromFile(const std::string& fn);

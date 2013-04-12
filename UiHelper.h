@@ -39,7 +39,7 @@ static inline void CenterText(String& txt)
 {
 	auto pos = txt.GetPosition();
 	auto bbox = txt.GetRect();
-	txt.SetPosition(pos - Vector2f(bbox.GetWidth() / 2.f, bbox.GetWidth() / 2.f));
+	txt.SetPosition(pos - Vector2f(bbox.GetWidth() / 2.f, bbox.GetHeight() / 2.f));
 }
 
 static inline void InitImage(Sprite& img, std::string prefix, int idx = -1)

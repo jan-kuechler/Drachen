@@ -33,6 +33,24 @@ namespace jsex
 	}
 
 	template <>
+	static std::string get(const js::mValue& v)
+	{
+		return v.get_str();
+	}
+
+	template <>
+	static js::mArray get(const js::mValue& v)
+	{
+		return v.get_array();
+	}
+
+	template <>
+	static js::mObject get(const js::mValue& v)
+	{
+		return v.get_obj();
+	}
+
+	template <>
 	static Vector2f get(const js::mValue& v)
 	{
 		const js::mArray& arr = v.get_array();
@@ -60,6 +78,14 @@ namespace jsex
 	}
 
 	template <typename T>
+	static T get_opt(const js::mObject& obj, const std::string& idx)
+	{
+		if (obj.count(idx))
+			return get<T>(obj.at(idx));
+		return T();
+	}
+
+	template <typename T>
 	static void get_opt(T& var, const js::mObject& obj, const std::string& idx)
 	{
 		if (obj.count(idx))
@@ -75,6 +101,26 @@ namespace jsex
 			vec.push_back(get<T>(arr[i]));
 		}
 		return vec;
+	}
+
+	template <typename T>
+	static std::set<T> read_set(const js::mArray& arr)
+	{
+		std::set<T> set;
+		for (size_t i=0; i < arr.size(); ++i) {
+			set.insert(get<T>(arr[i]));
+		}
+		return set;
+	}
+
+	template <typename T>
+	static js::mArray write_set(const std::set<T>& set)
+	{
+		js::mArray arr;
+		for (const auto& item: set) {
+			arr.push_back(js::mValue(item));
+		}
+		return arr;
 	}
 
 }

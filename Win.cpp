@@ -14,8 +14,12 @@ void Win::Reset()
 {
 	running = true;
 
-	if (static_cast<int>(gStatus.levelIndex) > gStatus.lastWonLevel[gStatus.levelPack])
-		gStatus.lastWonLevel[gStatus.levelPack] = gStatus.levelIndex;
+	int level = static_cast<int>(gStatus.levelIndex);
+	if (level > gStatus.packInfo[gStatus.levelPack].lastWonLevel)
+		gStatus.packInfo[gStatus.levelPack].lastWonLevel = level;
+
+	gStatus.runTime.levelPicker.commingFromLevel = level;
+	gStatus.runTime.levelPicker.didWin = true;
 
 	background.SetImage(gImageManager.getResource(gTheme.GetFileName("win/background")));
 	background.SetPosition(0, 0);

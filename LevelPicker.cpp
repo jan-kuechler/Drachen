@@ -8,6 +8,7 @@
 #include "UiHelper.h"
 
 #include "json_spirit/json_spirit.h"
+#include "jsex.h"
 
 namespace fs = boost::filesystem;
 namespace js = json_spirit;
@@ -18,11 +19,43 @@ LevelPicker::LevelPicker(RenderWindow& win)
 	LoadLevelPacks();
 }
 
+bool LevelPicker::ShouldDisplayText(const std::string& id)
+{
+	const LevelPack& pack = levelPacks[gStatus.levelPack];
+	return pack.texts.count(id) && !gStatus.packInfo[gStatus.levelPack].textsRead.count(id);
+}
+
+void LevelPicker::DisplayText(const std::string& id, State state)
+{
+	LevelPack& pack = levelPacks[gStatus.levelPack];
+
+	// quit this state and enter the text display state
+	nextState = ST_TEXT_DISPLAY;
+	running = false;
+
+	// prepare info for the text display
+	gStatus.runTime.textDisplay.text = pack.texts[id];
+	gStatus.runTime.textDisplay.nextState = state;
+
+	// and mark the text as read
+	gStatus.packInfo[gStatus.levelPack].textsRead.insert(id);
+}
+
 void LevelPicker::Reset()
 {
 	running = true;
 
 	const LevelPack& pack = levelPacks[gStatus.levelPack];
+
+	if (ShouldDisplayText("pre-pack"))
+		DisplayText("pre-pack", ST_LEVEL_PICKER);
+
+	if (gStatus.runTime.levelPicker.commingFromLevel >= 0 && gStatus.runTime.levelPicker.didWin) {
+		int prevLevel = gStatus.runTime.levelPicker.commingFromLevel;
+		std::string id = "post-level-" + boost::lexical_cast<std::string>(prevLevel + 1);
+		if (ShouldDisplayText(id))
+			DisplayText(id, ST_LEVEL_PICKER);
+	}
 
 	background.SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/background")));
 
@@ -46,8 +79,8 @@ void LevelPicker::Reset()
 	levelEnabled.resize(pack.levels.size());
 	for (int i=0; i < static_cast<int>(pack.levels.size()); ++i) {
 
-		bool enabled = packEnabled && i <= gStatus.lastWonLevel[gStatus.levelPack] + 1;
-		bool greenLevel = enabled && i <= gStatus.lastWonLevel[gStatus.levelPack];
+		bool enabled = packEnabled && i <= gStatus.packInfo[gStatus.levelPack].lastWonLevel + 1;
+		bool greenLevel = enabled && i <= gStatus.packInfo[gStatus.levelPack].lastWonLevel;
 
 		if (greenLevel)
 			levelButtons[i].SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/level-buttons/green")));
@@ -98,10 +131,17 @@ void LevelPicker::Run()
 
 	for (size_t i=0; i < levelButtons.size(); ++i) {
 		if (levelEnabled[i] && levelButtons[i].WasClicked()) {
-			running = false;
-			nextState = ST_GAME;
 			gStatus.level = std::get<1>(levelPacks[gStatus.levelPack].levels[i]);
 			gStatus.levelIndex = i;
+
+			std::string levelTextId = "pre-level-" + boost::lexical_cast<std::string>(i+1);
+			if (ShouldDisplayText(levelTextId)) {
+				DisplayText(levelTextId, ST_GAME);
+			}
+			else {
+				running = false;
+				nextState = ST_GAME;
+			}
 		}
 	}
 
@@ -160,6 +200,10 @@ void LevelPicker::LoadLevelPacks()
 				js::mArray& arr = levels[i].get_array();
 
 				pack.levels.push_back(std::make_tuple(arr[0].get_str(), arr[1].get_str()));
+			}
+
+			for (auto& it: jsex::get_opt<js::mObject>(def, "texts")) {
+				pack.texts[it.first] = it.second.get_str();
 			}
 
 			levelPacks[id] = pack;
