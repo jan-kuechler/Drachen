@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "json_spirit\json_spirit.h"
+#include "json_spirit/json_spirit.h"
 #include "jsex.h"
 
 namespace js = json_spirit;
