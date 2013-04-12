@@ -38,10 +38,14 @@ static bool CmpByDist(const std::shared_ptr<Enemy>& a, const std::shared_ptr<Ene
 
 void CanonTower::ChooseTarget()
 {
-	auto it = boost::min_element(enemies | boost::adaptors::filtered([](const std::shared_ptr<Enemy>& e){
-			return !e->IsIrrelevant();
-		}), boost::bind(CmpByDist, _1, _2, this)).base();
-	if (it == enemies.end() || dist(*(*it), *this) > range)
+	std::vector<std::shared_ptr<Enemy>> vec;
+	for (const auto &e : enemies) {
+		if(!e->IsIrrelevant()) {
+			vec.push_back(e);
+		}
+	}
+	auto  it = boost::min_element(vec, boost::bind(CmpByDist, _1, _2, this));
+	if (it == enemies.end() || dist(*(*it), *this) > range) //|| dist(*(*it), *this) > range
 		currentTarget.reset();
 	else
 		currentTarget = *it;
