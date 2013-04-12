@@ -6,7 +6,7 @@ namespace jsex
 	namespace js = json_spirit;
 
 	template <typename T>
-	 T get(const js::mValue& v){};
+	static T get(const js::mValue& v){};
 
 	template <>
 	 bool get(const js::mValue& v)
