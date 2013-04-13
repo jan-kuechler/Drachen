@@ -14,7 +14,7 @@ void Loose::Reset()
 {
 	running = true;
 
-	gStatus.runTime.levelPicker.commingFromLevel = gStatus.levelIndex;
+	gStatus.runTime.levelPicker.commingFromLevel = gStatus.runTime.levelIndex;
 	gStatus.runTime.levelPicker.didWin = false;
 
 	background.SetImage(gImageManager.getResource(gTheme.GetFileName("loose/background")));

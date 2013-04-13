@@ -14,9 +14,9 @@ void Win::Reset()
 {
 	running = true;
 
-	int level = static_cast<int>(gStatus.levelIndex);
-	if (level > gStatus.packInfo[gStatus.levelPack].lastWonLevel)
-		gStatus.packInfo[gStatus.levelPack].lastWonLevel = level;
+	int level = static_cast<int>(gStatus.runTime.levelIndex);
+	if (level > gStatus.packInfo[gStatus.runTime.levelPack].lastWonLevel)
+		gStatus.packInfo[gStatus.runTime.levelPack].lastWonLevel = level;
 
 	gStatus.runTime.levelPicker.commingFromLevel = level;
 	gStatus.runTime.levelPicker.didWin = true;

@@ -194,8 +194,8 @@ void HandleException(boost::exception& ex)
 
 void InitDebugStatus()
 {
-		gStatus.level = "pack1/level1.js";
-		gStatus.levelPack = "pack1";
+		gStatus.runTime.level = "pack1/level1.js";
+		gStatus.runTime.levelPack = "pack1";
 		gStatus.startLives = 6;
 		gStatus.moneyPerEnemy = 10;
 		gStatus.startMoney = 10000;

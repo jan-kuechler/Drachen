@@ -10,7 +10,7 @@
 namespace js = json_spirit;
 namespace fs = boost::filesystem;
 
-static const uint64_t GameStatusVersion = 3;
+static const uint64_t GameStatusVersion = 4;
 
 GlobalStatus::Debug::Debug()
 : enabled(false)
@@ -18,16 +18,13 @@ GlobalStatus::Debug::Debug()
 
 void GlobalStatus::Reset()
 {
-	level = "";
-	levelIndex = 0;
-	levelPack = "pack1";
-
 	startLives = 6;
 	startMoney = 200;
 
 	moneyPerEnemy = 10;
 
-	enabledPacks.insert(levelPack);
+	lastPack = 0;
+
 	packInfo.clear();
 
 	settings.useShader = true;
@@ -52,13 +49,11 @@ void GlobalStatus::LoadFromFile(const std::string& fn)
 
 		js::mObject& gameStatus = rootObj["game-status"].get_obj();
 
-		level = gameStatus["level"].get_str();
-		levelIndex = gameStatus["level-index"].get_int();
-		levelPack = gameStatus["level-pack"].get_str();
-
 		startLives = gameStatus["start-lives"].get_int();
 		startMoney = gameStatus["start-money"].get_int();
 		moneyPerEnemy = gameStatus["money-per-enemy"].get_int();
+
+		lastPack = gameStatus["last-pack"].get_int();
 
 		enabledPacks.clear();
 		js::mArray& packs = gameStatus["enabled-packs"].get_array();
@@ -100,13 +95,11 @@ void GlobalStatus::WriteToFile(const std::string& fn)
 	rootObj["game-status"] = gameStatusObj;
 	js::mObject& gameStatus = rootObj["game-status"].get_obj();
 
-	gameStatus["level"] = js::mValue(level);
-	gameStatus["level-index"] = js::mValue(static_cast<uint64_t>(levelIndex));
-	gameStatus["level-pack"] = js::mValue(levelPack);
-
 	gameStatus["start-lives"] = js::mValue(static_cast<uint64_t>(startLives));
 	gameStatus["start-money"] = js::mValue(static_cast<uint64_t>(startMoney));
 	gameStatus["money-per-enemy"] = js::mValue(static_cast<uint64_t>(moneyPerEnemy));
+
+	gameStatus["last-pack"] = js::mValue(static_cast<uint64_t>(lastPack));
 
 	js::mArray packs;
 	for (auto it = enabledPacks.begin(); it != enabledPacks.end(); ++it) {

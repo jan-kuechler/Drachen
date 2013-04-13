@@ -11,6 +11,7 @@ class LevelPicker : public StateDef
 
 	Sprite background;
 
+	std::vector<std::string> levelPackOrder;
 	std::map<std::string,LevelPack> levelPacks;
 
 	std::vector<Button> levelButtons;

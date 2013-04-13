@@ -5,10 +5,6 @@
 
 struct GlobalStatus
 {
-	std::string level;
-	size_t levelIndex;
-	std::string levelPack;
-
 	size_t startLives;
 	size_t startMoney;
 
@@ -16,10 +12,16 @@ struct GlobalStatus
 
 	std::set<std::string> enabledPacks;
 
+	size_t lastPack;
+
 	struct PackInfo
 	{
 		int lastWonLevel;
 		std::set<std::string> textsRead;
+
+		PackInfo()
+		: lastWonLevel(-1)
+		{ }
 	};
 	std::map<std::string,PackInfo> packInfo;
 
@@ -38,6 +40,10 @@ struct GlobalStatus
 
 	struct RunTime
 	{
+		std::string level;
+		size_t levelIndex;
+		std::string levelPack;
+
 		struct 
 		{
 			std::string text;

@@ -49,7 +49,7 @@ void Game::Reset()
 	gameStatus.Reset(globalStatus);
 	UpdateLoadingScreen(0.2f);
 
-	LoadLevel(globalStatus.level);
+	LoadLevel(globalStatus.runTime.level);
 	UpdateLoadingScreen(0.3f);
 
 	LoadEnemySettings();

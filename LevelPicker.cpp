@@ -21,13 +21,13 @@ LevelPicker::LevelPicker(RenderWindow& win)
 
 bool LevelPicker::ShouldDisplayText(const std::string& id)
 {
-	const LevelPack& pack = levelPacks[gStatus.levelPack];
-	return pack.texts.count(id) && !gStatus.packInfo[gStatus.levelPack].textsRead.count(id);
+	const LevelPack& pack = levelPacks[gStatus.runTime.levelPack];
+	return pack.texts.count(id) && !gStatus.packInfo[gStatus.runTime.levelPack].textsRead.count(id);
 }
 
 void LevelPicker::DisplayText(const std::string& id, State state)
 {
-	LevelPack& pack = levelPacks[gStatus.levelPack];
+	LevelPack& pack = levelPacks[gStatus.runTime.levelPack];
 
 	// quit this state and enter the text display state
 	nextState = ST_TEXT_DISPLAY;
@@ -38,14 +38,18 @@ void LevelPicker::DisplayText(const std::string& id, State state)
 	gStatus.runTime.textDisplay.nextState = state;
 
 	// and mark the text as read
-	gStatus.packInfo[gStatus.levelPack].textsRead.insert(id);
+	gStatus.packInfo[gStatus.runTime.levelPack].textsRead.insert(id);
 }
 
 void LevelPicker::Reset()
 {
 	running = true;
 
-	const LevelPack& pack = levelPacks[gStatus.levelPack];
+	if (gStatus.runTime.levelPack.empty()) {
+		gStatus.runTime.levelPack = levelPackOrder[gStatus.lastPack];
+	}
+
+	const LevelPack& pack = levelPacks[gStatus.runTime.levelPack];
 
 	if (ShouldDisplayText("pre-pack"))
 		DisplayText("pre-pack", ST_LEVEL_PICKER);
@@ -69,7 +73,7 @@ void LevelPicker::Reset()
 
 	InitButton(backButton, "level-picker/back-button");
 
-	bool packEnabled = gStatus.enabledPacks.count(gStatus.levelPack) > 0;
+	bool packEnabled = true;
 
 	auto startPos = gTheme.GetPosition("level-picker/level-buttons/start");
 	auto lineOffset = gTheme.GetPosition("level-picker/level-buttons/line-offset");
@@ -77,10 +81,10 @@ void LevelPicker::Reset()
 	levelButtons.resize(pack.levels.size());
 	levelStrings.resize(pack.levels.size());
 	levelEnabled.resize(pack.levels.size());
-	for (int i=0; i < static_cast<int>(pack.levels.size()); ++i) {
 
-		bool enabled = packEnabled && i <= gStatus.packInfo[gStatus.levelPack].lastWonLevel + 1;
-		bool greenLevel = enabled && i <= gStatus.packInfo[gStatus.levelPack].lastWonLevel;
+	for (int i=0; i < static_cast<int>(pack.levels.size()); ++i) {
+		bool enabled = packEnabled && i <= gStatus.packInfo[gStatus.runTime.levelPack].lastWonLevel + 1;
+		bool greenLevel = enabled && i <= gStatus.packInfo[gStatus.runTime.levelPack].lastWonLevel;
 
 		if (greenLevel)
 			levelButtons[i].SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/level-buttons/green")));
@@ -131,8 +135,8 @@ void LevelPicker::Run()
 
 	for (size_t i=0; i < levelButtons.size(); ++i) {
 		if (levelEnabled[i] && levelButtons[i].WasClicked()) {
-			gStatus.level = std::get<1>(levelPacks[gStatus.levelPack].levels[i]);
-			gStatus.levelIndex = i;
+			gStatus.runTime.level = std::get<1>(levelPacks[gStatus.runTime.levelPack].levels[i]);
+			gStatus.runTime.levelIndex = i;
 
 			std::string levelTextId = "pre-level-" + boost::lexical_cast<std::string>(i+1);
 			if (ShouldDisplayText(levelTextId)) {
@@ -208,6 +212,8 @@ void LevelPicker::LoadLevelPacks()
 
 			levelPacks[id] = pack;
 		}
+
+		levelPackOrder = jsex::read_vector<std::string>(rootObj["pack-order"].get_array());
 	}
 	catch (std::runtime_error err) {
 		throw GameError() << ErrorInfo::Desc("Json error") << ErrorInfo::Note(err.what()) << boost::errinfo_file_name(LevelPacksFile.string());
