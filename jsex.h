@@ -1,6 +1,16 @@
 #ifndef JSEX_H
 #define JSEX_H
 
+// Compiler workarround:
+// MSVC needs a static before each spezialization, for GCC it
+// has to be only before the unspezialized function.
+
+#ifdef _MSC_VER
+#define STATIC static
+#else
+#define STATIC
+#endif
+
 namespace jsex
 {
 	namespace js = json_spirit;
@@ -9,56 +19,56 @@ namespace jsex
 	static T get(const js::mValue& v);
 
 	template <>
-	static bool get(const js::mValue& v)
+	STATIC bool get(const js::mValue& v)
 	{
 		return v.get_bool();
 	}
 
 	template <>
-	static int get(const js::mValue& v)
+	STATIC int get(const js::mValue& v)
 	{
 		return v.get_int();
 	}
 
 	template <>
-	static float get(const js::mValue& v)
+	STATIC float get(const js::mValue& v)
 	{
 		return static_cast<float>(v.get_real());
 	}
 
 	template <>
-	static size_t get(const js::mValue& v)
+	STATIC size_t get(const js::mValue& v)
 	{
 		return v.get_int();
 	}
 
 	template <>
-	static std::string get(const js::mValue& v)
+	STATIC std::string get(const js::mValue& v)
 	{
 		return v.get_str();
 	}
 
 	template <>
-	static js::mArray get(const js::mValue& v)
+	STATIC js::mArray get(const js::mValue& v)
 	{
 		return v.get_array();
 	}
 
 	template <>
-	static js::mObject get(const js::mValue& v)
+	STATIC js::mObject get(const js::mValue& v)
 	{
 		return v.get_obj();
 	}
 
 	template <>
-	static Vector2f get(const js::mValue& v)
+	STATIC Vector2f get(const js::mValue& v)
 	{
 		const js::mArray& arr = v.get_array();
 		return Vector2f(get<float>(arr[0]), get<float>(arr[1]));
 	}
 
 	template <>
-	static FloatRect get(const js::mValue& v)
+	STATIC FloatRect get(const js::mValue& v)
 	{
 		const js::mObject& obj = v.get_obj();
 
@@ -124,5 +134,7 @@ namespace jsex
 	}
 
 }
+
+#undef STATIC
 
 #endif //JSEX_H
