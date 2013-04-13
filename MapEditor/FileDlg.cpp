@@ -1,7 +1,10 @@
 #include "pch.h"
-#include <CommDlg.h>
 
 namespace fs = boost::filesystem;
+
+// windows implementation for the File*Dlg() functions
+#ifdef WIN32
+#include <CommDlg.h>
 
 boost::optional<fs::path> FileOpenDlg()
 {
@@ -53,3 +56,17 @@ boost::optional<fs::path> FileSaveDlg()
 	return boost::optional<fs::path>();
 }
 
+// default implementation
+#else
+
+boost::optional<fs::path> FileOpenDlg()
+{
+	return boost::optional<fs::path>();
+}
+
+boost::optional<fs::path> FileSaveDlg()
+{
+	return boost::optional<fs::path>();
+}
+
+#endif

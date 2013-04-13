@@ -6,59 +6,59 @@ namespace jsex
 	namespace js = json_spirit;
 
 	template <typename T>
-	static T get(const js::mValue& v){};
+	static T get(const js::mValue& v);
 
 	template <>
-	 bool get(const js::mValue& v)
+	static bool get(const js::mValue& v)
 	{
 		return v.get_bool();
 	}
 
 	template <>
-	 int get(const js::mValue& v)
+	static int get(const js::mValue& v)
 	{
 		return v.get_int();
 	}
 
 	template <>
-	 float get(const js::mValue& v)
+	static float get(const js::mValue& v)
 	{
 		return static_cast<float>(v.get_real());
 	}
 
 	template <>
-	 size_t get(const js::mValue& v)
+	static size_t get(const js::mValue& v)
 	{
 		return v.get_int();
 	}
 
 	template <>
-	 std::string get(const js::mValue& v)
+	static std::string get(const js::mValue& v)
 	{
 		return v.get_str();
 	}
 
 	template <>
-	 js::mArray get(const js::mValue& v)
+	static js::mArray get(const js::mValue& v)
 	{
 		return v.get_array();
 	}
 
 	template <>
-	 js::mObject get(const js::mValue& v)
+	static js::mObject get(const js::mValue& v)
 	{
 		return v.get_obj();
 	}
 
 	template <>
-	 Vector2f get(const js::mValue& v)
+	static Vector2f get(const js::mValue& v)
 	{
 		const js::mArray& arr = v.get_array();
 		return Vector2f(get<float>(arr[0]), get<float>(arr[1]));
 	}
 
 	template <>
-	 FloatRect get(const js::mValue& v)
+	static FloatRect get(const js::mValue& v)
 	{
 		const js::mObject& obj = v.get_obj();
 
