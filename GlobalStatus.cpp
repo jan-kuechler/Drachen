@@ -55,12 +55,6 @@ void GlobalStatus::LoadFromFile(const std::string& fn)
 
 		lastPack = gameStatus["last-pack"].get_int();
 
-		enabledPacks.clear();
-		js::mArray& packs = gameStatus["enabled-packs"].get_array();
-		for (size_t i=0; i < packs.size(); ++i) {
-			enabledPacks.insert(packs[i].get_str());
-		}
-
 		js::mObject& packInfoObj = gameStatus["pack-info"].get_obj();
 		for (const auto& it: packInfoObj) {
 			const js::mObject& thisInfo = it.second.get_obj();
@@ -100,12 +94,6 @@ void GlobalStatus::WriteToFile(const std::string& fn)
 	gameStatus["money-per-enemy"] = js::mValue(static_cast<uint64_t>(moneyPerEnemy));
 
 	gameStatus["last-pack"] = js::mValue(static_cast<uint64_t>(lastPack));
-
-	js::mArray packs;
-	for (auto it = enabledPacks.begin(); it != enabledPacks.end(); ++it) {
-		packs.push_back(js::mValue(*it));
-	}
-	gameStatus["enabled-packs"] = packs;
 
 	js::mObject packInfoObj;
 	for (const auto& it: packInfo) {

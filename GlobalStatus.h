@@ -10,8 +10,6 @@ struct GlobalStatus
 
 	size_t moneyPerEnemy;
 
-	std::set<std::string> enabledPacks;
-
 	size_t lastPack;
 
 	struct PackInfo

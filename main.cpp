@@ -25,7 +25,6 @@ Theme gTheme;
 GlobalStatus gStatus;
 
 void HandleException(boost::exception& ex);
-void InitDebugStatus();
 
 int main(int argc, char **argv)
 {
@@ -190,17 +189,4 @@ void HandleException(boost::exception& ex)
 #ifdef WIN32
 	MessageBoxA(0, msg.str().c_str(), "Error", 0);
 #endif
-}
-
-void InitDebugStatus()
-{
-		gStatus.runTime.level = "pack1/level1.js";
-		gStatus.runTime.levelPack = "pack1";
-		gStatus.startLives = 6;
-		gStatus.moneyPerEnemy = 10;
-		gStatus.startMoney = 10000;
-
-		gStatus.enabledPacks.insert("pack1");
-		gStatus.enabledPacks.insert("pack2");
-		gStatus.packInfo["pack1"].lastWonLevel = 1;
 }
