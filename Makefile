@@ -21,9 +21,8 @@ DIST_CONTENT = $(TARGET) $(DIST_FILES)
 
 
 
-SRCS = $(shell find . -name '*.[cS]')
-SRCS += $(shell find . -name '*.cpp')
-SRCS += $(shell find json_spirit -name '*.cpp')
+SRCS = $(shell find  . -maxdepth 1 -name '*.cpp')
+SRCS += $(shell find json_spirit -maxdepth 1  -name '*.cpp')
 OBJS = $(addsuffix .o,$(basename $(SRCS)))
 
 SRC_FILES = $(wildcard $(SRC)/*.cpp)
@@ -43,6 +42,9 @@ Drachen: $(OBJS)
 
 %.o: %.cpp
 	$(CXX) $(CPPFLAGS) $(BOOSTDIR) $(ROOTINC) $(ROOTCFLAGS) -c -o $@ $^
+
+mkinfo:
+	@echo $(SRCS)
 
 clean:
 	rm -f $(OBJS)
