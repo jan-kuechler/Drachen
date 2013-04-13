@@ -24,6 +24,10 @@ class LevelPicker : public StateDef
 
 	Button backButton;
 
+	Button prevButton;
+	Button nextButton;
+	bool hasPrevPack, hasNextPack;
+
 	bool running;
 	State nextState;
 
@@ -48,6 +52,8 @@ private:
 
 	bool ShouldDisplayText(const std::string& id);
 	void DisplayText(const std::string& id, State nextState);
+
+	size_t GetPackIndex(const std::string& id);
 };
 
 #endif //LEVEL_PICKER_H

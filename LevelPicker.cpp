@@ -72,8 +72,15 @@ void LevelPicker::Reset()
 	CenterText(strName);
 
 	InitButton(backButton, "level-picker/back-button");
+	InitButton(prevButton, "level-picker/prev-button");
+	InitButton(nextButton, "level-picker/next-button");
 
-	bool packEnabled = true;
+	size_t packIndex = GetPackIndex(gStatus.runTime.levelPack);
+
+	bool packEnabled = packIndex <= gStatus.lastPack;
+
+	hasPrevPack = packIndex > 0;
+	hasNextPack = packIndex < (levelPackOrder.size() -1);
 
 	auto startPos = gTheme.GetPosition("level-picker/level-buttons/start");
 	auto lineOffset = gTheme.GetPosition("level-picker/level-buttons/line-offset");
@@ -131,6 +138,11 @@ void LevelPicker::Run()
 
 		if (backButton.HandleEvent(event))
 			continue;
+
+		if (hasPrevPack && prevButton.HandleEvent(event))
+			continue;
+		if (hasNextPack && nextButton.HandleEvent(event))
+			continue;
 	}
 
 	for (size_t i=0; i < levelButtons.size(); ++i) {
@@ -153,13 +165,29 @@ void LevelPicker::Run()
 		running = false;
 		nextState = ST_MAIN_MENU;
 	}
+	else if (prevButton.WasClicked()) {
+		running = false;
+		gStatus.runTime.levelPack = levelPackOrder[GetPackIndex(gStatus.runTime.levelPack) - 1];
+		nextState = ST_LEVEL_PICKER;
+	}
+	else if (nextButton.WasClicked()) {
+		running = false;
+		gStatus.runTime.levelPack = levelPackOrder[GetPackIndex(gStatus.runTime.levelPack) + 1];
+		nextState = ST_LEVEL_PICKER;
+	}
 
 	window.Draw(background);
 
-	window.Draw(strName);
-	window.Draw(strDesc);
 	window.Draw(previewImage);
 	window.Draw(backButton);
+
+	if (hasPrevPack)
+		window.Draw(prevButton);
+	if (hasNextPack)
+		window.Draw(nextButton);
+
+	window.Draw(strName);
+	window.Draw(strDesc);
 
 	for (size_t i=0; i < levelButtons.size(); ++i) {
 		window.Draw(levelButtons[i]);
@@ -218,4 +246,13 @@ void LevelPicker::LoadLevelPacks()
 	catch (std::runtime_error err) {
 		throw GameError() << ErrorInfo::Desc("Json error") << ErrorInfo::Note(err.what()) << boost::errinfo_file_name(LevelPacksFile.string());
 	}
+}
+
+size_t LevelPicker::GetPackIndex(const std::string& id)
+{
+	for (size_t i=0; i < levelPackOrder.size(); ++i) {
+		if (id == levelPackOrder[i])
+			return i;
+	}
+	return levelPackOrder.size();
 }

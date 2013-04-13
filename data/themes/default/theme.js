@@ -116,6 +116,16 @@
             "position": [20, 550],
             "image": "picker/ButtonBack-normal.png"
         },
+        
+        "prev-button": {
+        	"position": [60, 455],
+        	"image": "picker/PrevPackButton.png",
+        },
+        
+        "next-button": {
+        	"position": [672, 456],
+        	"image": "picker/NextPackButton.png",
+        },
 
         "desc": {
             "position": [425, 320],
