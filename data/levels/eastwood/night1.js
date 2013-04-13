@@ -1,7 +1,8 @@
 {
-	"name" : "Test Level 1",
+	"name" : "Ostwald IV",
 	"theme" : "default",
 	"map" : "forest",
+	"night-mode": true,
 	
 	"waves" : [
 		{ 

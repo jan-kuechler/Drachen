@@ -1,8 +1,8 @@
 {
-	"name" : "Ostwald - Kapitel 1",
+	"name" : "Ostwald I",
 	"theme" : "default",
 	"map" : "forest",
-	
+
 	"waves" : [
 		{ 
 			"countdown" : 5,

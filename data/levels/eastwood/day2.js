@@ -1,5 +1,5 @@
 {
-	"name" : "Ostwald - Kapitel 2",
+	"name" : "Ostwald II",
 	"theme" : "default",
 	"map" : "forest",
 	
