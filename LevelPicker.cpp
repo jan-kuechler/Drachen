@@ -51,7 +51,11 @@ void LevelPicker::Reset()
 
 	const LevelPack& pack = levelPacks[gStatus.runTime.levelPack];
 
-	if (ShouldDisplayText("pre-pack"))
+	size_t packIndex = GetPackIndex(gStatus.runTime.levelPack);
+	bool packEnabled = packIndex <= gStatus.lastPack;
+
+
+	if (ShouldDisplayText("pre-pack") && packEnabled)
 		DisplayText("pre-pack", ST_LEVEL_PICKER);
 
 	if (gStatus.runTime.levelPicker.commingFromLevel >= 0 && gStatus.runTime.levelPicker.didWin) {
@@ -60,6 +64,7 @@ void LevelPicker::Reset()
 		if (ShouldDisplayText(id))
 			DisplayText(id, ST_LEVEL_PICKER);
 	}
+	gStatus.runTime.levelPicker.commingFromLevel = -1;
 
 	background.SetImage(gImageManager.getResource(gTheme.GetFileName("level-picker/background")));
 
@@ -74,10 +79,6 @@ void LevelPicker::Reset()
 	InitButton(backButton, "level-picker/back-button");
 	InitButton(prevButton, "level-picker/prev-button");
 	InitButton(nextButton, "level-picker/next-button");
-
-	size_t packIndex = GetPackIndex(gStatus.runTime.levelPack);
-
-	bool packEnabled = packIndex <= gStatus.lastPack;
 
 	hasPrevPack = packIndex > 0;
 	hasNextPack = packIndex < (levelPackOrder.size() -1);
