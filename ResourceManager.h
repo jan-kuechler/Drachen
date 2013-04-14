@@ -33,6 +33,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 #include <map>
 
 #include "Error.h"
+#include "Log.h"
 
 template< class T >
 class ResourceManager {
@@ -57,6 +58,9 @@ protected:
     virtual T* load( const std::string& strId )
 	{
 		T* res = new T;
+
+		LOG(Debug, "Loading resource '" << strId << "'");
+
 		if (!res->LoadFromFile(strId)) {
 			throw GameError() << ErrorInfo::Loading(true) <<  boost::errinfo_file_name(strId);
 		}

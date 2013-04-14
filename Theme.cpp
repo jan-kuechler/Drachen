@@ -4,19 +4,28 @@
 #include "Utility.h"
 #include "DataPaths.h"
 #include "ResourceManager.h"
+#include "Log.h"
 
 namespace fs = boost::filesystem;
 namespace js = json_spirit;
 
 void Theme::LoadTheme(const std::string& name)
 {
-	if (currentTheme == name)
+	LOG(Msg, "Loading theme '" << name << "'.");
+	if (currentTheme == name) {
+		LOG(Debug, "Theme was loaded, nothing to do.");
 		return;
+	}
 
 	fs::path themePath = GetThemePath(name);
 	fs::path themeDef = themePath / ThemeDefinitionFile;
 
+	LOG(Debug, "Theme definition file: " << themeDef);
+
 	std::ifstream in(themeDef.string());
+	if (!in.is_open())
+		throw GameError() << ErrorInfo::Desc("Failed to open file") << ErrorInfo::Note("Loading theme '" + name + "'") << boost::errinfo_file_name(themeDef.string());
+
 	js::mValue rootValue;
 	try {
 		js::read_or_throw(in, rootValue);
@@ -39,6 +48,7 @@ void Theme::LoadTheme(const std::string& name)
 	LoadTowerSettings();
 }
 
+// TODO: Use jsex
 Vector2f GetVector2f(js::mArray& arr)
 {
 	return Vector2f(static_cast<float>(arr[0].get_real()), static_cast<float>(arr[1].get_real()));
@@ -63,7 +73,12 @@ void Theme::LoadTowerSettings()
 	fs::path themePath = GetThemePath(currentTheme);
 	fs::path towerDef = themePath / TowerDefinitionFile;
 
+	LOG(Msg, "Loading tower settings from " << towerDef);
+
 	std::ifstream in(towerDef.string());
+	if (!in.is_open())
+		throw GameError() << ErrorInfo::Desc("Failed to open file") << ErrorInfo::Note("Loading tower settings") << boost::errinfo_file_name(towerDef.string());
+
 	js::mValue rootValue;
 	try {
 		js::read_or_throw(in, rootValue);
