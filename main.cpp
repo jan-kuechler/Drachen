@@ -9,6 +9,7 @@
 #include "Utility.h"
 #include "ResourceManager.h"
 #include "Theme.h"
+#include "Log.h"
 
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -33,6 +34,10 @@ int main(int argc, char **argv)
 
 	std::ofstream fcout("cout.log");
 	std::cout.rdbuf(fcout.rdbuf());
+
+#ifdef _DEBUG
+	Log::Logger::Instance().SetLogLevel(Log::Logger::Debug);
+#endif
 
 	try {
 		auto fn = GetStatusFile();
