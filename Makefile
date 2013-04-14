@@ -5,7 +5,7 @@
 ## variables there. See local.config.sample for an example and a description
 ## of all used variables.
 CXX = g++
-CPPFLAGS +=  -Iinclude -Ijson_spirit -std=c++11  -O2 
+CPPFLAGS +=  -Iinclude -Ijson_spirit -std=c++11  -O2 -D_DEBUG
 
 
 LD = g++

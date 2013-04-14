@@ -1,10 +1,10 @@
 {
 	"main-font" : "segoepr.ttf",
-	
+
 	"top-panel": "top_bar.png",
-	
+
 	"bottom-panel": "bottom_panel.png",
-	
+
 	"buttons" : {
 		"upgrade" : {
 			"position": [340, 520],
@@ -12,10 +12,10 @@
 		},
 		"sell": {
 			"position": [440, 520],
-			"image": "button/ButtonSell.png"		
+			"image": "button/ButtonSell.png"
 		}
 	},
-	
+
 	"tower-buttons" : [
 		{
 			"image" : "button/ButtonArcher.png",
@@ -33,7 +33,7 @@
 			"tower" : 2
 		}
 	],
-	
+
 	"text" : {
 		"level-name": {
 			"position" : [400, 50],
@@ -41,7 +41,7 @@
 		},
 		"lives" : {
 			"position" : [690, 18],
-			"font-size" : 24		
+			"font-size" : 24
 		},
 		"countdown" : {
 			"position" : [100, 38],
@@ -52,7 +52,7 @@
 			"font-size": 24
 		}
 	},
-	
+
 	"decorations": [
 		{
 			"image": "Emblem.png",
@@ -61,7 +61,7 @@
 		{
 			"image": "Emblem.png",
 			"position": [520, 26]
-		},		
+		},
 		{
 			"image": "Heart.png",
 			"position": [660, 22]
@@ -71,18 +71,18 @@
 			"position": [660, 52]
 		}
 	],
-	
+
 	"win": {
 		"background": "Win.png"
 	},
-	
+
 	"loose": {
 		"background": "Loose.png"
 	},
-	
+
 	"main-menu": {
 		"background": "menu/MainMenuBackground.png",
-		
+
 		"buttons": [
 			"menu/button_start.png",
 			"menu/button_options.png",
@@ -116,35 +116,34 @@
             "position": [20, 550],
             "image": "picker/ButtonBack-normal.png"
         },
-        
+
         "prev-button": {
-        	"position": [60, 455],
-        	"image": "picker/PrevPackButton.png",
+			"position": [60, 455],
+			"image": "picker/PrevPackButton.png"
         },
-        
-        "next-button": {
-        	"position": [672, 456],
-        	"image": "picker/NextPackButton.png",
+
+            "next-button": {
+			"position": [672, 456],
+			"image": "picker/NextPackButton.png"
         },
 
         "desc": {
             "position": [425, 320],
             "font-size": 20,
-            "color": "black",
+            "color": "black"
         },
 
         "preview": {
-            "position": [447, 124],
-        },
+            "position": [447, 124]
+        }
     },
-    
+
     "text-display": {
-    	"background": "text/TextDisplayBackground.png",
-    	
-    	"text": {
-    		"position": [75, 75],
-    		"font-size": 22,
-    		"color": "black",
-    	},
-    },
+		"background": "text/TextDisplayBackground.png",
+			"text": {
+			"position": [75, 75],
+			"font-size": 22,
+			"color": "black"
+		}
+    }
 }
