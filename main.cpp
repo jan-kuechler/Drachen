@@ -29,22 +29,29 @@ void HandleException(boost::exception& ex);
 
 int main(int argc, char **argv)
 {
+#ifdef _DEBUG
+	Log::Logger::Instance().SetLogLevel(Log::Logger::Debug);
+#endif
+
+	LOG(Msg, "Drachen startup");
+
 	std::ofstream fcerr("cerr.log");
 	std::cerr.rdbuf(fcerr.rdbuf());
 
 	std::ofstream fcout("cout.log");
 	std::cout.rdbuf(fcout.rdbuf());
 
-#ifdef _DEBUG
-	Log::Logger::Instance().SetLogLevel(Log::Logger::Debug);
-#endif
 
 	try {
 		auto fn = GetStatusFile();
-		if (fs::exists(fn))
+		if (fs::exists(fn)) {
+			LOG(Msg, "Save file " << fn.string() << " exists, loading global status");
 			gStatus.LoadFromFile(fn.string());
-		else
+		}
+		else {
+			LOG(Msg, "Save file " << fn.string() << " does not exist, resetting global status.");
 			gStatus.Reset();
+		}
 
 		gStatus.settings.useShader = true;
 
@@ -64,6 +71,10 @@ int main(int argc, char **argv)
 		bool newState = true;
 
 		while (window.IsOpened()) {
+			if (newState) {
+				LOG(Msg, "Switched state to " << state);
+			}
+
 			switch (state) {
 			case ST_MAIN_MENU:
 				if (newState) {
@@ -144,13 +155,16 @@ int main(int argc, char **argv)
 			}
 		}
 
+		LOG(Msg, "Window closed, saving global status.");
 		gStatus.WriteToFile("drachen.st");
 	}
 	catch (std::runtime_error err) {
+		LOG(Crit, "runtime_error: " << err.what());
 		std::ofstream out("crash.log");
 		out << err.what() << "\n";
 	}
 	catch (boost::exception& ex) {
+		LOG(Crit, "GameError, saving info to crash.log");
 		HandleException(ex);
 	}
 
