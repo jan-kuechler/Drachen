@@ -69,6 +69,11 @@ public:
 		rangeCircle.SetPosition(pos);
 	}
 
+	const TowerSettings* GetSettings() const
+	{
+		return settings;
+	}
+
 protected:
 	Tower(const TowerSettings* settings, const std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Projectile>>& projectiles, bool highRange);
 
