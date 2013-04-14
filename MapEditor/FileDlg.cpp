@@ -56,6 +56,7 @@ boost::optional<fs::path> FileSaveDlg()
 	return boost::optional<fs::path>();
 }
 
+
 // default implementation
 #else
 

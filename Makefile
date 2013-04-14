@@ -7,12 +7,17 @@
 CXX = g++
 CPPFLAGS +=  -Iinclude -Ijson_spirit -std=c++11  -O2 
 
-OBJCCC = gcc
-OBJCFLAGS = -O2 -x objective-c
+OBJCCC = clang++
+OBJCFLAGS = -O2 -x objective-c++
+
 
 
 LD = g++
+
+MAPLD = clang++
 LIBS = -framework SFML -framework sfml-graphics -framework sfml-system -framework sfml-window -lboost_system -lboost_filesystem 
+
+LDMAPFLAGS = -framework Cocoa
 
 DIST_NAME = $(PROG_NAME)-$(PROG_VERSION)
 
@@ -67,7 +72,7 @@ $(BIN)/%: $(BUILD)/%.o
 
 MapEdit: $(MAP_OBJS_OBJC) $(MAP_OBJS_CXX) $(JSON_OBJS)
 	@echo Making Map
-	$(LD)  $(LDFLAGS) $(LIBS)  -o $@ $^
+	$(MAPLD)  $(LDFLAGS) $(LDMAPFLAGS) $(LIBS)  -o $@ $^
 
 $(MAP_DEP_OBJC): $(SRC_MAP_OBJC)
 	@echo Dep OBJC
