@@ -64,6 +64,10 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 	InitText(countdown, "text/countdown");
 	InitText(money, "text/money");
 
+	InitText(towerName, "tower-tooltip/name");
+	InitText(towerCost, "tower-tooltip/cost");
+	InitImage(towerCostCoin, "tower-tooltip/coin");
+
 	// release any towerPlacer left from the previous round
 	towerPlacer.release();
 
@@ -78,10 +82,16 @@ void GameUserInterface::Update()
 		textUpdateClock.Reset();
 	}
 
+	showTowerTooltip = false;
 	for (size_t i=0; i < towerButtons.size(); ++i) {
 		if (towerButtons[i].WasClicked()) {
 			selectedTower.reset(); // clear selected tower when placing a new one
 			StartPlacingTower(i);
+		}
+
+		if (towerButtons[i].MouseOver()) {
+			showTowerTooltip = true;
+			UpdateTowerTooltip(gTheme.GetTowerSettings(i), false);
 		}
 	}
 
@@ -96,6 +106,11 @@ void GameUserInterface::Update()
 	}
 
 	if (selectedTower) {
+		if (btnUpgrade.MouseOver()) {
+			showTowerTooltip = true;
+			UpdateTowerTooltip(selectedTower->GetSettings(), true);
+		}
+
 		if (btnUpgrade.WasClicked() && selectedTower->CanUpgrade())
 			selectedTower->Upgrade();
 		if (btnSell.WasClicked()) {
@@ -143,6 +158,12 @@ void GameUserInterface::Draw()
 
 	if (showCountdown)
 		window.Draw(countdown);
+
+	if (showTowerTooltip) {
+		window.Draw(towerName);
+		window.Draw(towerCost);
+		window.Draw(towerCostCoin);
+	}
 }
 
 bool GameUserInterface::HandleEvent(Event& event)
@@ -201,7 +222,18 @@ void GameUserInterface::StartPlacingTower(size_t id)
 	for (size_t i=0; i < places.size(); ++i) {
 		towerMarkers.push_back(Shape::Circle(places[i], MARKER_RADIUS, ColorMarker));
 	}
-	(void)0;
+}
+
+void GameUserInterface::UpdateTowerTooltip(const TowerSettings* settings, bool upgrade)
+{
+	towerName.SetText(settings->name);
+	if (upgrade) {
+		towerCost.SetText("Upgrade: 0");
+	}
+	else {
+		towerCost.SetText("Bauen: " + boost::lexical_cast<std::string>(settings->baseCost));
+	}
+	towerCostCoin.SetX(towerCost.GetRect().Right + 10);
 }
 
 void GameUserInterface::TowerSelected(std::shared_ptr<Tower> tower)

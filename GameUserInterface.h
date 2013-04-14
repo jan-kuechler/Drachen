@@ -31,6 +31,11 @@ class GameUserInterface
 	String countdown;
 	String money;
 
+	String towerName;
+	String towerCost;
+	Sprite towerCostCoin;
+	bool showTowerTooltip;
+
 	std::vector<Sprite> decoration;
 
 	std::vector<Button> towerButtons;
@@ -62,6 +67,7 @@ private:
 	void UpdateText();
 
 	void StartPlacingTower(size_t id);
+	void UpdateTowerTooltip(const TowerSettings* settings, bool upgrade);
 
 	void LoadDefinition();
 };

@@ -7,11 +7,11 @@
 	
 	"buttons" : {
 		"upgrade" : {
-			"position": [340, 520],
+			"position": [620, 520],
 			"image": "button/ButtonUpgrade.png"
 		},
 		"sell": {
-			"position": [440, 520],
+			"position": [720, 520],
 			"image": "button/ButtonSell.png"		
 		}
 	},
@@ -51,6 +51,23 @@
 			"position": [690, 48],
 			"font-size": 24
 		}
+	},
+	
+	"tower-tooltip": {
+		"name": {
+			"position": [315, 515],
+			"font-size": 26,
+			"color": "yellow",
+		},
+		"cost": {
+			"position": [315, 550],
+			"font-size": 18,
+			"color": "white",
+		},
+		"coin": {
+			"position": [315, 550],
+			"image": "Coin.png",
+		},
 	},
 	
 	"decorations": [
