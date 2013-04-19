@@ -235,6 +235,7 @@ void GameUserInterface::Tooltip::SetTower(const TowerSettings* tower, Mode md)
 
 	mode = md;
 	title.SetText(tower->name);
+	title.Show();
 
 	switch (md) {
 	case Preview:
@@ -256,6 +257,7 @@ void GameUserInterface::Tooltip::SetTower(const TowerSettings* tower, Mode md)
 		break;
 
 	case Hidden:
+		title.Hide();
 		break;
 	}
 
@@ -265,33 +267,36 @@ void GameUserInterface::Tooltip::SetTower(const TowerSettings* tower, Mode md)
 void GameUserInterface::Tooltip::Clear()
 {
 	mode = Hidden;
+	title.Hide();
 }
 
 void GameUserInterface::Tooltip::Draw(RenderTarget& target)
 {
+	target.Draw(title);
+
 	switch (mode) {
 	case Hidden:
 		break;
 
 	case Preview:
-		target.Draw(title);
+		//target.Draw(title);
 		target.Draw(cost);
 		target.Draw(coin);
 		break;
 
 	case Selected:
-		target.Draw(title);
+		//target.Draw(title);
 		break;
 
 	case Upgrade:
-		target.Draw(title);
+		//target.Draw(title);
 		target.Draw(subtitle);
 		target.Draw(cost);
 		target.Draw(coin);
 		break;
 
 	case Sell:
-		target.Draw(title);
+		//target.Draw(title);
 		target.Draw(subtitle);
 		target.Draw(cost);
 		target.Draw(coin);

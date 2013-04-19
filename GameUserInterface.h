@@ -4,6 +4,7 @@
 #include "Button.h"
 #include "Theme.h"
 #include "TowerPlacer.h"
+#include "sfex.h"
 
 class Map;
 class Game;
@@ -57,7 +58,7 @@ class GameUserInterface
 
 		Color buyColor, sellColor;
 
-		String title;
+		sfex::String title;
 		String subtitle;
 		String cost;
 		Sprite coin;
