@@ -42,6 +42,11 @@ class GameUserInterface
 		void SetTower(const TowerSettings* settings, Mode md);
 		void Clear();
 
+		Mode GetMode() const
+		{
+			return mode;
+		}
+
 		void Draw(RenderTarget& target);
 
 		Tooltip()

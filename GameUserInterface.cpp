@@ -103,13 +103,12 @@ void GameUserInterface::Update()
 	}
 
 	if (selectedTower) {
-		Tooltip::Mode md = Tooltip::Selected;
-		if (btnUpgrade.MouseOver())
-			md = Tooltip::Upgrade;
+		if (btnUpgrade.MouseOver() && selectedTower->CanUpgrade()) // FIXME: Buttons should handle visibility state
+			tooltip.SetTower(selectedTower->GetSettings(), Tooltip::Upgrade);
 		else if (btnSell.MouseOver())
-			md = Tooltip::Sell;
-
-		tooltip.SetTower(selectedTower->GetSettings(), md);
+			tooltip.SetTower(selectedTower->GetSettings(), Tooltip::Sell);
+		else if (tooltip.GetMode() == Tooltip::Hidden)
+			tooltip.SetTower(selectedTower->GetSettings(), Tooltip::Selected);
 
 		if (btnUpgrade.WasClicked() && selectedTower->CanUpgrade())
 			selectedTower->Upgrade();
@@ -124,7 +123,6 @@ void GameUserInterface::PreDraw()
 {
 	if (selectedTower)
 		selectedTower->DrawRangeCircle(window);
-
 }
 
 void GameUserInterface::Draw()
@@ -145,11 +143,12 @@ void GameUserInterface::Draw()
 	window.Draw(money);
 
 	boost::for_each(decoration, [&](const Sprite& sp) {
-			window.Draw(sp);
-		});
+		window.Draw(sp);
+	});
 
 	if (selectedTower) {
-		window.Draw(btnUpgrade);
+		if (selectedTower->CanUpgrade())
+			window.Draw(btnUpgrade);
 		window.Draw(btnSell);
 	}
 
@@ -172,7 +171,7 @@ bool GameUserInterface::HandleEvent(Event& event)
 			return true;
 
 	if (selectedTower) {
-		if (btnUpgrade.HandleEvent(event))
+		if (selectedTower->CanUpgrade() && btnUpgrade.HandleEvent(event))
 			return true;
 		if (btnSell.HandleEvent(event))
 			return true;
@@ -252,7 +251,7 @@ void GameUserInterface::Tooltip::SetTower(const TowerSettings* tower, Mode md)
 		break;
 
 	case Sell:
-		cost.SetText("Verkaufen: " + lexical_cast<string>(tower->baseCost));
+		cost.SetText("Verkaufen: +" + lexical_cast<string>(tower->baseCost));
 		cost.SetColor(sellColor);
 		break;
 
