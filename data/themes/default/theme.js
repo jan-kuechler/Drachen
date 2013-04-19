@@ -52,9 +52,13 @@
 			"font-size": 24
 		}
 	},
-	
-	"tower-tooltip": {
-		"name": {
+		
+	"tooltip": {
+		"color": {
+			"buy": "red",
+			"sell": "green",
+		},
+		"title": {
 			"position": [315, 515],
 			"font-size": 26,
 			"color": "yellow",

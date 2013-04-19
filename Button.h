@@ -1,7 +1,9 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-class Button : public sf::Sprite
+#include "sfex.h"
+
+class Button : public sfex::Sprite
 {
 	const Image *imgNormal, *imgHighlight, *imgDown;
 	bool mouseOver, mouseDown;
@@ -13,7 +15,7 @@ public:
 	static const Vector2f ImageArea;
 
 	Button()
-	: sf::Sprite(), clicked(false), mouseOver(false), activeSize(ImageArea), mouseDown(false), 
+	: sfex::Sprite(), clicked(false), mouseOver(false), activeSize(ImageArea), mouseDown(false), 
 	  imgNormal(nullptr), imgHighlight(nullptr), imgDown(nullptr)
 	{ }
 
@@ -49,7 +51,7 @@ public:
 
 	bool MouseOver()
 	{
-		return mouseOver;
+		return visible && mouseOver;
 	}
 
 private:

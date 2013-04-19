@@ -6,6 +6,9 @@ const Vector2f Button::ImageArea(-1, -1);
 
 bool Button::HandleEvent(Event& event)
 {
+	if (!visible)
+		return false;
+
 	bool handled = false;
 	switch (event.Type) {
 	case Event::MouseMoved:

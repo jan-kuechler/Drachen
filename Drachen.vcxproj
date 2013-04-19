@@ -176,6 +176,7 @@
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySettings.h" />
     <ClInclude Include="Error.h" />
+    <ClInclude Include="sfex.h" />
     <ClInclude Include="FireEffect.h" />
     <ClInclude Include="GameStatus.h" />
     <ClInclude Include="jsex.h" />
