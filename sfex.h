@@ -43,6 +43,7 @@ namespace sfex
 	};
 
 	typedef ExtendedDrawable<sf::String> String;
+	typedef ExtendedDrawable<sf::Sprite> Sprite;
 };
 
 #endif //EXTENDED_DRAWABLES_H

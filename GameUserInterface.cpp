@@ -52,7 +52,7 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 
 	InitButton(btnUpgrade, "buttons/upgrade");
 	InitButton(btnSell, "buttons/sell");
-	selectedTower.reset();
+	TowerSelected(nullptr);
 
 	levelName.SetFont(gTheme.GetMainFont());
 	levelName.SetText(metaInfo.name);
@@ -83,7 +83,7 @@ void GameUserInterface::Update()
 	tooltip.Clear();
 	for (size_t i=0; i < towerButtons.size(); ++i) {
 		if (towerButtons[i].WasClicked()) {
-			selectedTower.reset(); // clear selected tower when placing a new one
+			TowerSelected(nullptr); // clear selected tower when placing a new one
 			StartPlacingTower(i);
 		}
 
@@ -110,11 +110,13 @@ void GameUserInterface::Update()
 		else if (tooltip.GetMode() == Tooltip::Hidden)
 			tooltip.SetTower(selectedTower->GetSettings(), Tooltip::Selected);
 
-		if (btnUpgrade.WasClicked() && selectedTower->CanUpgrade())
+		if (btnUpgrade.WasClicked() && selectedTower->CanUpgrade()) {
 			selectedTower->Upgrade();
+			btnUpgrade.SetVisible(selectedTower->CanUpgrade());
+		}
 		if (btnSell.WasClicked()) {
 			gameStatus.money += selectedTower->Sell();
-			selectedTower.reset();
+			TowerSelected(nullptr);
 		}
 	}
 }
@@ -146,11 +148,8 @@ void GameUserInterface::Draw()
 		window.Draw(sp);
 	});
 
-	if (selectedTower) {
-		if (selectedTower->CanUpgrade())
-			window.Draw(btnUpgrade);
-		window.Draw(btnSell);
-	}
+	window.Draw(btnUpgrade);
+	window.Draw(btnSell);
 
 	for (auto it = towerButtons.begin(); it != towerButtons.end(); ++it)
 		window.Draw(*it);
@@ -170,12 +169,10 @@ bool GameUserInterface::HandleEvent(Event& event)
 		if (it->HandleEvent(event))
 			return true;
 
-	if (selectedTower) {
-		if (selectedTower->CanUpgrade() && btnUpgrade.HandleEvent(event))
-			return true;
-		if (btnSell.HandleEvent(event))
-			return true;
-	}
+	if (btnUpgrade.HandleEvent(event))
+		return true;
+	if (btnSell.HandleEvent(event))
+		return true;
 
 	return false;
 }
@@ -217,7 +214,6 @@ void GameUserInterface::StartPlacingTower(size_t id)
 	for (size_t i=0; i < places.size(); ++i) {
 		towerMarkers.push_back(Shape::Circle(places[i], MARKER_RADIUS, ColorMarker));
 	}
-
 }
 
 void GameUserInterface::TowerSelected(std::shared_ptr<Tower> tower)
@@ -226,6 +222,15 @@ void GameUserInterface::TowerSelected(std::shared_ptr<Tower> tower)
 		selectedTower.reset();
 
 	selectedTower = tower;
+
+	if (selectedTower) {
+		btnSell.Show();
+		btnUpgrade.SetVisible(selectedTower->CanUpgrade());
+	}
+	else {
+		btnSell.Hide();
+		btnUpgrade.Hide();
+	}
 }
 
 void GameUserInterface::Tooltip::SetTower(const TowerSettings* tower, Mode md)
