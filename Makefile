@@ -8,14 +8,14 @@ CXX = g++
 CPPFLAGS +=  -Iinclude -Ijson_spirit -std=c++11  -O2 
 
 OBJCCC = clang++
-OBJCFLAGS = -O2 -x objective-c++
+OBJCFLAGS = -O2 
 
-
+MAPCXX = clang++
 
 LD = g++
 
 MAPLD = clang++
-LIBS = -framework SFML -framework sfml-graphics -framework sfml-system -framework sfml-window -lboost_system -lboost_filesystem 
+LIBS = -framework SFML -framework sfml-graphics -framework sfml-system -framework sfml-window -lboost_system -lboost_filesystem -lboost_date_time
 
 LDMAPFLAGS = -framework Cocoa
 
@@ -70,9 +70,10 @@ $(BIN)/%: $(BUILD)/%.o
 	@echo Linking $@
 	$(LD) -o $@ $(LDFLAGS) $(LIBS) $<
 
-MapEdit: $(MAP_OBJS_OBJC) $(MAP_OBJS_CXX) $(JSON_OBJS)
+MapEdit: $(MAP_OBJS_OBJC) $(MAP_OBJS_CXX) $(JSON_OBJS) Log.o
 	@echo Making Map
-	$(MAPLD)  $(LDFLAGS) $(LDMAPFLAGS) $(LIBS)  -o $@ $^
+	@echo $(MAP_OBJS_OBJC) $(MAP_OBJS_CXX) $(JSON_OBJS)
+	$(MAPLD) -v  $(LDFLAGS) $(LDMAPFLAGS)    -o $@  $^ $(LIBS) $(LIBS) -lc++
 
 $(MAP_DEP_OBJC): $(SRC_MAP_OBJC)
 	@echo Dep OBJC
@@ -86,7 +87,7 @@ $(MAP)/%.o: $(MAP)/%.mm
 	$(OBJCCC) $(OBJCFLAGS) -c -o $@ $^
 
 $(MAP)/%.o: $(MAP)/%.cpp
-	$(CXX)  $(CPPFLAGS)   -c -o $@ $^
+	$(CXX)  $(CPPFLAGS) -c -o $@ $^
 
 $(JSON)/%.o: $(JSON)/%.cpp
 	$(CXX)  $(CPPFLAGS)   -c -o $@ $^

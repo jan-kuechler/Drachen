@@ -4,6 +4,7 @@
 #include "../ResourceManager.h"
 #include "../Utility.h"
 #include "../json_spirit/json_spirit.h"
+#include "../Log.h"
 
 namespace fs = boost::filesystem;
 namespace js = json_spirit;
