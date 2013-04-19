@@ -31,10 +31,33 @@ class GameUserInterface
 	String countdown;
 	String money;
 
-	String towerName;
-	String towerCost;
-	Sprite towerCostCoin;
-	bool showTowerTooltip;
+	struct Tooltip
+	{
+		enum Mode {
+			Hidden, Preview, Selected, Upgrade, Sell,
+		};
+
+		void Initialize(const std::string& prefix = "tooltip");
+
+		void SetTower(const TowerSettings* settings, Mode md);
+		void Clear();
+
+		void Draw(RenderTarget& target);
+
+		Tooltip()
+		: mode(Hidden)
+		{}
+	private:
+		Mode mode;
+
+		Color buyColor, sellColor;
+
+		String title;
+		String subtitle;
+		String cost;
+		Sprite coin;
+	};
+	Tooltip tooltip;
 
 	std::vector<Sprite> decoration;
 
@@ -67,7 +90,6 @@ private:
 	void UpdateText();
 
 	void StartPlacingTower(size_t id);
-	void UpdateTowerTooltip(const TowerSettings* settings, bool upgrade);
 
 	void LoadDefinition();
 };

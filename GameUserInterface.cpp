@@ -64,9 +64,7 @@ void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
 	InitText(countdown, "text/countdown");
 	InitText(money, "text/money");
 
-	InitText(towerName, "tower-tooltip/name");
-	InitText(towerCost, "tower-tooltip/cost");
-	InitImage(towerCostCoin, "tower-tooltip/coin");
+	tooltip.Initialize();
 
 	// release any towerPlacer left from the previous round
 	towerPlacer.release();
@@ -82,7 +80,7 @@ void GameUserInterface::Update()
 		textUpdateClock.Reset();
 	}
 
-	showTowerTooltip = false;
+	tooltip.Clear();
 	for (size_t i=0; i < towerButtons.size(); ++i) {
 		if (towerButtons[i].WasClicked()) {
 			selectedTower.reset(); // clear selected tower when placing a new one
@@ -90,8 +88,7 @@ void GameUserInterface::Update()
 		}
 
 		if (towerButtons[i].MouseOver()) {
-			showTowerTooltip = true;
-			UpdateTowerTooltip(gTheme.GetTowerSettings(i), false);
+			tooltip.SetTower(gTheme.GetTowerSettings(i), Tooltip::Preview);
 		}
 	}
 
@@ -106,10 +103,13 @@ void GameUserInterface::Update()
 	}
 
 	if (selectedTower) {
-		if (btnUpgrade.MouseOver()) {
-			showTowerTooltip = true;
-			UpdateTowerTooltip(selectedTower->GetSettings(), true);
-		}
+		Tooltip::Mode md = Tooltip::Selected;
+		if (btnUpgrade.MouseOver())
+			md = Tooltip::Upgrade;
+		else if (btnSell.MouseOver())
+			md = Tooltip::Sell;
+
+		tooltip.SetTower(selectedTower->GetSettings(), md);
 
 		if (btnUpgrade.WasClicked() && selectedTower->CanUpgrade())
 			selectedTower->Upgrade();
@@ -159,11 +159,7 @@ void GameUserInterface::Draw()
 	if (showCountdown)
 		window.Draw(countdown);
 
-	if (showTowerTooltip) {
-		window.Draw(towerName);
-		window.Draw(towerCost);
-		window.Draw(towerCostCoin);
-	}
+	tooltip.Draw(window);
 }
 
 bool GameUserInterface::HandleEvent(Event& event)
@@ -222,18 +218,7 @@ void GameUserInterface::StartPlacingTower(size_t id)
 	for (size_t i=0; i < places.size(); ++i) {
 		towerMarkers.push_back(Shape::Circle(places[i], MARKER_RADIUS, ColorMarker));
 	}
-}
 
-void GameUserInterface::UpdateTowerTooltip(const TowerSettings* settings, bool upgrade)
-{
-	towerName.SetText(settings->name);
-	if (upgrade) {
-		towerCost.SetText("Upgrade: 0");
-	}
-	else {
-		towerCost.SetText("Bauen: " + boost::lexical_cast<std::string>(settings->baseCost));
-	}
-	towerCostCoin.SetX(towerCost.GetRect().Right + 10);
 }
 
 void GameUserInterface::TowerSelected(std::shared_ptr<Tower> tower)
@@ -242,4 +227,85 @@ void GameUserInterface::TowerSelected(std::shared_ptr<Tower> tower)
 		selectedTower.reset();
 
 	selectedTower = tower;
+}
+
+void GameUserInterface::Tooltip::SetTower(const TowerSettings* tower, Mode md)
+{
+	using std::string;
+	using boost::lexical_cast;
+
+	mode = md;
+	title.SetText(tower->name);
+
+	switch (md) {
+	case Preview:
+		cost.SetText(lexical_cast<string>(tower->baseCost));
+		cost.SetColor(buyColor);
+		break;
+
+	case Selected:
+		break;
+
+	case Upgrade:
+		cost.SetText("Verbessern: " + lexical_cast<string>(0));
+		cost.SetColor(buyColor);
+		break;
+
+	case Sell:
+		cost.SetText("Verkaufen: " + lexical_cast<string>(tower->baseCost));
+		cost.SetColor(sellColor);
+		break;
+
+	case Hidden:
+		break;
+	}
+
+	coin.SetX(cost.GetRect().Right + 8);
+}
+
+void GameUserInterface::Tooltip::Clear()
+{
+	mode = Hidden;
+}
+
+void GameUserInterface::Tooltip::Draw(RenderTarget& target)
+{
+	switch (mode) {
+	case Hidden:
+		break;
+
+	case Preview:
+		target.Draw(title);
+		target.Draw(cost);
+		target.Draw(coin);
+		break;
+
+	case Selected:
+		target.Draw(title);
+		break;
+
+	case Upgrade:
+		target.Draw(title);
+		target.Draw(subtitle);
+		target.Draw(cost);
+		target.Draw(coin);
+		break;
+
+	case Sell:
+		target.Draw(title);
+		target.Draw(subtitle);
+		target.Draw(cost);
+		target.Draw(coin);
+		break;
+	}
+}
+
+void GameUserInterface::Tooltip::Initialize(const std::string& prefix)
+{
+	InitText(title, prefix + "/title");
+	InitText(cost, prefix + "/cost");
+	InitImage(coin, prefix + "/coin");
+
+	buyColor = gTheme.GetColor(prefix + "/color/buy");
+	sellColor = gTheme.GetColor(prefix + "/color/sell");
 }
