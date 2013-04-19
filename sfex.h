@@ -3,47 +3,50 @@
 
 namespace sfex
 {
-	template <typename Base>
-	class ExtendedDrawable : public Base
+	namespace detail 
 	{
-	protected:
-		bool visible;
-
-	public:
-		ExtendedDrawable()
-		: visible(true)
-		{ }
-
-		void Show()
+		template <typename Base>
+		class ExtendedDrawable : public Base
 		{
-			visible = true;
-		}
+		protected:
+			bool visible;
 
-		void Hide()
-		{
-			visible = false;
-		}
+		public:
+			ExtendedDrawable()
+			: visible(true)
+			{ }
 
-		void SetVisible(bool vis)
-		{
-			visible = vis;
-		}
+			void Show()
+			{
+				visible = true;
+			}
 
-		bool GetVisible() const
-		{
-			return visible;
-		}
+			void Hide()
+			{
+				visible = false;
+			}
 
-	protected:
-		void Render(sf::RenderTarget& target) const
-		{
-			if (visible)
-				Base::Render(target);
-		}
-	};
+			void SetVisible(bool vis)
+			{
+				visible = vis;
+			}
 
-	typedef ExtendedDrawable<sf::String> String;
-	typedef ExtendedDrawable<sf::Sprite> Sprite;
-};
+			bool GetVisible() const
+			{
+				return visible;
+			}
+
+		protected:
+			void Render(sf::RenderTarget& target) const
+			{
+				if (visible)
+					Base::Render(target);
+			}
+		};
+	}
+
+	typedef detail::ExtendedDrawable<sf::String> String;
+	typedef detail::ExtendedDrawable<sf::Sprite> Sprite;
+}
 
 #endif //EXTENDED_DRAWABLES_H
