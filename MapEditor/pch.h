@@ -27,6 +27,7 @@
 #include <boost/exception/all.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/optional.hpp>
+#include <boost/date_time.hpp>
 
 // SFML Header
 #include <SFML/System.hpp>
