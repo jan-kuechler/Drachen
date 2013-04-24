@@ -7,7 +7,7 @@
 namespace js = json_spirit;
 namespace fs = boost::filesystem;
 
-js::mObject jsex::load_root_from_file(fs::path& path)
+js::mObject jsex::load_root_from_file(const fs::path& path)
 {
 	std::ifstream in(path.string());
 	js::mValue rootValue;

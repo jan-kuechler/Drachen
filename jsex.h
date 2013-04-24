@@ -133,7 +133,7 @@ namespace jsex
 		return arr;
 	}
 
-	js::mObject load_root_from_file(boost::filesystem::path& path);
+	js::mObject load_root_from_file(const boost::filesystem::path& path);
 }
 
 #undef STATIC
