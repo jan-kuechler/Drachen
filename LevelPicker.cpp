@@ -66,7 +66,6 @@ void LevelPicker::Reset()
 	size_t packIndex = GetPackIndex(gStatus.runTime.levelPack);
 	bool packEnabled = packIndex <= gStatus.lastPack;
 
-
 	if (ShouldDisplayText("pre-pack") && packEnabled)
 		DisplayText("pre-pack", ST_LEVEL_PICKER);
 
