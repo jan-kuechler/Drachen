@@ -51,6 +51,18 @@ void LevelPicker::Reset()
 
 	const LevelPack& pack = levelPacks[gStatus.runTime.levelPack];
 
+	// if the last level of the pack has been won
+	if (gStatus.packInfo[gStatus.runTime.levelPack].lastWonLevel == (pack.levels.size()-1)) {
+		size_t nextPackIndex = GetPackIndex(gStatus.runTime.levelPack) + 1;
+		if (nextPackIndex < levelPackOrder.size()) {
+			gStatus.runTime.levelPack = levelPackOrder[nextPackIndex];
+			gStatus.lastPack = nextPackIndex;
+			running  = false;
+			nextState = ST_LEVEL_PICKER;
+			return;
+		}
+	}
+
 	size_t packIndex = GetPackIndex(gStatus.runTime.levelPack);
 	bool packEnabled = packIndex <= gStatus.lastPack;
 
