@@ -41,7 +41,6 @@ private:
 
 };
 
-#ifdef _DEBUG
 #define LOG(lvl_, msg_) \
 	do { \
 		Log::Logger& L_ = Log::Logger::Instance(); \
@@ -49,7 +48,5 @@ private:
 			L_.GetStream(Log::Logger::lvl_) << msg_ << std::endl; \
 		} \
 	} while (0)
-#else
-#define LOG(lvl_, msg_)
-#endif
+
 #endif //LOG_H
