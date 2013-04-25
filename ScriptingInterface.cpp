@@ -63,7 +63,7 @@ namespace Exp {
 	{
 		Log::Logger& logger = Log::Logger::Instance();
 		if (lvl <= logger.GetLogLevel()) {
-			logger.GetStream(lvl) << str << std::endl;
+			logger.GetStream(lvl) << "Lua: " << str << std::endl;
 		}
 	}
 
