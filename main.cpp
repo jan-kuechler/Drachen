@@ -71,6 +71,7 @@ int main(int argc, char **argv)
 		ScriptingInterface scriptingInterface(game);
 		scriptingInterface.Reset();
 		scriptingInterface.ExecuteFile("data/test.lua");
+		scriptingInterface.CallEventHandlers(GE_TEST_EVENT);
 
 		State state = ST_MAIN_MENU;
 		bool newState = true;

@@ -8,6 +8,8 @@ enum GameEvent
 	GE_LEVEL_START,
 	GE_LEVEL_END,
 
+	GE_TEST_EVENT,
+
 	GE_UNDEFINED,
 };
 
