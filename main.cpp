@@ -10,6 +10,7 @@
 #include "ResourceManager.h"
 #include "Theme.h"
 #include "Log.h"
+#include "ScriptingInterface.h"
 
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -66,6 +67,10 @@ int main(int argc, char **argv)
 		Game game(window, gStatus);
 		LevelPicker levelPicker(window);
 		TextDisplay textDisplay(window);
+
+		ScriptingInterface scriptingInterface(game);
+		scriptingInterface.Reset();
+		scriptingInterface.ExecuteFile("data/test.lua");
 
 		State state = ST_MAIN_MENU;
 		bool newState = true;

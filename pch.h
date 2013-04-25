@@ -29,6 +29,9 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time.hpp>
 
+#include <luabind/lua_include.hpp>
+#include <luabind/luabind.hpp>
+
 // SFML Header
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>

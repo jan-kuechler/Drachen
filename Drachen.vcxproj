@@ -78,6 +78,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>LUABIND_CPLUSPLUS_LUA;WIN32;_SCL_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>/Zm150 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -93,6 +94,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>LUABIND_CPLUSPLUS_LUA;WIN32;_SCL_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>/Zm150 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -110,6 +112,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>LUABIND_CPLUSPLUS_LUA;WIN32;_SCL_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalOptions>/Zm150 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -478,6 +481,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="Rectangle.cpp" />
+    <ClCompile Include="ScriptingInterface.cpp" />
     <ClCompile Include="TeaTower.cpp" />
     <ClCompile Include="TextDisplay.cpp" />
     <ClCompile Include="Theme.cpp" />
@@ -609,7 +613,10 @@
     <ClInclude Include="ext_libs\luabind-0.9.1\luabind\weak_ref.hpp" />
     <ClInclude Include="ext_libs\luabind-0.9.1\luabind\wrapper_base.hpp" />
     <ClInclude Include="ext_libs\luabind-0.9.1\luabind\yield_policy.hpp" />
+    <ClInclude Include="GameEvent.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LuaConverter.h" />
+    <ClInclude Include="ScriptingInterface.h" />
     <ClInclude Include="sfex.h" />
     <ClInclude Include="FireEffect.h" />
     <ClInclude Include="GameStatus.h" />
