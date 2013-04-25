@@ -3,6 +3,11 @@
 
 #include "Game.h"
 #include "GameEvent.h"
+#include "Error.h"
+
+struct ScriptError : public GameError
+{ };
+
 
 class ScriptingInterface
 {

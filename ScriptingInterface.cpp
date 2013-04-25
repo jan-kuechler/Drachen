@@ -35,14 +35,15 @@ void ScriptingInterface::ExecuteFile(const fs::path& file)
 {
 	int res = luaL_dofile(L, file.string().c_str());
 	if (res != 0)
-		throw GameError();
+		BOOST_THROW_EXCEPTION(ScriptError() << ErrorInfo::Desc("Error executing Lua file") << ErrorInfo::Note(lua_tostring(L, -1)) << boost::errinfo_file_name(file.string()));
 }
+
 
 void ScriptingInterface::ExecuteString(const std::string& str)
 {
 	int res = luaL_dostring(L, str.c_str());
 	if (res != 0)
-		throw GameError();
+		BOOST_THROW_EXCEPTION(ScriptError() << ErrorInfo::Desc("Error executing Lua code") << ErrorInfo::Note(lua_tostring(L, -1)));
 }
 
 void ScriptingInterface::CallEventHandlers(GameEvent event)
@@ -51,7 +52,12 @@ void ScriptingInterface::CallEventHandlers(GameEvent event)
 		auto& handlers = eventHandlers[event];
 
 		for (auto& func: handlers) {
-			call_function<void>(func, event);
+			try {
+				call_function<void>(func, event);
+			}
+			catch (luabind::error err) {
+				LOG(Error, "Error executing Lua event handler: " << lua_tostring(L, -1));
+			}
 		}
 	}
 }
@@ -94,10 +100,9 @@ void ScriptingInterface::InitialiseLua()
 
 	open(L);
 
-	// FIXME: commented out, leads to a runtime_error("unregistered class")
-	//for (auto& name: REMOVED_GLOBALS) {
-	//	settable(globals(L), name, nil);
-	//}
+	for (auto& name: REMOVED_GLOBALS) {
+		globals(L)[name] =  nil;
+	}
 
 	module(L) [
 		def("Log", Exp::Log),
