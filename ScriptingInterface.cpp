@@ -77,6 +77,10 @@ namespace Exp {
 	{
 		gInterface->exp_RegisterForEvent(event, func);
 	}
+
+	namespace DummyClass {
+		struct LogLevel {};
+	}
 }
 
 void ScriptingInterface::exp_RegisterForEvent(GameEvent event, object func)
@@ -106,6 +110,16 @@ void ScriptingInterface::InitialiseLua()
 
 	module(L) [
 		def("Log", Exp::Log),
-		def("RegisterForEvent", Exp::RegisterForEvent)
+		def("RegisterForEvent", Exp::RegisterForEvent),
+
+		class_<Exp::DummyClass::LogLevel>("LogLevel")
+		.enum_("loglevels")[
+			value("Crit", Log::Logger::Crit),
+			value("Error", Log::Logger::Error),
+			value("Warning", Log::Logger::Warning),
+			value("Msg", Log::Logger::Msg),
+			value("Debug", Log::Logger::Debug),
+			value("Trace", Log::Logger::Trace)
+		]
 	];
 }
