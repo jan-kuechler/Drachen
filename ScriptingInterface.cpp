@@ -31,13 +31,24 @@ void ScriptingInterface::Reset()
 	InitialiseLua();
 }
 
+void ScriptingInterface::Update(float elapsed)
+{
+	for (auto& func: updateHandlers) {
+		try {
+			luabind::call_function<void>(func, elapsed);
+		}
+		catch (luabind::error err) {
+			LOG(Error, "Error executing update handler: " << lua_tostring(L, -1));
+		}
+	}
+}
+
 void ScriptingInterface::ExecuteFile(const fs::path& file)
 {
 	int res = luaL_dofile(L, file.string().c_str());
 	if (res != 0)
 		BOOST_THROW_EXCEPTION(ScriptError() << ErrorInfo::Desc("Error executing Lua file") << ErrorInfo::Note(lua_tostring(L, -1)) << boost::errinfo_file_name(file.string()));
 }
-
 
 void ScriptingInterface::ExecuteString(const std::string& str)
 {
@@ -78,6 +89,11 @@ namespace Exp {
 		gInterface->exp_RegisterForEvent(event, func);
 	}
 
+	void RegisterForUpdate(luabind::object func)
+	{
+		gInterface->exp_RegisterForUpdate(func);
+	}
+
 	namespace DummyClass {
 		struct LogLevel {};
 	}
@@ -86,6 +102,11 @@ namespace Exp {
 void ScriptingInterface::exp_RegisterForEvent(GameEvent event, object func)
 {
 	eventHandlers[event].push_back(func);
+}
+
+void ScriptingInterface::exp_RegisterForUpdate(luabind::object func)
+{
+	updateHandlers.push_back(func);
 }
 
 static const char* REMOVED_GLOBALS[] = {
@@ -111,6 +132,7 @@ void ScriptingInterface::InitialiseLua()
 	module(L) [
 		def("Log", Exp::Log),
 		def("RegisterForEvent", Exp::RegisterForEvent),
+		def("RegisterForUpdate", Exp::RegisterForUpdate),
 
 		class_<Exp::DummyClass::LogLevel>("LogLevel")
 		.enum_("loglevels")[
