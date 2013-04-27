@@ -36,6 +36,8 @@ public:
 	void RegisterDrawable(sf::Drawable* obj);
 	void UnregisterDrawable(sf::Drawable* obj);
 
+	lua_State *GetLuaState() { return L; }
+
 	// exported functions, do not call from C++
 
 	void exp_RegisterForEvent(GameEvent event, luabind::object func);

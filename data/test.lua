@@ -36,8 +36,11 @@ end)
 
 str = CreateString()
 str:SetText("Hello World!")
-str:SetPosition(50, 50)
+str:SetPosition(60, 100)
 str:SetColor(Color.Black)
+
+local x, y = str:GetPosition()
+Log(LogLevel.Debug, "str:GetPosition() -> " .. x .. "," .. y)
 
 RegisterTimer(5, function()
 	str:SetColor(Color(255, 0, 0))

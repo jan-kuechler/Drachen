@@ -25,6 +25,7 @@ void ScriptingInterface::Reset()
 {
 	eventHandlers.clear();
 	updateHandlers.clear();
+	drawables.clear();
 
 	if (L) {
 		lua_close(L);
@@ -138,7 +139,8 @@ static void Unregister(T& self)
 	gInterface->UnregisterDrawable(&self);
 }
 
-static void GetPosition(lua_State* L, sf::Drawable& self)
+template <typename T>
+static void GetPosition(lua_State* L, T& self)
 {
 	auto pos = self.GetPosition();
 	lua_pushnumber(L, pos.x);
@@ -154,6 +156,15 @@ static sfex::String* CreateString()
 	return str;
 }
 
+static luabind::scope DeclColor()
+{
+	return
+		class_<sf::Color>("Color")
+			.def(luabind::constructor<Uint8, Uint8, Uint8>())
+			.def(luabind::constructor<Uint8, Uint8, Uint8, Uint8>())
+	;
+}
+
 static luabind::scope DeclString()
 {
 	return
@@ -163,22 +174,14 @@ static luabind::scope DeclString()
 			.def("SetSize", &sfex::String::SetSize)
 			.def("GetSize", &sfex::String::GetSize)
 			.def("SetColor", &sfex::String::SetColor)
+			.def("GetColor", &sfex::String::GetColor)
 			.def("SetPosition", pick(sfex::String, SetPosition, void, (float, float)))
-			.def("GetPosition", &GetPosition)
+			.def("GetPosition", &GetPosition<sfex::String>)
 			.def("Show", &sfex::String::Show)
 			.def("Hide", &sfex::String::Hide)
 			.def("SetVisible", &sfex::String::SetVisible)
 			.def("GetVisible", &sfex::String::GetVisible)
 			.def("Unregister", &Unregister<sfex::String>)
-	;
-}
-
-static luabind::scope DeclColor()
-{
-	return
-		class_<sf::Color>("Color")
-			.def(luabind::constructor<Uint8, Uint8, Uint8>())
-			.def(luabind::constructor<Uint8, Uint8, Uint8, Uint8>())
 	;
 }
 
