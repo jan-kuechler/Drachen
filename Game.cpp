@@ -18,7 +18,7 @@ static const float LOADING_BAR_WIDTH = 500;
 
 #pragma warning (disable: 4355)
 Game::Game(RenderWindow& win, GlobalStatus& gs)
-: window(win), globalStatus(gs), userInterface(this, window, globalStatus, gameStatus, &map), running(true), loadingScreenBar(LOADING_BAR_WIDTH, 20)
+: scripting(*this), window(win), globalStatus(gs), userInterface(this, window, globalStatus, gameStatus, &map), running(true), loadingScreenBar(LOADING_BAR_WIDTH, 20)
 { }
 
 // Compare towers by their y position, to ensure lower towers (= higher y pos) are drawn
@@ -82,6 +82,9 @@ void Game::Reset()
 	gameStatus.spawnTimer.Reset();
 	gameStatus.countdownTimer.Reset();
 	UpdateLoadingScreen(1.f);
+
+	scripting.Reset();
+	scripting.ExecuteFile("data/test.lua");
 
 	running = true;
 }
@@ -150,6 +153,8 @@ void Game::Run()
 	}
 
 	float elapsed = window.GetFrameTime();
+
+	scripting.Update(elapsed);
 
 	// Update the wave state
 	UpdateWave();
@@ -240,6 +245,8 @@ void Game::Run()
 
 	// Draw the user interface at last, so it does not get hidden by any objects
 	userInterface.Draw();
+
+	scripting.Draw(window);
 
 	window.Display();
 }

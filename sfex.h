@@ -37,7 +37,7 @@ namespace sfex
 			}
 
 		protected:
-			void Render(sf::RenderTarget& target) const
+			virtual void Render(sf::RenderTarget& target) const
 			{
 				if (visible)
 					Base::Render(target);

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ScriptingInterface.h"
+#include "Game.h"
 #include "Error.h"
 
 #include "lualib.h" // for luaopen_*
@@ -23,6 +24,7 @@ ScriptingInterface::ScriptingInterface(Game& game)
 void ScriptingInterface::Reset()
 {
 	eventHandlers.clear();
+	updateHandlers.clear();
 
 	if (L) {
 		lua_close(L);
@@ -73,6 +75,25 @@ void ScriptingInterface::CallEventHandlers(GameEvent event)
 	}
 }
 
+void ScriptingInterface::RegisterDrawable(sf::Drawable* obj)
+{
+	drawables.push_back(obj);
+}
+
+void ScriptingInterface::UnregisterDrawable(sf::Drawable* obj)
+{
+	auto iter = boost::range::find(drawables, obj);
+	if (iter != drawables.end())
+		drawables.erase(iter);
+}
+
+void ScriptingInterface::Draw(RenderTarget& target)
+{
+	for (auto& obj: drawables) {
+		target.Draw(*obj);
+	}
+}
+
 // exported functions
 
 namespace Exp {
@@ -109,6 +130,58 @@ void ScriptingInterface::exp_RegisterForUpdate(luabind::object func)
 	updateHandlers.push_back(func);
 }
 
+#define pick(Class_, Func_, Ret_, Arg_) static_cast<Ret_ (Class_::*) Arg_>(&Class_::Func_)
+
+template <typename T>
+static void Unregister(T& self)
+{
+	gInterface->UnregisterDrawable(&self);
+}
+
+static void GetPosition(lua_State* L, sf::Drawable& self)
+{
+	auto pos = self.GetPosition();
+	lua_pushnumber(L, pos.x);
+	lua_pushnumber(L, pos.y);
+}
+
+static sfex::String* CreateString()
+{
+	auto str = new sfex::String;
+	gInterface->RegisterDrawable(str);
+
+	str->SetFont(gTheme.GetMainFont());
+	return str;
+}
+
+static luabind::scope DeclString()
+{
+	return
+		class_<sfex::String>("String")
+			.def("SetText", &sfex::String::SetText)
+			.def("GetText", &sfex::String::GetText)
+			.def("SetSize", &sfex::String::SetSize)
+			.def("GetSize", &sfex::String::GetSize)
+			.def("SetColor", &sfex::String::SetColor)
+			.def("SetPosition", pick(sfex::String, SetPosition, void, (float, float)))
+			.def("GetPosition", &GetPosition)
+			.def("Show", &sfex::String::Show)
+			.def("Hide", &sfex::String::Hide)
+			.def("SetVisible", &sfex::String::SetVisible)
+			.def("GetVisible", &sfex::String::GetVisible)
+			.def("Unregister", &Unregister<sfex::String>)
+	;
+}
+
+static luabind::scope DeclColor()
+{
+	return
+		class_<sf::Color>("Color")
+			.def(luabind::constructor<Uint8, Uint8, Uint8>())
+			.def(luabind::constructor<Uint8, Uint8, Uint8, Uint8>())
+	;
+}
+
 static const char* REMOVED_GLOBALS[] = {
 	"print", "load", "loadfile", "dofile", LUA_COLIBNAME,
 };
@@ -130,9 +203,9 @@ void ScriptingInterface::InitialiseLua()
 	}
 
 	module(L) [
-		def("Log", Exp::Log),
-		def("RegisterForEvent", Exp::RegisterForEvent),
-		def("RegisterForUpdate", Exp::RegisterForUpdate),
+		def("Log", &Exp::Log),
+		def("RegisterForEvent", &Exp::RegisterForEvent),
+		def("RegisterForUpdate", &Exp::RegisterForUpdate),
 
 		class_<Exp::DummyClass::LogLevel>("LogLevel")
 		.enum_("loglevels")[
@@ -142,6 +215,21 @@ void ScriptingInterface::InitialiseLua()
 			value("Msg", Log::Logger::Msg),
 			value("Debug", Log::Logger::Debug),
 			value("Trace", Log::Logger::Trace)
-		]
+		],
+
+		DeclColor(),
+
+		def("CreateString", &CreateString),
+		DeclString()
 	];
+
+	globals(L)["Color"]["Black"] = &Color::Black;
+	globals(L)["Color"]["White"] = &Color::White;
+	globals(L)["Color"]["Red"] = &Color::Red;
+	globals(L)["Color"]["Green"] = &Color::Green;
+	globals(L)["Color"]["Blue"] = &Color::Blue;
+	globals(L)["Color"]["Yellow"] = &Color::Yellow;
+	globals(L)["Color"]["Magenta"] = &Color::Magenta;
+	globals(L)["Color"]["Cyan"] = &Color::Cyan;
 }
+

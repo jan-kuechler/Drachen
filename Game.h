@@ -14,11 +14,14 @@
 #include "EnemySettings.h"
 #include "Rectangle.h"
 #include "FireEffect.h"
+#include "ScriptingInterface.h"
 
 struct TowerSettings;
 
 class Game
 {
+	ScriptingInterface scripting;
+
 	RenderWindow& window;
 	GlobalStatus& globalStatus;
 
