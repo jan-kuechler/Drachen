@@ -2,6 +2,8 @@
 #include "ScriptingInterface.h"
 #include "Game.h"
 #include "Error.h"
+#include "ResourceManager.h"
+#include "DataPaths.h"
 
 #include "lualib.h" // for luaopen_*
 
@@ -147,41 +149,70 @@ static void GetPosition(lua_State* L, T& self)
 	lua_pushnumber(L, pos.y);
 }
 
+static luabind::scope DeclColor()
+{
+	return class_<sf::Color>("Color")
+		.def(luabind::constructor<Uint8, Uint8, Uint8>())
+		.def(luabind::constructor<Uint8, Uint8, Uint8, Uint8>())
+	;
+}
+
+static sf::Image& GetImage(const char *path)
+{
+	return gImageManager.getResource(GetLevelPackFile(path).string());
+}
+
+static luabind::scope DeclImage()
+{
+	return class_<sf::Image>("Image")
+	;
+}
+
 static sfex::String* CreateString()
 {
 	auto str = new sfex::String;
 	gInterface->RegisterDrawable(str);
-
 	str->SetFont(gTheme.GetMainFont());
 	return str;
 }
 
-static luabind::scope DeclColor()
+static luabind::scope DeclString()
 {
-	return
-		class_<sf::Color>("Color")
-			.def(luabind::constructor<Uint8, Uint8, Uint8>())
-			.def(luabind::constructor<Uint8, Uint8, Uint8, Uint8>())
+	return class_<sfex::String>("String")
+		.def("SetText", &sfex::String::SetText)
+		.def("GetText", &sfex::String::GetText)
+		.def("SetSize", &sfex::String::SetSize)
+		.def("GetSize", &sfex::String::GetSize)
+		.def("SetColor", &sfex::String::SetColor)
+		.def("GetColor", &sfex::String::GetColor)
+		.def("SetPosition", pick(sfex::String, SetPosition, void, (float, float)))
+		.def("GetPosition", &GetPosition<sfex::String>)
+		.def("Show", &sfex::String::Show)
+		.def("Hide", &sfex::String::Hide)
+		.def("SetVisible", &sfex::String::SetVisible)
+		.def("GetVisible", &sfex::String::GetVisible)
+		.def("Unregister", &Unregister<sfex::String>)
 	;
 }
 
-static luabind::scope DeclString()
+static sfex::Sprite* CreateSprite()
 {
-	return
-		class_<sfex::String>("String")
-			.def("SetText", &sfex::String::SetText)
-			.def("GetText", &sfex::String::GetText)
-			.def("SetSize", &sfex::String::SetSize)
-			.def("GetSize", &sfex::String::GetSize)
-			.def("SetColor", &sfex::String::SetColor)
-			.def("GetColor", &sfex::String::GetColor)
-			.def("SetPosition", pick(sfex::String, SetPosition, void, (float, float)))
-			.def("GetPosition", &GetPosition<sfex::String>)
-			.def("Show", &sfex::String::Show)
-			.def("Hide", &sfex::String::Hide)
-			.def("SetVisible", &sfex::String::SetVisible)
-			.def("GetVisible", &sfex::String::GetVisible)
-			.def("Unregister", &Unregister<sfex::String>)
+	auto sprite = new sfex::Sprite;
+	gInterface->RegisterDrawable(sprite);
+	return sprite;
+}
+
+static luabind::scope DeclSprite()
+{
+	return class_<sfex::Sprite>("Sprite")
+		.def("SetImage", &sfex::Sprite::SetImage)
+		.def("SetPosition", pick(sfex::Sprite, SetPosition, void, (float, float)))
+		.def("GetPosition", &GetPosition<sfex::Sprite>)
+		.def("Show", &sfex::Sprite::Show)
+		.def("Hide", &sfex::Sprite::Hide)
+		.def("SetVisible", &sfex::Sprite::SetVisible)
+		.def("GetVisible", &sfex::Sprite::GetVisible)
+		.def("Unregister", &Unregister<sfex::Sprite>)
 	;
 }
 
@@ -222,8 +253,14 @@ void ScriptingInterface::InitialiseLua()
 
 		DeclColor(),
 
+		def("GetImage", &GetImage),
+		DeclImage(),
+
 		def("CreateString", &CreateString),
-		DeclString()
+		DeclString(),
+
+		def("CreateSprite", &CreateSprite),
+		DeclSprite()
 	];
 
 	globals(L)["Color"]["Black"] = &Color::Black;
