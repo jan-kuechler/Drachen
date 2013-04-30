@@ -31,21 +31,7 @@ namespace luabind
 
 		void to(lua_State* L, const GameEvent& event)
 		{
-			switch (event) {
-			case GE_LEVEL_START:
-				lua_pushstring(L, "LevelStart");
-				return;
-			case GE_LEVEL_END:
-				lua_pushstring(L, "LevelEnd");
-				return;
-
-			case GE_TEST_EVENT:
-				lua_pushstring(L, "TestEvent");
-				return;
-
-			default:
-				throw GameError(); // TODO
-			}
+			lua_pushstring(L, boost::lexical_cast<std::string>(event).c_str());
 		}
 	};
 

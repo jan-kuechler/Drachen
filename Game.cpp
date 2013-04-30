@@ -85,6 +85,7 @@ void Game::Reset()
 
 	scripting.Reset();
 	scripting.ExecuteFile("data/test.lua");
+	scripting.LogInfo();
 
 	running = true;
 }

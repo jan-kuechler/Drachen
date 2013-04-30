@@ -38,6 +38,8 @@ public:
 
 	lua_State *GetLuaState() { return L; }
 
+	void LogInfo() const;
+
 	// exported functions, do not call from C++
 
 	void exp_RegisterForEvent(GameEvent event, luabind::object func);

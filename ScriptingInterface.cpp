@@ -6,8 +6,11 @@
 #include "DataPaths.h"
 
 #include "lualib.h" // for luaopen_*
+#include "lstate.h" // for lua_State
 
 #include "LuaConverter.h"
+
+
 
 namespace fs = boost::filesystem;
 using namespace luabind;
@@ -95,6 +98,21 @@ void ScriptingInterface::Draw(RenderTarget& target)
 	for (auto& obj: drawables) {
 		target.Draw(*obj);
 	}
+}
+
+void ScriptingInterface::LogInfo() const
+{
+	LOG(Msg, "ScriptingInterface info:");
+	LOG(Msg,"\tUpdate handlers: " << updateHandlers.size());
+	LOG(Msg,"\tEvent handlers:");
+	for (const auto& it : eventHandlers) {
+		LOG(Msg, "\t\t" << it.first << ": " << it.second.size());
+	}
+	LOG(Msg, "\tRegistered drawables: " << drawables.size());
+	LOG(Msg, "\tLua state:");
+	LOG(Msg, "\t\tAllocated bytes: " << L->l_G->totalbytes);
+	LOG(Msg, "\t\tUsed bytes:      " << L->l_G->estimate << " (estimated)");
+	LOG(Msg, "\t\tGC dept:         " << L->l_G->gcdept);
 }
 
 // exported functions
@@ -272,4 +290,3 @@ void ScriptingInterface::InitialiseLua()
 	globals(L)["Color"]["Magenta"] = &Color::Magenta;
 	globals(L)["Color"]["Cyan"] = &Color::Cyan;
 }
-
