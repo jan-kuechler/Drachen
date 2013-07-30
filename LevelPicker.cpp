@@ -52,7 +52,7 @@ void LevelPicker::Reset()
 	const LevelPack& pack = levelPacks[gStatus.runTime.levelPack];
 
 	// if the last level of the pack has been won
-	if (gStatus.packInfo[gStatus.runTime.levelPack].lastWonLevel == (pack.levels.size()-1)) {
+	if (gStatus.packInfo[gStatus.runTime.levelPack].lastWonLevel == (pack.levels.size()-1) && gStatus.runTime.levelPicker.commingFromLevel == gStatus.packInfo[gStatus.runTime.levelPack].lastWonLevel) {
 		size_t nextPackIndex = GetPackIndex(gStatus.runTime.levelPack) + 1;
 		if (nextPackIndex < levelPackOrder.size()) {
 			gStatus.runTime.levelPack = levelPackOrder[nextPackIndex];
