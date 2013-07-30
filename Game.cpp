@@ -49,13 +49,15 @@ void Game::Reset()
 	gameStatus.Reset(globalStatus);
 	UpdateLoadingScreen(0.2f);
 
-	LoadLevel(globalStatus.runTime.level);
+	auto levelPath = GetLevelPath(globalStatus.runTime.level);
+	auto levelFile = GetLevelFile(globalStatus.runTime.level);
+	level.LoadFromFile(levelPath / levelFile);
 	UpdateLoadingScreen(0.3f);
 
 	LoadEnemySettings();
 	UpdateLoadingScreen(0.4f);
 
-	LoadFromFile(map, levelInfo.map);
+	LoadFromFile(map, level.map);
 	map.Reset();
 	UpdateLoadingScreen(0.7f);
 
@@ -74,8 +76,8 @@ void Game::Reset()
 	});
 	boost::sort(fireEffects, CompByY);
 
-	gTheme.LoadTheme(levelInfo.theme);
-	userInterface.Reset(levelInfo);
+	gTheme.LoadTheme(level.theme);
+	userInterface.Reset(level);
 	UpdateLoadingScreen(0.9f);
 
 	// reset countdown and spawn timer here for the first wave
@@ -117,7 +119,7 @@ void Game::Run()
 		if (event.Type == Event::KeyReleased) {
 			switch (event.Key.Code) {
 			case Key::G:
-				SpawnEnemy(0);
+				SpawnEnemy(0, 0);
 				break;
 
 			case Key::Q:
@@ -130,7 +132,7 @@ void Game::Run()
 				break;
 
 			case Key::N:
-				levelInfo.nightMode = !levelInfo.nightMode;
+				level.nightMode = !level.nightMode;
 			}
 		}
 		else if (event.Type == Event::MouseButtonReleased && event.MouseButton.Button == Mouse::Left) {
@@ -170,7 +172,7 @@ void Game::Run()
 	for (auto it = towers.begin(); it != towers.end(); ++it)
 		(*it)->Update(elapsed);
 
-	if (levelInfo.nightMode) {
+	if (level.nightMode) {
 		boost::for_each(fireEffects, [&](const std::shared_ptr<FireEffect>& fire) {
 			fire->Update(elapsed);
 		});
@@ -209,7 +211,7 @@ void Game::Run()
 	// keep towers, enemies and possibly fires sorted by their y position to correctly treat overlap
 	std::vector<std::shared_ptr<Drawable>> sprites;
 
-	if (levelInfo.nightMode) {
+	if (level.nightMode) {
 		sprites.reserve(towers.size() + enemies.size() + fireEffects.size());
 
 		std::vector<std::shared_ptr<Drawable>> towersAndFires;
@@ -222,7 +224,7 @@ void Game::Run()
 	}
 
 	// draw the night mode shader before the towers, so they do not get too dark
-	if (levelInfo.nightMode)
+	if (level.nightMode)
 		window.Draw(nightModeFx);
 
 	boost::for_each(sprites, [&](const std::shared_ptr<Drawable>& sprite) {
@@ -246,7 +248,7 @@ void Game::Run()
 
 void Game::UpdateWave()
 {
-	if (gameStatus.currentWave >= gameStatus.waves.size()) {
+	if (gameStatus.currentWave >= level.waves.size()) {
 		// if we finished the last wave, the game has ended
 		if (enemies.size() == 0)
 			running = false;
@@ -256,7 +258,7 @@ void Game::UpdateWave()
 		return;
 	}
 
-	GameStatus::Wave& currentWave = gameStatus.waves[gameStatus.currentWave];
+	Level::Wave& currentWave = level.waves[gameStatus.currentWave];
 
 	switch (gameStatus.waveState) {
 	case GameStatus::InCountdown:
@@ -264,6 +266,16 @@ void Game::UpdateWave()
 		// the enemies by proceeding to the InSpawn state;
 		if (gameStatus.countdownTimer.GetElapsedTime() > currentWave.countdown) {
 			gameStatus.waveState = GameStatus::InSpawn;
+
+			// copy the enemies to spawn to a stack
+			enemiesToSpawn.clear();
+			enemiesToSpawn.resize(currentWave.enemies.size());
+			for (size_t spawnPt = 0; spawnPt < currentWave.enemies.size(); ++spawnPt) {
+				boost::for_each(currentWave.enemies[spawnPt], [&](size_t tp) {
+					enemiesToSpawn[spawnPt].push(tp);
+				});
+			}
+
 			gameStatus.waveTimer.Reset();
 		}
 		break;
@@ -271,12 +283,19 @@ void Game::UpdateWave()
 		// In the spawn state see if the spawn timer has elapsed and then spawn an enemy.
 		// If all enemies for this wave are spawned proceed to the InWave state
 		if (gameStatus.spawnTimer.GetElapsedTime() > SPAWN_TIME) {
-			if (currentWave.enemies.size() > 0) {
-				SpawnEnemy(currentWave.enemies.front());
-				currentWave.enemies.pop();
-				gameStatus.spawnTimer.Reset();
+
+			bool spawned = false;
+			for (size_t spawnPt = 0; spawnPt < std::min(enemiesToSpawn.size(), map.GetNumSpawns()); ++spawnPt) {
+				if (enemiesToSpawn[spawnPt].size() > 0) {
+					SpawnEnemy(enemiesToSpawn[spawnPt].front(), spawnPt);
+					enemiesToSpawn[spawnPt].pop();
+					gameStatus.spawnTimer.Reset();
+					spawned = true;
+				}
 			}
-			else {
+
+			// everything is spawned, proceeed to InWave
+			if (!spawned) {
 				gameStatus.waveState = GameStatus::InWave;
 			}
 		}
@@ -316,63 +335,12 @@ State Game::GetNextState()
 	return ST_LOOSE;
 }
 
-void Game::LoadLevel(const std::string& level)
-{
-	fs::path levelPath = GetLevelPath(level);
-	fs::path levelDef = levelPath / GetLevelFile(level);
-
-	std::ifstream in(levelDef.string());
-	js::mValue rootValue;
-	try {
-		js::read_or_throw(in, rootValue);
-	}
-	catch (js::Error_position err) {
-		throw GameError() << ErrorInfo::Desc("Invalid json file") << ErrorInfo::Note(err.reason_) << boost::errinfo_at_line(err.line_) << boost::errinfo_file_name(levelDef.string());
-	}
-
-	if (rootValue.type() != js::obj_type)
-		throw GameError() << ErrorInfo::Desc("Root value is not an object");
-
-	js::mObject rootObj = rootValue.get_obj();
-
-	try {
-		levelInfo.name = rootObj["name"].get_str();
-		levelInfo.map = rootObj["map"].get_str();
-		levelInfo.theme = rootObj["theme"].get_str();
-		levelInfo.nightMode = jsex::get_opt<bool>(rootObj, "night-mode", false);
-
-		js::mArray& waves = rootObj["waves"].get_array();
-		for (size_t i=0; i < waves.size(); ++i) {
-			js::mObject& waveDef = waves[i].get_obj();
-
-			GameStatus::Wave wave;
-			wave.countdown = waveDef["countdown"].get_int();
-
-			js::mArray enemies = waveDef["enemies"].get_array();
-			for (size_t j=0; j < enemies.size(); ++j) {
-				js::mArray what = enemies[j].get_array();
-
-				size_t type = what[0].get_int();
-				size_t num = what[1].get_int();
-				for (size_t k=0; k < num; ++k)
-					wave.enemies.push(type);
-			}
-
-			wave.maxTime = jsex::get_opt<int>(waveDef, "max-time", 0);
-			gameStatus.waves.push_back(wave);
-		}
-	}
-	catch (std::runtime_error err) {
-		throw GameError() << ErrorInfo::Desc("Json error") << ErrorInfo::Note(err.what()) << boost::errinfo_file_name(levelDef.string());
-	}
-}
-
 void Game::LoadEnemySettings()
 {
-	if (levelInfo.theme == prevTheme)
+	if (level.theme == prevTheme)
 		return; // already loaded
 
-	fs::path themePath = GetThemePath(levelInfo.theme);
+	fs::path themePath = GetThemePath(level.theme);
 	fs::path enemyDef = themePath / EnemyDefinitionFile;
 
 	std::ifstream in(enemyDef.string());
@@ -408,10 +376,10 @@ void Game::LoadEnemySettings()
 	}
 }
 
-void Game::SpawnEnemy(size_t type)
+void Game::SpawnEnemy(size_t type, size_t spawn)
 {
 	std::shared_ptr<Enemy> e(new Enemy(enemySettings[type], &map));
-	e->SetPosition(map.GetSpawnPosition());
+	e->SetPosition(map.GetSpawnPosition(spawn));
 	e->SetTarget(map.GetDefaultTarget());
 	enemies.push_back(e);
 }

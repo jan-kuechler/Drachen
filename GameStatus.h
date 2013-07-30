@@ -5,17 +5,9 @@
 
 struct GameStatus
 {
-	struct Wave
-	{
-		size_t countdown; // seconds to start the wave
-		size_t maxTime; // maximal time for this wave
-		std::queue<size_t> enemies; // enemies to spawn
-	};
-
 	size_t lives;
 	size_t money;
 
-	std::vector<Wave> waves;
 	size_t currentWave;
 	enum {
 		InCountdown, InSpawn, InWave,
@@ -28,7 +20,6 @@ struct GameStatus
 	{
 		lives = gs.startLives;
 		money = gs.startMoney;
-		waves.clear();
 		currentWave = 0;
 		waveState = InCountdown;
 	}

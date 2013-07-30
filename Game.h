@@ -14,6 +14,7 @@
 #include "EnemySettings.h"
 #include "Rectangle.h"
 #include "FireEffect.h"
+#include "Level.h"
 
 struct TowerSettings;
 
@@ -46,7 +47,10 @@ class Game
 	Map map;
 	GameStatus gameStatus;
 	GameUserInterface userInterface;
-	LevelMetaInfo levelInfo;
+	
+	Level level;
+	std::vector<std::queue<size_t>> enemiesToSpawn;
+
 public:
 	Game(RenderWindow& win, GlobalStatus& gs);
 
@@ -61,10 +65,8 @@ public:
 private:
 	bool running;
 
-	void LoadLevel(const std::string& level);
-
 	void UpdateWave();
-	void SpawnEnemy(size_t type);
+	void SpawnEnemy(size_t type, size_t spawn);
 
 	void LooseLife();
 

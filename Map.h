@@ -47,6 +47,15 @@ public:
 		return spawnPlaces[0];
 	}
 
+	Vector2f GetSpawnPosition(size_t idx) const
+	{
+		return spawnPlaces[idx];
+	}
+
+	size_t GetNumSpawns() const
+	{
+		return spawnPlaces.size();
+	}
 
 
 	Vector2f GetDefaultTarget() const

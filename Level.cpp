@@ -51,6 +51,8 @@ void Level::LoadFromFile(const fs::path& path)
 		theme = jsex::get<string>(rootObj["theme"]);
 		nightMode = jsex::get_opt<bool>(rootObj, "night-mode", false);
 
+
+		waves.clear();
 		auto& wavesArr = rootObj["waves"].get_array();
 		for (auto& val: wavesArr) {
 			auto& waveObj = val.get_obj();
@@ -76,6 +78,8 @@ void Level::LoadFromFile(const fs::path& path)
 
 				wave.enemies.push_back(enemiesForSpawn);
 			}
+
+			waves.emplace_back(wave);
 		}
 	}
 	catch (std::runtime_error err) {

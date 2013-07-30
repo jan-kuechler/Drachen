@@ -4,7 +4,7 @@
 #include "Game.h"
 #include "GlobalStatus.h"
 #include "GameStatus.h"
-#include "LevelMetaInfo.h"
+#include "Level.h"
 #include "TowerPlacer.h"
 #include "TowerSettings.h"
 #include "ResourceManager.h"
@@ -23,8 +23,10 @@ GameUserInterface::GameUserInterface(Game* game, RenderWindow& window, GlobalSta
 : game(game), window(window), globalStatus(globalStatus), gameStatus(gameStatus), map(map)
 { }
 
-void GameUserInterface::Reset(const LevelMetaInfo& metaInfo)
+void GameUserInterface::Reset(const Level& metaInfo)
 {
+	levelInfo = &metaInfo;
+
 	topPanel.SetImage(gImageManager.getResource(gTheme.GetFileName("top-panel")));
 	topPanel.SetPosition(0, 0);
 
@@ -182,8 +184,8 @@ void GameUserInterface::UpdateText()
 	lives.SetText(lexical_cast<std::string>(gameStatus.lives));
 	money.SetText(lexical_cast<std::string>(gameStatus.money));
 
-	if (gameStatus.waveState == GameStatus::InCountdown && gameStatus.currentWave < gameStatus.waves.size()) {
-		countdown.SetText(lexical_cast<std::string>(gameStatus.waves[gameStatus.currentWave].countdown - static_cast<int>(gameStatus.countdownTimer.GetElapsedTime())));
+	if (gameStatus.waveState == GameStatus::InCountdown && gameStatus.currentWave < levelInfo->waves.size()) {
+		countdown.SetText(lexical_cast<std::string>(levelInfo->waves[gameStatus.currentWave].countdown - static_cast<int>(gameStatus.countdownTimer.GetElapsedTime())));
 		showCountdown = true;
 	}
 	else {

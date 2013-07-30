@@ -12,7 +12,7 @@ class Theme;
 class Tower;
 struct GlobalStatus;
 struct GameStatus;
-struct LevelMetaInfo;
+struct Level;
 
 class GameUserInterface
 {
@@ -22,6 +22,8 @@ class GameUserInterface
 	GameStatus& gameStatus;
 	const Map* map;
 	Game* game;
+
+	const Level* levelInfo;
 
 	Sprite topPanel, bottomPanel;
 
@@ -86,7 +88,7 @@ public:
 
 	void PreDraw();
 	void Draw();
-	void Reset(const LevelMetaInfo& metaInfo);
+	void Reset(const Level& metaInfo);
 
 	void TowerSelected(std::shared_ptr<Tower> tower);
 
