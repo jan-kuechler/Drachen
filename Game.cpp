@@ -30,6 +30,8 @@ static bool CompByY(const std::shared_ptr<sf::Drawable>& a, const std::shared_pt
 
 void Game::Reset()
 {
+	LOG(Msg, "GameState reset");
+
 	postfx.LoadFromFile("data/postfx.sfx");
 	postfx.SetTexture("framebuffer", nullptr);
 
@@ -319,6 +321,9 @@ bool Game::IsRunning()
 
 State Game::GetNextState()
 {
+	LOG(Msg, "GameState ending");
+	scripting.LogInfo();
+
 	if (gameStatus.lives > 0)
 		return ST_WIN;
 	return ST_LOOSE;
